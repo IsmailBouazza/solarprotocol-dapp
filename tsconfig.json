@@ -16,5 +16,11 @@
     "incremental": true
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "baseUrl": ".",
+  "paths": {
+    "@components/*": ["/components/*"],
+    "@hooks/*": ["/hooks/*"],
+    "@config/*": ["/config/*"]
+  },
   "exclude": ["node_modules"]
 }
