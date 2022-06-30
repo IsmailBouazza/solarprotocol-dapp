@@ -1,11 +1,11 @@
+import { Heading, HStack } from '@chakra-ui/react'
 import type { NextPage } from 'next'
-import ConnectWalletButton from '../components/connectWalletButton'
 
 const Home: NextPage = () => {
   return (
-    <>
-      <ConnectWalletButton />
-    </>
+    <HStack w={'full'} alignItems="center" justifyContent="center" h="full">
+      <Heading>COMING SOON</Heading>
+    </HStack>
   )
 }
 

@@ -1,5 +1,6 @@
 import { ethers } from 'ethers'
 import { Chain, defaultChains } from 'wagmi'
+import { PresaleABI } from './abis'
 
 export const FTM_CHAIN_PARAMS_ADD = {
   chainId: '0x19',
@@ -26,6 +27,11 @@ export const METIS_CHAIN_PARAMS = {
   blockExplorerUrls: ['https://ftmscan.com/'],
 }
 
+export const presaleContractConfig = {
+  addressOrName: '0xdE1dEBADfc466cc50BBaad33917a954d9D77b874',
+  contractInterface: PresaleABI,
+}
+
 interface INetworkDetails {
   [key: number]: {
     rpcUrl: string
@@ -49,7 +55,7 @@ export const connectorIcons: IConnectorIcon = {
       'https://upload.wikimedia.org/wikipedia/commons/3/36/MetaMask_Fox.svg',
   },
   'Coinbase Wallet': {
-    logoURI: 'https://avatars.githubusercontent.com/u/1885080?s=200&v=4',
+    logoURI: 'https://avatars.githubusercontent.com/u/18060234?s=200&v=4',
   },
   WalletConnect: {
     logoURI:
@@ -144,8 +150,31 @@ export const ftmChain: Chain = {
 }
 
 export const allChains: Chain[] = [...defaultChains, ftmChain]
+
 export const secondsByDuration: ISecondsByDuration = {
   week: 7 * 24 * 60 * 60,
   month: 30 * 24 * 60 * 60,
   year: 365 * 24 * 60 * 60,
+}
+
+export const palette = {
+  background: {
+    color: '#01030b',
+    accent: '#e06a41',
+    gradient:
+      'linear-gradient(117deg, rgba(16,14,24,1) 0%, rgba(51,45,69,1) 36%, rgba(16,14,24,1) 72%)',
+  },
+  main: {
+    text: '#fafafa',
+    title: '#f67447',
+    buttonBg: '#081429',
+    buttonBorder: '#d34715',
+    buttonLightBorder: '#f67447',
+    outerGlow: '#e87147',
+  },
+  footer: {
+    text: 'rgba(250, 250, 250, 0.65)',
+    title: '#f67447',
+    extra: '#fafafa',
+  },
 }

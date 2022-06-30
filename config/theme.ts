@@ -1,54 +1,78 @@
-import { extendTheme, ThemeComponentProps, ThemeConfig } from '@chakra-ui/react'
+import { extendTheme, ThemeConfig } from '@chakra-ui/react'
+import { palette } from './constants'
 
-export const palette = {
-  dark: {
-    blue1: '#51ceaf',
-    blue2: '#16b28b',
-    blue3: '#008d63',
-    red1: '#e6000d',
-    red2: '#cb000b',
-    red3: '#720009',
-    purp1: '#00468a',
-    purp2: '#081561',
-    purp3: '#060434',
-    purp4: '#05061b',
-  },
-  light: {
-    blue1: '#a4ded7',
-    blue2: '#6db5ad',
-    blue3: '#36847b',
-    red1: '#a33d36',
-    red2: '#85221b',
-    red3: '#470905',
-    purp1: '#1c3a62',
-    purp2: '#14153d',
-    purp3: '#0e0a20',
-    purp4: '#090812',
-  },
-}
 const config: ThemeConfig = {
   initialColorMode: 'system',
   useSystemColorMode: true,
 }
 
-export const theme = extendTheme(
-  {
-    fonts: {
-      heading: 'Ubuntu, sans-serif',
-      body: 'Ubuntu, sans-serif',
-    },
-    components: {
-      Text: {
-        baseStyle: (props: ThemeComponentProps) => ({
-          color: props.colorMode === 'dark' ? 'white' : 'black',
+export const theme = extendTheme({
+  fonts: {
+    heading: 'Ubuntu, sans-serif',
+    body: 'Ubuntu, sans-serif',
+  },
+  components: {
+    Button: {
+      variants: {
+        solid: () => ({
+          color: 'white',
+          background:
+            'linear-gradient(#081429, #081429) padding-box, linear-gradient(45deg, rgba(211,71,21,1) 0%,rgba(246,151,117,1) 100%) border-box',
+          borderRadius: '1em',
+          border: '2px solid transparent',
+          transition: '0.3s',
+          _hover: {
+            background:
+              'linear-gradient(#081429, #081429) padding-box, linear-gradient(45deg, rgba(211,71,21,1) 0%,rgba(246,151,117,1) 100%) border-box',
+            borderRadius: '1em',
+            border: '2px solid transparent',
+            transform: 'translate(0, -4px)',
+          },
+          _focus: {
+            background:
+              'linear-gradient(#081429, #081429) padding-box, linear-gradient(45deg, rgba(211,71,21,1) 0%,rgba(246,151,117,1) 100%) border-box',
+            borderRadius: '1em',
+            border: '2px solid transparent',
+            transform: 'translate(0, -4px)',
+          },
+          _active: {
+            background:
+              'linear-gradient(#081429, #081429) padding-box, linear-gradient(45deg, rgba(211,71,21,1) 0%,rgba(246,151,117,1) 100%) border-box',
+            borderRadius: '1em',
+            border: '2px solid transparent',
+            transform: 'translate(0, -4px)',
+          },
         }),
-      },
-      Heading: {
-        baseStyle: (props: ThemeComponentProps) => ({
-          color: props.colorMode === 'dark' ? 'white' : 'black',
+        solid2: () => ({
+          color: 'white',
+          background: '#2c2b34',
+          borderRadius: '1em',
+          border: '1px solid transparent',
+          transition: '0.3s',
+          _hover: {
+            background: '#2c2b34',
+            borderRadius: '1em',
+            border: '2px solid transparent',
+            borderColor: palette.main.buttonLightBorder,
+            transform: 'translate(0, -4px)',
+          },
+          _focus: {
+            background: '#2c2b34',
+            borderRadius: '1em',
+            border: '2px solid transparent',
+            borderColor: palette.main.buttonLightBorder,
+            transform: 'translate(0, -4px)',
+          },
+          _active: {
+            background: '#2c2b34',
+            borderRadius: '1em',
+            border: '2px solid transparent',
+            borderColor: palette.main.buttonLightBorder,
+            transform: 'translate(0, -4px)',
+          },
         }),
       },
     },
   },
-  config
-)
+  config,
+})

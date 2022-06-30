@@ -1,16 +1,47 @@
-html,
-body {
-  padding: 0;
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+.shadowglow {
+  -webkit-box-shadow: 0px 0px 22px 8px rgba(232, 113, 71, 0.5);
+  -moz-box-shadow: 0px 0px 22px 8px rgba(232, 113, 71, 0.5);
+  box-shadow: 0px 0px 22px 8px rgba(232, 113, 71, 0.5);
+  animation: pulse 2s infinite;
+}
+@-webkit-keyframes pulse {
+  0% {
+    -webkit-box-shadow: 0px 0px 22px 8px rgba(232, 113, 71, 0.5);
+    -moz-box-shadow: 0px 0px 22px 8px rgba(232, 113, 71, 0.5);
+    box-shadow: 0px 0px 22px 8px rgba(232, 113, 71, 0.5);
+  }
+  50% {
+    -webkit-box-shadow: 0px 0px 22px 12px rgba(232, 113, 71, 0.5);
+    -moz-box-shadow: 0px 0px 22px 12px rgba(232, 113, 71, 0.5);
+    box-shadow: 0px 0px 22px 12px rgba(232, 113, 71, 0.5);
+  }
+  100% {
+    -webkit-box-shadow: 0px 0px 22px 8px rgba(232, 113, 71, 0.5);
+    -moz-box-shadow: 0px 0px 22px 8px rgba(232, 113, 71, 0.5);
+    box-shadow: 0px 0px 22px 8px rgba(232, 113, 71, 0.5);
+  }
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
+@keyframes pulse {
+  0% {
+    -webkit-box-shadow: 0px 0px 22px 8px rgba(232, 113, 71, 0.5);
+    -moz-box-shadow: 0px 0px 22px 8px rgba(232, 113, 71, 0.5);
+    box-shadow: 0px 0px 22px 8px rgba(232, 113, 71, 0.5);
+  }
+  50% {
+    -webkit-box-shadow: 0px 0px 22px 12px rgba(232, 113, 71, 0.5);
+    -moz-box-shadow: 0px 0px 22px 12px rgba(232, 113, 71, 0.5);
+    box-shadow: 0px 0px 22px 12px rgba(232, 113, 71, 0.5);
+  }
+  100% {
+    -webkit-box-shadow: 0px 0px 22px 8px rgba(232, 113, 71, 0.5);
+    -moz-box-shadow: 0px 0px 22px 8px rgba(232, 113, 71, 0.5);
+    box-shadow: 0px 0px 22px 8px rgba(232, 113, 71, 0.5);
+  }
 }
 
-* {
-  box-sizing: border-box;
+.glow {
+  -webkit-box-shadow: 0px 0px 22px 8px rgba(232, 113, 71, 0.5);
+  -moz-box-shadow: 0px 0px 22px 8px rgba(232, 113, 71, 0.5);
+  box-shadow: 0px 0px 22px 8px rgba(232, 113, 71, 0.5);
 }
