@@ -6,15 +6,13 @@ import {
   Progress,
   Text,
 } from '@chakra-ui/react'
-import { ethers } from 'ethers'
 import { useState } from 'react'
 import Countdown, {
   CountdownRendererFn,
   CountdownRenderProps,
 } from 'react-countdown'
-import { useAccount, useContractRead } from 'wagmi'
-import { palette, presaleContractConfig } from '../../config/constants'
-import { IEpoch } from '../../config/types'
+import { palette } from '../../config/constants'
+
 import useMounted from '../../hooks/useMounted'
 import useWeb3Formatter from '../../hooks/useWeb3Formatter'
 
@@ -44,57 +42,56 @@ export default function PresaleStats() {
   }
   // WEB3
   // Address
-  const { data: accData } = useAccount()
   // endsAt
-  const [endsAt, setEndsAt] = useState<number>(0)
-  const { isError: endsAtErr, isLoading: endsAtLoad } = useContractRead(
-    presaleContractConfig,
-    'getEndsAt',
-    {
-      chainId: 250,
-      onSettled(data, error) {
-        if (error) console.log('Error on endsAt', error)
-        console.log('endsAt', Number(data))
-        setEndsAt(Number(data))
-        console.log('ended condition', Number(data) < Date.now())
-        setEnded(Number(data) < Date.now()) // TODO: UNCOMENT THIS AND REMOVE TEST STATEMENT
-        // setEnded(false)
-      },
-    }
-  )
-  // currentEpoch
-  const [currentEpoch, setCurrentEpoch] = useState<IEpoch>()
-  function buildEpoch(data: unknown) {
-    const temp = data as IEpoch
-    const epoch: IEpoch = {
-      id: Number(temp['id']),
-      duration: Number(temp['duration']),
-      price: Number(temp['price']),
-      epochUserCap: Number(temp['epochUserCap']),
-      userCap: Number(temp['userCap']),
-      epochTotalCap: Number(temp['epochTotalCap']),
-      totalCap: Number(temp['totalCap']),
-      whitelistIds: temp['whitelistIds'].map((val) => {
-        return Number(val)
-      }),
-    }
-    return epoch
-  }
-  const { isError: currentEpochErr, isLoading: currentEpochLoad } =
-    useContractRead(presaleContractConfig, 'getCurrentEpoch', {
-      chainId: 250,
-      onSettled(data, error) {
-        if (error) console.log('Error on currentEpoch', error)
-        console.log('currentEpoch', buildEpoch(data))
-        setCurrentEpoch(buildEpoch(data))
-        // setEndsAt(Number(data))
-        // setEnded(Number(data) < Date.now()) // TODO: UNCOMENT THIS AND REMOVE TEST STATEMENT
-        // // setEnded(false)
-      },
-    })
+  // const [endsAt, setEndsAt] = useState<number>(0)
+  // // const { isError: endsAtErr, isLoading: endsAtLoad } = useContractRead(
+  // //   presaleContractConfig,
+  // //   'getEndsAt',
+  // //   {
+  // //     chainId: 250,
+  // //     onSettled(data, error) {
+  // //       if (error) console.log('Error on endsAt', error)
+  // //       console.log('endsAt', Number(data))
+  // //       setEndsAt(Number(data))
+  // //       console.log('ended condition', Number(data) < Date.now())
+  // //       setEnded(Number(data) < Date.now()) // TODO: UNCOMENT THIS AND REMOVE TEST STATEMENT
+  // //       // setEnded(false)
+  // //     },
+  // //   }
+  // // )
+  // // currentEpoch
+  // const [currentEpoch, setCurrentEpoch] = useState<IEpoch>()
+  // function buildEpoch(data: unknown) {
+  //   const temp = data as IEpoch
+  //   const epoch: IEpoch = {
+  //     id: Number(temp['id']),
+  //     duration: Number(temp['duration']),
+  //     price: Number(temp['price']),
+  //     epochUserCap: Number(temp['epochUserCap']),
+  //     userCap: Number(temp['userCap']),
+  //     epochTotalCap: Number(temp['epochTotalCap']),
+  //     totalCap: Number(temp['totalCap']),
+  //     whitelistIds: temp['whitelistIds'].map((val) => {
+  //       return Number(val)
+  //     }),
+  //   }
+  //   return epoch
+  // }
+  // const { isError: currentEpochErr, isLoading: currentEpochLoad } =
+  //   useContractRead(presaleContractConfig, 'getCurrentEpoch', {
+  //     chainId: 250,
+  //     onSettled(data, error) {
+  //       if (error) console.log('Error on currentEpoch', error)
+  //       console.log('currentEpoch', buildEpoch(data))
+  //       setCurrentEpoch(buildEpoch(data))
+  //       // setEndsAt(Number(data))
+  //       // setEnded(Number(data) < Date.now()) // TODO: UNCOMENT THIS AND REMOVE TEST STATEMENT
+  //       // // setEnded(false)
+  //     },
+  //   })
   // Progress
-  const [percent, setPercent] = useState(50)
-  const [ended, setEnded] = useState(true)
+  const [percent] = useState(50)
+  const [ended] = useState(true)
   return (
     <>
       {ended ? (
@@ -143,7 +140,7 @@ export default function PresaleStats() {
             <Text>Phase: 1</Text>
             <HStack justifySelf={'center'}>
               <Text>Presale ends in:</Text>
-              {mounted && <Countdown date={endsAt} renderer={renderer} />}
+              {/* {mounted && <Countdown date={endsAt} renderer={renderer} />} */}
             </HStack>
             <HStack justifySelf={'end'}>
               <Text>Next phase in:</Text>
