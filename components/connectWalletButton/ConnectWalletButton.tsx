@@ -92,7 +92,7 @@ export default function ConnectWalletButton() {
               <Text>Connect Wallet</Text>
             )}
           </ModalHeader>
-          <ModalCloseButton />
+          <ModalCloseButton color={'white'} />
           <ModalBody px={4} color="white">
             {isConnected ? (
               <VStack py={2} alignItems="start">
