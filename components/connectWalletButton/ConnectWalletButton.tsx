@@ -87,7 +87,7 @@ export default function ConnectWalletButton() {
         <ModalContent background={palette.background.gradient}>
           <ModalHeader justifyContent="center" py={2} px={4}>
             {isConnected ? (
-              <>Connected with {data?.connector?.name}</>
+              <Text>Connected with {data?.connector?.name}</Text>
             ) : (
               'Connect Wallet'
             )}
