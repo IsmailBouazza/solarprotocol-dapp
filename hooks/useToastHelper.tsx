@@ -20,6 +20,7 @@ export default function useToastHelper() {
       status: status,
       description: description,
       position: 'bottom',
+      colorScheme: 'orange',
     })
   }
   return { toastFactory, summonToast }

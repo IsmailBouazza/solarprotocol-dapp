@@ -31,12 +31,20 @@ export default function ConnectWalletButton() {
     useConnect({
       onConnect() {
         onClose()
-        summonToast('connected', 'info', <Text>Wallet connected</Text>)
+        summonToast(
+          'connected',
+          'info',
+          <Text color={'black'}>Wallet connected</Text>
+        )
       },
     })
   const { disconnect } = useDisconnect({
     onSuccess() {
-      summonToast('disconnected', 'warning', <Text>Wallet disconnected</Text>)
+      summonToast(
+        'disconnected',
+        'warning',
+        <Text color={'black'}>Wallet disconnected</Text>
+      )
     },
   })
   const { data } = useAccount()
@@ -55,13 +63,18 @@ export default function ConnectWalletButton() {
   // Show toast on error
   useEffect(() => {
     if (!isError) return
-    if (error) summonToast('error', 'error', <Text>{error.message}</Text>)
+    if (error)
+      summonToast(
+        'error',
+        'error',
+        <Text color={'black'}>{error.message}</Text>
+      )
   }, [error, isError, onClose, summonToast])
 
   // Show toast on copy
   useEffect(() => {
     if (!hasCopied) return
-    summonToast('copy', 'info', <Text>Address copied</Text>)
+    summonToast('copy', 'info', <Text color={'black'}>Address copied</Text>)
   }, [hasCopied, summonToast])
 
   return (
