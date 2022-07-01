@@ -61,7 +61,7 @@ export default function WalletStats() {
         ) : userCapLoad ? (
           <Spinner />
         ) : (
-          <Text justifySelf={'start'}>Max. allocation: {userCap}$pKELVIN</Text>
+          <Text justifySelf={'start'}>Max. allocation: {userCap}$nKELVIN</Text>
         )}
         {investorIssuedErr ? (
           <Text justifySelf={'center'}>Error fetching investorIssued</Text>
@@ -69,11 +69,11 @@ export default function WalletStats() {
           <Spinner />
         ) : (
           <Text justifySelf={'center'}>
-            Tokens purchased: {investorIssued}$pKELVIN
+            Tokens purchased: {investorIssued}$nKELVIN
           </Text>
         )}
         <Text justifySelf={'end'}>
-          Available: {userCap - investorIssued}$pKELVIN
+          Available: {userCap - investorIssued}$nKELVIN
         </Text>
       </Grid>
     </>
