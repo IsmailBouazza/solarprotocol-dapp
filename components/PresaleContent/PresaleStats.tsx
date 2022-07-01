@@ -4,14 +4,18 @@ import {
   Heading,
   HStack,
   Progress,
+  Spinner,
   Text,
 } from '@chakra-ui/react'
-import { useState } from 'react'
+import { ethers } from 'ethers'
+import { useEffect, useState } from 'react'
 import Countdown, {
   CountdownRendererFn,
   CountdownRenderProps,
 } from 'react-countdown'
-import { palette } from '../../config/constants'
+import { useContractRead } from 'wagmi'
+import { palette, presaleContractConfig } from '../../config/constants'
+import { IEpoch } from '../../config/types'
 
 import useMounted from '../../hooks/useMounted'
 import useWeb3Formatter from '../../hooks/useWeb3Formatter'
@@ -41,57 +45,107 @@ export default function PresaleStats() {
     }
   }
   // WEB3
-  // Address
   // endsAt
-  // const [endsAt, setEndsAt] = useState<number>(0)
-  // // const { isError: endsAtErr, isLoading: endsAtLoad } = useContractRead(
-  // //   presaleContractConfig,
-  // //   'getEndsAt',
-  // //   {
-  // //     chainId: 250,
-  // //     onSettled(data, error) {
-  // //       if (error) console.log('Error on endsAt', error)
-  // //       console.log('endsAt', Number(data))
-  // //       setEndsAt(Number(data))
-  // //       console.log('ended condition', Number(data) < Date.now())
-  // //       setEnded(Number(data) < Date.now()) // TODO: UNCOMENT THIS AND REMOVE TEST STATEMENT
-  // //       // setEnded(false)
-  // //     },
-  // //   }
-  // // )
-  // // currentEpoch
-  // const [currentEpoch, setCurrentEpoch] = useState<IEpoch>()
-  // function buildEpoch(data: unknown) {
-  //   const temp = data as IEpoch
-  //   const epoch: IEpoch = {
-  //     id: Number(temp['id']),
-  //     duration: Number(temp['duration']),
-  //     price: Number(temp['price']),
-  //     epochUserCap: Number(temp['epochUserCap']),
-  //     userCap: Number(temp['userCap']),
-  //     epochTotalCap: Number(temp['epochTotalCap']),
-  //     totalCap: Number(temp['totalCap']),
-  //     whitelistIds: temp['whitelistIds'].map((val) => {
-  //       return Number(val)
-  //     }),
-  //   }
-  //   return epoch
-  // }
-  // const { isError: currentEpochErr, isLoading: currentEpochLoad } =
-  //   useContractRead(presaleContractConfig, 'getCurrentEpoch', {
-  //     chainId: 250,
-  //     onSettled(data, error) {
-  //       if (error) console.log('Error on currentEpoch', error)
-  //       console.log('currentEpoch', buildEpoch(data))
-  //       setCurrentEpoch(buildEpoch(data))
-  //       // setEndsAt(Number(data))
-  //       // setEnded(Number(data) < Date.now()) // TODO: UNCOMENT THIS AND REMOVE TEST STATEMENT
-  //       // // setEnded(false)
-  //     },
-  //   })
+  const [endsAt, setEndsAt] = useState<number>(0)
+  const { isError: endsAtErr, isLoading: endsAtLoad } = useContractRead(
+    presaleContractConfig,
+    'getEndsAt',
+    {
+      chainId: 250,
+      onSettled(data, error) {
+        if (error) console.log('📅 Error on endsAt', error)
+        console.log('📅 endsAt', Number(data))
+        setEndsAt(Number(data))
+        console.log('📅 ended condition', Number(data) < Date.now())
+        setEnded(Number(data) > Date.now()) // TODO: UNCOMENT THIS AND REMOVE TEST STATEMENT
+        // setEnded(false)
+      },
+    }
+  )
+  // currentEpoch
+  const [currentEpoch, setCurrentEpoch] = useState<IEpoch>()
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  function buildEpoch(data: any) {
+    const epoch: IEpoch = {
+      id: Number(data.epoch['id']),
+      duration: Number(data.epoch['duration']),
+      price: Number(data.epoch['price']),
+      epochUserCap: Number(data.epoch['epochUserCap']),
+      userCap: Number(data.epoch['userCap']),
+      epochTotalCap: Number(data.epoch['epochTotalCap']),
+      totalCap: Number(data.epoch['totalCap']),
+      whitelistIds: data.epoch[7].map((val: ethers.BigNumberish) => {
+        return Number(val)
+      }),
+      endsAt: Number(data.endsAt),
+    }
+    return epoch
+  }
+  const { isError: currentEpochErr, isLoading: currentEpochLoad } =
+    useContractRead(presaleContractConfig, 'getCurrentEpoch', {
+      chainId: 250,
+      onSettled(data, error) {
+        if (error) console.log('📅 Error on currentEpoch', error)
+        if (!data) return
+        console.log('📅 currentEpoch', buildEpoch(data))
+        setCurrentEpoch(buildEpoch(data))
+        // setEndsAt(Number(data))
+        // setEnded(Number(data) < Date.now()) // TODO: UNCOMENT THIS AND REMOVE TEST STATEMENT
+        // // setEnded(false)
+      },
+    })
+  // getTotalCap
+  const [totalCap, setTotalCap] = useState<number>(0)
+  const { isError: totalCapErr, isLoading: totalCapLoad } = useContractRead(
+    presaleContractConfig,
+    'getTotalCap',
+    {
+      chainId: 250,
+      onSettled(data, error) {
+        if (error) console.log('📅 Error on totalCap', error)
+        const formatted = Number(
+          ethers.utils.formatEther(data as unknown as string)
+        )
+        console.log('📅 totalCap', formatted)
+        setTotalCap(formatted)
+      },
+    }
+  )
+  // getTotalIssued
+  const [totalIssued, settotalIssued] = useState<number>(0)
+  const { isError: totalIssuedErr, isLoading: totalIssuedLoad } =
+    useContractRead(presaleContractConfig, 'getTotalIssued', {
+      chainId: 250,
+      onSettled(data, error) {
+        if (error) console.log('📅 Error on totalIssued', error)
+        const formatted = Number(
+          ethers.utils.formatEther(data as unknown as string)
+        )
+        console.log('📅 totalIssued', formatted)
+        settotalIssued(formatted)
+      },
+    })
+
+  // getTotalInvested
+  const [totalInvested, setTotalInvested] = useState<number>(0)
+  const { isError: totalInvestedErr, isLoading: totalInvestedLoad } =
+    useContractRead(presaleContractConfig, 'getTotalInvested', {
+      chainId: 250,
+      onSettled(data, error) {
+        if (error) console.log('📅 Error on totalInvested', error)
+        const formatted = Number(
+          ethers.utils.formatUnits(data as unknown as string, 6)
+        )
+        console.log('📅 totalInvested', formatted)
+        setTotalInvested(formatted)
+      },
+    })
   // Progress
-  const [percent] = useState(50)
-  const [ended] = useState(true)
+  const [percent, setPercent] = useState(0)
+  useEffect(() => {
+    if (totalIssued && totalCap) setPercent((totalIssued / totalCap) * 100)
+  }, [totalIssued, totalCap])
+  const [ended, setEnded] = useState(true)
   return (
     <>
       {ended ? (
@@ -99,6 +153,60 @@ export default function PresaleStats() {
           <Heading>PRESALE HAS ENDED</Heading>
           <Heading>SOLAR LAUNCH IN</Heading>
           <Countdown date={1657306800000} renderer={renderer} />
+        </>
+      ) : (
+        <>
+          {currentEpochErr ? (
+            <Text>
+              There was an error fetching the current epoch&apos;s data.
+            </Text>
+          ) : currentEpochLoad ? (
+            <Spinner />
+          ) : (
+            <>
+              {' '}
+              <Text fontSize={'4xl'}>
+                Presale{' '}
+                <b style={{ color: palette.main.buttonLightBorder }}>Stats</b>
+              </Text>
+              <Grid
+                templateColumns={{
+                  base: '1fr',
+                  lg: 'repeat(2, 1fr)',
+                  xl: 'repeat(3, 1fr)',
+                }}
+                fontSize={'xl'}
+                w="full"
+                justifyItems={'start'}
+              >
+                <Text>Phase: {currentEpoch?.id}</Text>
+                <HStack justifySelf={'center'}>
+                  <Text>Presale ends in:</Text>
+                  {mounted && endsAtErr ? (
+                    <>Error fetching endsAt</>
+                  ) : (
+                    <>
+                      {endsAtLoad ? (
+                        <Spinner />
+                      ) : (
+                        <Countdown date={endsAt * 1000} renderer={renderer} />
+                      )}
+                    </>
+                  )}
+                </HStack>
+                <HStack justifySelf={'end'}>
+                  <Text>Next phase in:</Text>
+                  {mounted && currentEpoch && (
+                    <Countdown
+                      date={currentEpoch.endsAt * 1000}
+                      renderer={renderer}
+                    />
+                  )}
+                </HStack>
+              </Grid>
+            </>
+          )}
+          <Divider borderBottomWidth={'2px'} opacity={1} />
           <Grid
             templateColumns={{
               base: '1fr',
@@ -108,8 +216,43 @@ export default function PresaleStats() {
             w="full"
             justifyItems={'center'}
           >
-            <Text justifySelf="start">Tokens Sold 50/1500</Text>
-            <Text justifySelf="end">USDC Raised: $500.00</Text>
+            <Text justifySelf="start">
+              Tokens Sold{' '}
+              {totalIssuedErr ? (
+                <>Error fetching totalIssued</>
+              ) : (
+                <>
+                  {totalIssuedLoad ? (
+                    <Spinner />
+                  ) : (
+                    totalIssued.toLocaleString('en-GB')
+                  )}
+                </>
+              )}
+              /
+              {totalCapErr ? (
+                <>Error fetching totalCap</>
+              ) : (
+                <>
+                  {totalCapLoad ? (
+                    <Spinner />
+                  ) : (
+                    totalCap.toLocaleString('en-GB')
+                  )}
+                </>
+              )}
+            </Text>
+            {totalInvestedErr ? (
+              <Text justifySelf="end">
+                There was an error fetching totalInvested
+              </Text>
+            ) : totalInvestedLoad ? (
+              <Spinner />
+            ) : (
+              <Text justifySelf="end">
+                USDC Raised: ${totalInvested.toFixed(2)}
+              </Text>
+            )}
           </Grid>
           <Progress
             value={percent}
@@ -120,36 +263,6 @@ export default function PresaleStats() {
             rounded={'xl'}
             colorScheme={'purple'}
           />
-        </>
-      ) : (
-        <>
-          <Text fontSize={'4xl'}>
-            Presale{' '}
-            <b style={{ color: palette.main.buttonLightBorder }}>Stats</b>
-          </Text>
-          <Grid
-            templateColumns={{
-              base: '1fr',
-              lg: 'repeat(2, 1fr)',
-              xl: 'repeat(3, 1fr)',
-            }}
-            fontSize={'xl'}
-            w="full"
-            justifyItems={'start'}
-          >
-            <Text>Phase: 1</Text>
-            <HStack justifySelf={'center'}>
-              <Text>Presale ends in:</Text>
-              {/* {mounted && <Countdown date={endsAt} renderer={renderer} />} */}
-            </HStack>
-            <HStack justifySelf={'end'}>
-              <Text>Next phase in:</Text>
-              {mounted && (
-                <Countdown date={1656618145000} renderer={renderer} />
-              )}
-            </HStack>
-          </Grid>
-          <Divider borderBottomWidth={'2px'} opacity={1} />
         </>
       )}
     </>

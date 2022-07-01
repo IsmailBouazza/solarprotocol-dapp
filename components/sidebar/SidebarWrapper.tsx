@@ -6,7 +6,6 @@ import {
   Flex,
   Icon,
   useColorModeValue,
-  Link,
   Drawer,
   DrawerContent,
   Text,
@@ -96,6 +95,7 @@ interface SidebarProps extends BoxProps {
 }
 
 const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
+  const router = useRouter()
   return (
     <VStack
       backdropFilter="auto"
@@ -112,14 +112,14 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
     >
       <VStack>
         <Flex h="20" alignItems="center" w="full" justifyContent={'center'}>
-          <Link href="/">
-            <Image
-              src="https://raw.githubusercontent.com/SolarProtocol/Media/main/LOGOS%20SOLAR%20PROTOCOL%20PNG/4%20SOLAR%20simbolo%20fondo%20transparente.png"
-              objectFit="contain"
-              h="64px"
-              alt="Solar Logo"
-            />
-          </Link>
+          <Image
+            onClick={() => router.push('/', undefined, { shallow: true })}
+            src="https://raw.githubusercontent.com/SolarProtocol/Media/main/LOGOS%20SOLAR%20PROTOCOL%20PNG/4%20SOLAR%20simbolo%20fondo%20transparente.png"
+            objectFit="contain"
+            h="64px"
+            alt="Solar Logo"
+            cursor={'pointer'}
+          />
           <CloseButton
             display={{ base: 'flex', md: 'none' }}
             onClick={onClose}
@@ -153,39 +153,33 @@ const NavItem = ({ icon, link, children }: NavItemProps) => {
     return router.pathname === link
   }, [link, router.pathname])
   return (
-    <Link
-      p="2"
-      w="full"
-      href={link}
-      style={{ textDecoration: 'none' }}
-      _focus={{ boxShadow: 'none' }}
+    <VStack
+      w="90%"
+      p={4}
+      onClick={() => router.push(link, undefined, { shallow: true })}
+      borderRadius="lg"
+      role="group"
+      cursor="pointer"
+      _hover={{
+        bg: palette.main.buttonLightBorder,
+        color: 'white',
+      }}
+      border={
+        isSelected
+          ? `2px solid ${palette.main.buttonLightBorder}`
+          : '2px solid transparent'
+      }
     >
-      <VStack
-        p="4"
-        borderRadius="lg"
-        role="group"
-        cursor="pointer"
-        _hover={{
-          bg: palette.main.buttonLightBorder,
+      <Icon
+        fontSize="2xl"
+        _groupHover={{
           color: 'white',
         }}
-        border={
-          isSelected
-            ? `2px solid ${palette.main.buttonLightBorder}`
-            : '2px solid transparent'
-        }
-      >
-        <Icon
-          fontSize="2xl"
-          _groupHover={{
-            color: 'white',
-          }}
-          as={icon}
-        />
+        as={icon}
+      />
 
-        <Text>{children}</Text>
-      </VStack>
-    </Link>
+      <Text>{children}</Text>
+    </VStack>
   )
 }
 

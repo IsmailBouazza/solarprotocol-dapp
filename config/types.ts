@@ -7,4 +7,12 @@ export interface IEpoch {
   epochTotalCap: number
   totalCap: number
   whitelistIds: number[]
+  endsAt: number
+}
+
+export interface IInvestInfo {
+  userCap: number
+  investorIssued: number
+  step: number
+  epoch: IEpoch
 }

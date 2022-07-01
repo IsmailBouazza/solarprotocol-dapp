@@ -1,4 +1,4 @@
-import { Grid, Text, Heading, Spinner } from '@chakra-ui/react'
+import { Text, Heading, Spinner } from '@chakra-ui/react'
 import { ethers } from 'ethers'
 import { useState } from 'react'
 import Countdown, {
@@ -6,10 +6,12 @@ import Countdown, {
   CountdownRenderProps,
 } from 'react-countdown'
 import { useAccount, useContractRead } from 'wagmi'
-import { palette, presaleContractConfig } from '../../config/constants'
+import { presaleContractConfig } from '../../config/constants'
 import useMounted from '../../hooks/useMounted'
 import useWeb3Formatter from '../../hooks/useWeb3Formatter'
+import Invest from './Invest'
 import PresaleStats from './PresaleStats'
+import WalletStats from './WalletStats'
 
 export default function PresaleContent() {
   const [started, setStarted] = useState(false)
@@ -51,6 +53,38 @@ export default function PresaleContent() {
       console.log('Error on isWhitelisted', err)
     },
   })
+
+  // isWhitelistedInPresale
+  const [isWhitelistedInPresale, setIsWhitelistedInPresale] = useState(false)
+  const {} = useContractRead(
+    presaleContractConfig,
+    'isWhitelistedIn(address,uint256[])',
+    {
+      args: [accData ? accData.address : ethers.constants.AddressZero, [1]],
+      chainId: 250,
+      onSettled(data, err) {
+        if (err) console.log('Error on isWhitelistedInPresale', err)
+        console.log('☀ isWhitelistedInPresale', data)
+        setIsWhitelistedInPresale(Boolean(data))
+      },
+    }
+  )
+
+  // isWhitelistedInNB
+  const [isWhitelistedInNB, setIsWhitelistedInNB] = useState(false)
+  const {} = useContractRead(
+    presaleContractConfig,
+    'isWhitelistedIn(address,uint256[])',
+    {
+      args: [accData ? accData.address : ethers.constants.AddressZero, [2]],
+      chainId: 250,
+      onSettled(data, err) {
+        if (err) console.log('Error on isWhitelistedInNB', err)
+        console.log('🐻 isWhitelistedInNB', data)
+        setIsWhitelistedInNB(Boolean(data))
+      },
+    }
+  )
   // startsAt
   const [startsAt, setStartsAt] = useState<number>(0)
   const { isError: startsAtErr, isLoading: startsAtLoad } = useContractRead(
@@ -59,11 +93,11 @@ export default function PresaleContent() {
     {
       chainId: 250,
       onSettled(data, error) {
-        if (error) console.log('Error on startsAt', error)
-        console.log('startsAt', Number(data))
+        if (error) console.log('📅 Error on startsAt', error)
+        console.log('📅 startsAt', Number(data))
         setStartsAt(Number(data))
-        setStarted(Number(data) < Date.now()) // TODO: UNCOMENT THIS AND REMOVE TEST STATEMENT
-        // setStarted(true)
+        setStarted(Number(data) * 1000 < Date.now()) // TODO: UNCOMENT THIS AND REMOVE TEST STATEMENT
+        // setStarted(true) // TEST STATEMENT
       },
     }
   )
@@ -76,44 +110,27 @@ export default function PresaleContent() {
         <Spinner />
       ) : (
         <>
-          <Countdown date={startsAt} renderer={renderer} />
+          {isWhitelistedErr ? (
+            <Text position={'absolute'} top={8} right={8}>
+              Error
+            </Text>
+          ) : isWhitelistedLoad ? (
+            <Spinner />
+          ) : isWhitelisted ? (
+            <Text position={'absolute'} top={8} right={8}>
+              Whitelisted {isWhitelistedInPresale && '☀'}
+              {isWhitelistedInNB && '🐻'}
+            </Text>
+          ) : (
+            <Text position={'absolute'} top={8} right={8}>
+              ❌ Not Whitelisted
+            </Text>
+          )}
           {started ? (
             <>
-              {isWhitelistedErr ? (
-                <Text position={'absolute'} top={8} right={8}>
-                  Error
-                </Text>
-              ) : isWhitelistedLoad ? (
-                <Spinner />
-              ) : isWhitelisted ? (
-                <Text position={'absolute'} top={8} right={8}>
-                  yes
-                </Text>
-              ) : (
-                <Text position={'absolute'} top={8} right={8}>
-                  no
-                </Text>
-              )}
-
               <PresaleStats />
-              <Text fontSize={'4xl'}>
-                Wallet{' '}
-                <b style={{ color: palette.main.buttonLightBorder }}>Stats</b>
-              </Text>
-              <Grid
-                templateColumns={{
-                  base: '1fr',
-                  lg: 'repeat(2, 1fr)',
-                  xl: 'repeat(3, 1fr)',
-                }}
-                fontSize={'xl'}
-                w="full"
-                justifyItems={'center'}
-              >
-                <Text justifySelf={'start'}>Max. allocation: 30 $pKELVIN</Text>
-                <Text justifySelf={'center'}>Tokens purchased: 5 $pKELVIN</Text>
-                <Text justifySelf={'end'}>Available: 25 $pKELVIN</Text>
-              </Grid>
+              <WalletStats />
+              <Invest isWhitelisted={Boolean(isWhitelisted)} />
             </>
           ) : (
             <>
@@ -127,7 +144,7 @@ export default function PresaleContent() {
               ) : (
                 <>
                   {startsAt !== 0 && (
-                    <Countdown date={startsAt} renderer={renderer} />
+                    <Countdown date={startsAt * 1000} renderer={renderer} />
                   )}
                 </>
               )}

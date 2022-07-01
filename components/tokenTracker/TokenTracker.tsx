@@ -36,7 +36,7 @@ export default function TokenTracker({
       state(data.value)
     },
   })
-  const { toFormattedValue } = useWeb3Formatter()
+  const { balanceToNumber, toFormattedValue } = useWeb3Formatter()
   if (isError || isLoading) return <Spinner size="sm" />
   return (
     <HStack>
@@ -46,7 +46,12 @@ export default function TokenTracker({
         objectFit="contain"
         alt={`token ${address} balance`}
       />
-      <Text>{toFormattedValue(Number(data?.formatted))}</Text>
+      <Text>
+        {data &&
+          toFormattedValue(
+            balanceToNumber(Number(data?.value), data?.decimals)
+          )}
+      </Text>
     </HStack>
   )
 }

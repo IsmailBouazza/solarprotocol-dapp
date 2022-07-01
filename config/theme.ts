@@ -3,7 +3,6 @@ import { palette } from './constants'
 
 const config: ThemeConfig = {
   initialColorMode: 'dark',
-  useSystemColorMode: true,
 }
 
 export const theme = extendTheme({
@@ -12,16 +11,6 @@ export const theme = extendTheme({
     body: 'Ubuntu, sans-serif',
   },
   components: {
-    Text: {
-      baseStyle: () => ({
-        color: 'white',
-      }),
-    },
-    Heading: {
-      baseStyle: () => ({
-        color: 'white',
-      }),
-    },
     Button: {
       variants: {
         solid: () => ({

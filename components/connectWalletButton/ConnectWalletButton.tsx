@@ -136,15 +136,15 @@ export default function ConnectWalletButton() {
                           staleTime={5000}
                         />
                       </HStack>
-                      {/* <TokenTracker
-                        tokenLogo="https://assets.coingecko.com/coins/images/19158/small/beets-icon-large.png?1634545465"
+                      <TokenTracker
+                        tokenLogo="https://assets.coingecko.com/coins/images/6319/small/USD_Coin_icon.png?1547042389"
                         address={data.address}
-                        token="0xF24Bcf4d1e507740041C9cFd2DddB29585aDCe1e"
+                        token="0x04068DA6C83AFCFA0e13ba15A6696662335D5B75"
                         watch={true}
                         cacheTime={5000}
                         chainId={250}
                         staleTime={5000}
-                      /> */}
+                      />
                     </>
                   ) : (
                     <>

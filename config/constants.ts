@@ -28,7 +28,7 @@ export const METIS_CHAIN_PARAMS = {
 }
 
 export const presaleContractConfig = {
-  addressOrName: '0xdE1dEBADfc466cc50BBaad33917a954d9D77b874',
+  addressOrName: '0x0642d02271eBC831583F54d726D5aC9BF6709E2d',
   contractInterface: PresaleABI,
 }
 
@@ -68,33 +68,11 @@ interface ISecondsByDuration {
 }
 
 export const networkDetails: INetworkDetails = {
-  43114: {
-    rpcUrl: 'https://api.avax.network/ext/bc/C/rpc',
-    chainProviders: new ethers.providers.JsonRpcProvider(
-      'https://api.avax.network/ext/bc/C/rpc'
-    ),
-    blockExplorerURL: 'https://snowtrace.io/',
-    blockExplorerName: 'Snowtrace',
-    prefix: 'avax',
-    logoURI:
-      'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/avalanchex/info/logo.png',
-  },
-  137: {
-    rpcUrl: 'https://polygon-rpc.com/',
-    chainProviders: new ethers.providers.JsonRpcProvider(
-      'https://polygon-rpc.com/'
-    ),
-    blockExplorerURL: 'https://polygonscan.com/',
-    blockExplorerName: 'Polygonscan',
-    prefix: 'polygon',
-    logoURI:
-      'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/polygon/info/logo.png',
-  },
   250: {
-    rpcUrl: 'https://rpc.ftm.tools/',
+    rpcUrl: 'https://rpc.ankr.com/fantom',
 
     chainProviders: new ethers.providers.JsonRpcProvider(
-      'https://rpc.ftm.tools/'
+      'https://rpc.ankr.com/fantom'
     ),
 
     blockExplorerURL: 'https://ftmscan.com',
@@ -103,52 +81,53 @@ export const networkDetails: INetworkDetails = {
     logoURI:
       'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/fantom/info/logo.png',
   },
-  1: {
-    rpcUrl: 'https://rpc.ankr.com/eth',
+  // 1: {
+  //   rpcUrl: 'https://rpc.ankr.com/eth',
 
-    chainProviders: new ethers.providers.JsonRpcProvider(
-      'https://rpc.ankr.com/eth'
-    ),
+  //   chainProviders: new ethers.providers.JsonRpcProvider(
+  //     'https://rpc.ankr.com/eth'
+  //   ),
 
-    blockExplorerURL: 'https://etherscan.io/',
-    blockExplorerName: 'Etherscan',
-    prefix: 'ethereum',
-    logoURI:
-      'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/info/logo.png',
-  },
-  10: {
-    rpcUrl: 'https://mainnet.optimism.io',
-    chainProviders: new ethers.providers.JsonRpcProvider(
-      'https://mainnet.optimism.io'
-    ),
-    blockExplorerURL: 'https://optimistic.etherscan.io/',
-    blockExplorerName: 'Etherscan',
-    prefix: 'optimism',
-    logoURI:
-      'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/optimism/info/logo.png',
-  },
-  56: {
-    rpcUrl: 'https://bsc-dataseed.binance.org',
-    chainProviders: new ethers.providers.JsonRpcProvider(
-      'https://bsc-dataseed.binance.org'
-    ),
-    blockExplorerURL: 'https://www.bscscan.com/',
-    blockExplorerName: 'BscScan',
-    prefix: 'bsc',
-    logoURI:
-      'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/binance/info/logo.png',
-  },
+  //   blockExplorerURL: 'https://etherscan.io/',
+  //   blockExplorerName: 'Etherscan',
+  //   prefix: 'ethereum',
+  //   logoURI:
+  //     'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/info/logo.png',
+  // },
+  // 10: {
+  //   rpcUrl: 'https://mainnet.optimism.io',
+  //   chainProviders: new ethers.providers.JsonRpcProvider(
+  //     'https://mainnet.optimism.io'
+  //   ),
+  //   blockExplorerURL: 'https://optimistic.etherscan.io/',
+  //   blockExplorerName: 'Etherscan',
+  //   prefix: 'optimism',
+  //   logoURI:
+  //     'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/optimism/info/logo.png',
+  // },
+  // 56: {
+  //   rpcUrl: 'https://bsc-dataseed.binance.org',
+  //   chainProviders: new ethers.providers.JsonRpcProvider(
+  //     'https://bsc-dataseed.binance.org'
+  //   ),
+  //   blockExplorerURL: 'https://www.bscscan.com/',
+  //   blockExplorerName: 'BscScan',
+  //   prefix: 'bsc',
+  //   logoURI:
+  //     'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/binance/info/logo.png',
+  // },
 }
 
 export const ftmChain: Chain = {
   id: 250,
   name: 'Fantom',
   network: 'Fantom Opera',
-  rpcUrls: { default: 'https://rpc.ftm.tools' },
+  rpcUrls: { default: 'https://rpc.fantom.network' },
   blockExplorers: { default: { name: 'ftmscan', url: 'https://ftmscan.com' } },
   nativeCurrency: { name: 'Fantom', symbol: 'FTM', decimals: 18 },
 }
 
+export const USDCAddress = '0x04068DA6C83AFCFA0e13ba15A6696662335D5B75'
 export const allChains: Chain[] = [...defaultChains, ftmChain]
 
 export const secondsByDuration: ISecondsByDuration = {
