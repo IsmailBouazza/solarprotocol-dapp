@@ -185,6 +185,7 @@ export default function Invest({ isWhitelisted }: { isWhitelisted: boolean }) {
           clampValueOnBlur={false}
           step={step}
           min={step}
+          color="white"
         >
           <NumberInputField />
           <NumberInputStepper>
