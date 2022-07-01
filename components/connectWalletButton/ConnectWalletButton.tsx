@@ -89,7 +89,7 @@ export default function ConnectWalletButton() {
             {isConnected ? (
               <Text>Connected with {data?.connector?.name}</Text>
             ) : (
-              'Connect Wallet'
+              <Text>Connect Wallet</Text>
             )}
           </ModalHeader>
           <ModalCloseButton />
