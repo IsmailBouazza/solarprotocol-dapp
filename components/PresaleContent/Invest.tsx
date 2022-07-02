@@ -92,6 +92,7 @@ export default function Invest({
       chainId: 250,
       onSettled(data, error) {
         if (error) console.log('📈 Error on getStep', error)
+        if (!data) return
         const formatted = Number(
           ethers.utils.formatEther(data as unknown as string)
         )
@@ -276,6 +277,9 @@ export default function Invest({
           <FiInfo color="white" />
         </HStack>
       </Tooltip>
+      <Text fontSize={'lg'} textAlign="center">
+        1$nKELVIN = {currentEpoch && currentEpoch.price}$USDC
+      </Text>
 
       <Grid
         gap={2}

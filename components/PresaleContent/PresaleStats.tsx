@@ -121,6 +121,7 @@ export default function PresaleStats() {
     chainId: 250,
     onSettled(data, error) {
       if (error) console.log('📅 Error on totalIssued', error)
+      if (!data) return
       const formatted = Number(
         ethers.utils.formatEther(data as unknown as string)
       )

@@ -1,4 +1,11 @@
-import { Text, Heading, Spinner, Button, Image } from '@chakra-ui/react'
+import {
+  Text,
+  Heading,
+  Spinner,
+  Button,
+  Image,
+  Tooltip,
+} from '@chakra-ui/react'
 import { ethers } from 'ethers'
 import { useState } from 'react'
 import Countdown, {
@@ -140,23 +147,29 @@ export default function PresaleContent() {
       ) : (
         <>
           {window.ethereum ? (
-            <Button
-              position={'absolute'}
-              p={4}
-              py={6}
-              top={8}
-              left={8}
-              onClick={() =>
-                addToken(presaleContractConfig.addressOrName, 'nKELVIN')
-              }
+            <Tooltip
+              hasArrow
+              aria-label="Add $nKELVIN to Metamask"
+              label="Add $nKELVIN to Metamask"
             >
-              <Image
-                src={connectorIcons['MetaMask'].logoURI}
-                alt="MetaMask logo"
-                minH="32px"
-              />
-              +
-            </Button>
+              <Button
+                position={'absolute'}
+                p={4}
+                py={6}
+                top={8}
+                left={8}
+                onClick={() =>
+                  addToken(presaleContractConfig.addressOrName, 'nKELVIN')
+                }
+              >
+                <Image
+                  src={connectorIcons['MetaMask'].logoURI}
+                  alt="MetaMask logo"
+                  minH="32px"
+                />
+                +
+              </Button>
+            </Tooltip>
           ) : (
             <Button
               disabled

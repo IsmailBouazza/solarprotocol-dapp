@@ -18,10 +18,7 @@ export default function InvestButton({
   invest,
 }: InvestButtonProps) {
   return (
-    <Tooltip
-      label={currentEpoch && `Cost: ${currentEpoch.price * amount}$USDC`}
-      aria-label="Cost"
-    >
+    <>
       {max - issued >= amount ? (
         <>
           {isLoading ? (
@@ -29,9 +26,17 @@ export default function InvestButton({
               Buy {amount} $nKELVIN
             </Button>
           ) : (
-            <Button onClick={() => invest(amount)}>
-              Buy {amount} $nKELVIN
-            </Button>
+            <Tooltip
+              hasArrow
+              label={
+                currentEpoch && `Cost: ${currentEpoch.price * amount}$USDC`
+              }
+              aria-label={`Cost of ${amount}`}
+            >
+              <Button onClick={() => invest(amount)}>
+                Buy {amount} $nKELVIN
+              </Button>
+            </Tooltip>
           )}
         </>
       ) : (
@@ -39,6 +44,6 @@ export default function InvestButton({
           Allocation exceeded
         </Button>
       )}
-    </Tooltip>
+    </>
   )
 }
