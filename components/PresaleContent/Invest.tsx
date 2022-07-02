@@ -273,7 +273,7 @@ export default function Invest({
             Invest
           </Text>
 
-          <FiInfo />
+          <FiInfo color="white" />
         </HStack>
       </Tooltip>
 
