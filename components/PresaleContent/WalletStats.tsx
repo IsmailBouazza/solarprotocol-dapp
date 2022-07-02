@@ -1,47 +1,11 @@
-import { Grid, Spinner, Text } from '@chakra-ui/react'
-import { ethers } from 'ethers'
-import { useState } from 'react'
-import { useAccount, useContractRead } from 'wagmi'
-import { palette, presaleContractConfig } from '../../config/constants'
+import { Grid, HStack, Text, Tooltip } from '@chakra-ui/react'
+import { useContext } from 'react'
+import { FiInfo } from 'react-icons/fi'
+import { palette } from '../../config/constants'
+import { SolarContext } from '../../context/SolarContext'
 
 export default function WalletStats() {
-  // WEB3
-  const { data: userData } = useAccount()
-  // userCap
-  const [userCap, setUserCap] = useState<number>(0)
-  const { isError: userCapErr, isLoading: userCapLoad } = useContractRead(
-    presaleContractConfig,
-    'getUserCap',
-    {
-      chainId: 250,
-      onSettled(data, error) {
-        if (error) console.log('💰 Error on userCap', error)
-        const formatted = Number(
-          ethers.utils.formatEther(data as unknown as string)
-        )
-        console.log('💰 userCap', formatted)
-        setUserCap(formatted)
-      },
-    }
-  )
-
-  // investorIssued
-  const [investorIssued, setInvestorIssued] = useState<number>(0)
-  const { isError: investorIssuedErr, isLoading: investorIssuedLoad } =
-    useContractRead(presaleContractConfig, 'balanceOf', {
-      chainId: 250,
-      args: [userData?.address],
-      onSettled(data, error) {
-        if (error) console.log('💰 Error on investorIssued', error)
-        if (!data) return
-        const formatted = Number(
-          ethers.utils.formatEther(data as unknown as string)
-        )
-        console.log('💰 investorIssued', formatted)
-        setInvestorIssued(formatted)
-      },
-    })
-
+  const { Presale } = useContext(SolarContext)
   return (
     <>
       <Text fontSize={'4xl'} textAlign={'center'}>
@@ -57,27 +21,34 @@ export default function WalletStats() {
         justifyItems={'center'}
         textAlign="center"
       >
-        {userCapErr ? (
-          <Text>Error fetching userCap</Text>
-        ) : userCapLoad ? (
-          <Spinner />
-        ) : (
-          <Text justifySelf={{ base: 'center', '2xl': 'start' }}>
-            Max. allocation: {userCap}$nKELVIN
-          </Text>
+        {Presale.userCap && (
+          <Tooltip label="Max $nKELVIN allocation per wallet." hasArrow>
+            <HStack justifySelf={{ base: 'center', '2xl': 'start' }}>
+              <Text>Max. allocation: {Presale.userCap}$nKELVIN</Text>
+              <FiInfo />
+            </HStack>
+          </Tooltip>
         )}
-        {investorIssuedErr ? (
-          <Text justifySelf={'center'}>Error fetching investorIssued</Text>
-        ) : investorIssuedLoad ? (
-          <Spinner />
-        ) : (
-          <Text justifySelf={'center'}>
-            Tokens purchased: {investorIssued}$nKELVIN
-          </Text>
+
+        {Presale.tokensIssued !== undefined && (
+          <Tooltip label="$nKELVIN purchased by this wallet." hasArrow>
+            <HStack justifySelf={'center'} textAlign="center">
+              <Text>Tokens purchased: {Presale.tokensIssued}$nKELVIN</Text>
+
+              <FiInfo />
+            </HStack>
+          </Tooltip>
         )}
-        <Text justifySelf={{ base: 'center', '2xl': 'end' }}>
-          Available: {userCap - investorIssued}$nKELVIN
-        </Text>
+        {Presale.userCap !== undefined && Presale.tokensIssued !== undefined && (
+          <Tooltip label="$nKELVIN tokens available for this wallet." hasArrow>
+            <HStack justifySelf={{ base: 'center', '2xl': 'end' }}>
+              <Text>
+                Available: {Presale.userCap - Presale.tokensIssued}$nKELVIN
+              </Text>
+              <FiInfo />
+            </HStack>
+          </Tooltip>
+        )}
       </Grid>
     </>
   )

@@ -6,14 +6,13 @@ import {
   Image,
   Tooltip,
 } from '@chakra-ui/react'
-import { ethers } from 'ethers'
-import { useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import Countdown, {
   CountdownRendererFn,
   CountdownRenderProps,
 } from 'react-countdown'
-import { useAccount, useContractRead } from 'wagmi'
 import { connectorIcons, presaleContractConfig } from '../../config/constants'
+import { SolarContext } from '../../context/SolarContext'
 import useMounted from '../../hooks/useMounted'
 import useWeb3Formatter from '../../hooks/useWeb3Formatter'
 import Invest from './Invest'
@@ -23,6 +22,7 @@ import WalletStats from './WalletStats'
 export default function PresaleContent() {
   const [started, setStarted] = useState(false)
   const { addLeadingZeroes } = useWeb3Formatter()
+
   const renderer: CountdownRendererFn = ({
     hours,
     minutes,
@@ -46,80 +46,12 @@ export default function PresaleContent() {
     }
   }
   // WEB3
-  // Address
-  const { data: accData } = useAccount()
-  // isWhitelisted
-  const {
-    data: isWhitelisted,
-    isError: isWhitelistedErr,
-    isLoading: isWhitelistedLoad,
-  } = useContractRead(presaleContractConfig, 'isWhitelisted', {
-    args: accData ? accData.address : ethers.constants.AddressZero,
-    chainId: 250,
-    onError(err) {
-      console.log('Error on isWhitelisted', err)
-    },
-  })
+  const { Presale } = useContext(SolarContext)
 
-  // whitelistId
-  const [whitelistId, setWhitelistId] = useState(0)
-  const {} = useContractRead(presaleContractConfig, 'getAccountWhitelist', {
-    args: [accData ? accData.address : ethers.constants.AddressZero],
-    chainId: 250,
-    onSettled(data, err) {
-      if (err) console.log('Error on whitelistId', err)
-      if (!data) return
-      setWhitelistId(Number(data))
-    },
-  })
-
-  // isWhitelistedInPresale
-  const [isWhitelistedInPresale, setIsWhitelistedInPresale] = useState(false)
-  const {} = useContractRead(
-    presaleContractConfig,
-    'isWhitelistedIn(address,uint256[])',
-    {
-      args: [accData ? accData.address : ethers.constants.AddressZero, [1]],
-      chainId: 250,
-      onSettled(data, err) {
-        if (err) console.log('Error on isWhitelistedInPresale', err)
-        console.log('☀ isWhitelistedInPresale', data)
-        setIsWhitelistedInPresale(Boolean(data))
-      },
-    }
-  )
-
-  // isWhitelistedInNB
-  const [isWhitelistedInNB, setIsWhitelistedInNB] = useState(false)
-  const {} = useContractRead(
-    presaleContractConfig,
-    'isWhitelistedIn(address,uint256[])',
-    {
-      args: [accData ? accData.address : ethers.constants.AddressZero, [2]],
-      chainId: 250,
-      onSettled(data, err) {
-        if (err) console.log('Error on isWhitelistedInNB', err)
-        console.log('🐻 isWhitelistedInNB', data)
-        setIsWhitelistedInNB(Boolean(data))
-      },
-    }
-  )
-  // startsAt
-  const [startsAt, setStartsAt] = useState<number>(0)
-  const { isError: startsAtErr, isLoading: startsAtLoad } = useContractRead(
-    presaleContractConfig,
-    'getStartsAt',
-    {
-      chainId: 250,
-      onSettled(data, error) {
-        if (error) console.log('📅 Error on startsAt', error)
-        console.log('📅 startsAt', Number(data))
-        setStartsAt(Number(data))
-        setStarted(Number(data) * 1000 < Date.now()) // TODO: UNCOMENT THIS AND REMOVE TEST STATEMENT
-        // setStarted(true) // TEST STATEMENT
-      },
-    }
-  )
+  useEffect(() => {
+    if (!Presale.startsAt) return
+    setStarted(Presale.startsAt * 1000 < Date.now())
+  }, [Presale.startsAt])
 
   const mounted = useMounted()
 
@@ -142,7 +74,7 @@ export default function PresaleContent() {
 
   return (
     <>
-      {!mounted ? (
+      {!mounted || Presale.loading ? (
         <Spinner />
       ) : (
         <>
@@ -190,24 +122,14 @@ export default function PresaleContent() {
               +
             </Button>
           )}
-          {isWhitelistedErr ? (
+          {Presale.whitelistId !== 0 ? (
             <Text
               position={'absolute'}
               top={{ base: 2, lg: 8 }}
               right={{ base: 2, lg: 8 }}
             >
-              Error
-            </Text>
-          ) : isWhitelistedLoad ? (
-            <Spinner />
-          ) : isWhitelisted ? (
-            <Text
-              position={'absolute'}
-              top={{ base: 2, lg: 8 }}
-              right={{ base: 2, lg: 8 }}
-            >
-              Whitelisted {isWhitelistedInPresale && '☀'}
-              {isWhitelistedInNB && '🐻'}
+              Whitelisted {Presale.whitelistId === 1 && '☀'}
+              {Presale.whitelistId === 2 && '🐻'}
             </Text>
           ) : (
             <Text
@@ -222,26 +144,20 @@ export default function PresaleContent() {
             <>
               <PresaleStats />
               <WalletStats />
-              <Invest
-                whitelistId={whitelistId}
-                isWhitelisted={Boolean(isWhitelisted)}
-              />
+              {Presale.whitelistId !== undefined && (
+                <Invest
+                  whitelistId={Presale.whitelistId}
+                  isWhitelisted={Boolean(
+                    Presale.whitelistId !== undefined ||
+                      Presale.whitelistId !== 0
+                  )}
+                />
+              )}
             </>
           ) : (
             <>
-              {startsAtErr ? (
-                <Text>There was an error fetching the Start timestamp</Text>
-              ) : startsAtLoad ? (
-                <>
-                  {' '}
-                  <Spinner size={'lg'} />
-                </>
-              ) : (
-                <>
-                  {startsAt !== 0 && (
-                    <Countdown date={startsAt * 1000} renderer={renderer} />
-                  )}
-                </>
+              {Presale.startsAt && (
+                <Countdown date={Presale.startsAt * 1000} renderer={renderer} />
               )}
             </>
           )}

@@ -1,52 +1,11 @@
 import { ethers } from 'ethers'
 import { Chain, defaultChains } from 'wagmi'
 import { PresaleABI } from './abis'
-
-export const FTM_CHAIN_PARAMS_ADD = {
-  chainId: '0x19',
-  chainName: 'Fantom',
-  nativeCurrency: {
-    name: 'Fantom',
-    symbol: 'FTM', // 2-6 characters long
-    decimals: 18,
-  },
-  rpcUrls: ['https://rpc.ftm.tools/'],
-  blockExplorerUrls: ['https://ftmscan.com/'],
-}
-
-export const METIS_CHAIN_PARAMS = {
-  chainId: '0x19',
-  networkId: 25,
-  chainName: 'Fantom',
-  nativeCurrency: {
-    name: 'Fantom',
-    symbol: 'FTM', // 2-6 characters long
-    decimals: 18,
-  },
-  rpcUrls: ['https://rpc.ftm.tools/'],
-  blockExplorerUrls: ['https://ftmscan.com/'],
-}
+import { IConnectorIcon, INetworkDetails, ISecondsByDuration } from './types'
 
 export const presaleContractConfig = {
   addressOrName: '0x0642d02271eBC831583F54d726D5aC9BF6709E2d',
   contractInterface: PresaleABI,
-}
-
-interface INetworkDetails {
-  [key: number]: {
-    rpcUrl: string
-    chainProviders: ethers.providers.BaseProvider
-    blockExplorerURL: string
-    blockExplorerName: string
-    prefix: string
-    logoURI: string
-  }
-}
-
-interface IConnectorIcon {
-  [key: string]: {
-    logoURI: string
-  }
 }
 
 export const connectorIcons: IConnectorIcon = {
@@ -61,10 +20,6 @@ export const connectorIcons: IConnectorIcon = {
     logoURI:
       'https://raw.githubusercontent.com/WalletConnect/walletconnect-assets/master/png/circle/walletconnect-circle-blue.png',
   },
-}
-
-interface ISecondsByDuration {
-  [key: string]: number
 }
 
 export const networkDetails: INetworkDetails = {
@@ -122,7 +77,7 @@ export const ftmChain: Chain = {
   id: 250,
   name: 'Fantom',
   network: 'Fantom Opera',
-  rpcUrls: { default: 'https://rpc.fantom.network' },
+  rpcUrls: { default: 'https://rpc.ankr.com/fantom' },
   blockExplorers: { default: { name: 'ftmscan', url: 'https://ftmscan.com' } },
   nativeCurrency: { name: 'Fantom', symbol: 'FTM', decimals: 18 },
 }
