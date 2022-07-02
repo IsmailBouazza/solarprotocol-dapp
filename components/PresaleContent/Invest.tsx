@@ -234,7 +234,6 @@ export default function Invest({
   })
 
   async function investWrapper(amount: number) {
-    debugger
     if (!currentEpoch) return
     const cost = amount * currentEpoch.price
     if (cost > balance) {
@@ -247,6 +246,7 @@ export default function Invest({
       )
       return
     }
+    invest()
   }
 
   useEffect(() => {
