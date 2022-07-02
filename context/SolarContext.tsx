@@ -6,18 +6,6 @@ import { IEpoch, IPresale } from '../config/types'
 
 const emptyPresale: IPresale = {
   loading: true,
-  currentEpoch: undefined, // Current epoch parameters
-  name: undefined, // Presale Token Name
-  symbol: undefined, // Presale Token Symbol
-  investmentToken: undefined, // Investment token address
-  startsAt: undefined, // Epoch timestamp when presale starts
-  endsAt: undefined, // Epoch timestamp when presale ends
-  userCap: undefined, // Max amount of tokens to be purchased by a user
-  totalCap: undefined, // Max amount of tokens that can be issued
-  minimalBalance: undefined, // Minimum amount of tokens to purchase
-  step: undefined, // Step between purchase amounts
-  totalInvested: undefined, // amount of investmentTokens deposited
-  totalIssued: undefined, // amount of presale tokens issued
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

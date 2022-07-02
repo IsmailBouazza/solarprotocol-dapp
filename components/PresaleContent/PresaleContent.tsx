@@ -75,7 +75,7 @@ export default function PresaleContent() {
   return (
     <>
       {!mounted || Presale.loading ? (
-        <Spinner />
+        <Spinner color="white" />
       ) : (
         <>
           {window.ethereum ? (
