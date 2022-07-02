@@ -16,7 +16,7 @@ import {
 } from '@chakra-ui/react'
 import { ethers } from 'ethers'
 import { watch } from 'fs'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { FiInfo } from 'react-icons/fi'
 import {
   chainId,
@@ -153,7 +153,7 @@ export default function Invest({
     }
   )
   // toInvest
-  const [toInvest, setToInvest] = useState(5)
+  const [toInvest, setToInvest] = useState(0)
   // invest
   const {
     isError: toInvestErr,
@@ -233,14 +233,13 @@ export default function Invest({
     },
   })
 
-  async function investWrapper(amount: number) {
+  const investWrapper = useCallback(() => {
     debugger
-    setToInvest(amount)
     if (!currentEpoch) return
-    const cost = amount * currentEpoch.price
+    const cost = toInvest * currentEpoch.price
     if (cost > balance) {
       summonToast(
-        `tooExpensive${amount}`,
+        `tooExpensive${toInvest}`,
         'warning',
         <Text color={'black'}>
           You don{"'"}t have enough USDC, {cost} required
@@ -249,7 +248,11 @@ export default function Invest({
       return
     }
     invest()
-  }
+  }, [balance, currentEpoch, invest, summonToast, toInvest])
+  useEffect(() => {
+    console.log('invest n changed')
+    investWrapper()
+  }, [toInvest])
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -310,7 +313,7 @@ export default function Invest({
                             amount={5}
                             issued={investorIssued}
                             max={userCap}
-                            invest={investWrapper}
+                            invest={setToInvest}
                           />
                         )}
                         {userCap - investorIssued >= 10 && (
@@ -320,7 +323,7 @@ export default function Invest({
                             amount={10}
                             issued={investorIssued}
                             max={userCap}
-                            invest={investWrapper}
+                            invest={setToInvest}
                           />
                         )}
                         {userCap - investorIssued >= 15 && (
@@ -330,7 +333,7 @@ export default function Invest({
                             amount={15}
                             issued={investorIssued}
                             max={userCap}
-                            invest={investWrapper}
+                            invest={setToInvest}
                           />
                         )}
                         {userCap - investorIssued >= 20 && (
@@ -340,7 +343,7 @@ export default function Invest({
                             amount={20}
                             issued={investorIssued}
                             max={userCap}
-                            invest={investWrapper}
+                            invest={setToInvest}
                           />
                         )}
                         {userCap - investorIssued >= 25 && (
@@ -350,7 +353,7 @@ export default function Invest({
                             amount={25}
                             issued={investorIssued}
                             max={userCap}
-                            invest={investWrapper}
+                            invest={setToInvest}
                           />
                         )}
                         {userCap - investorIssued >= 30 && (
@@ -360,7 +363,7 @@ export default function Invest({
                             amount={30}
                             issued={investorIssued}
                             max={userCap}
-                            invest={investWrapper}
+                            invest={setToInvest}
                           />
                         )}
                         {userCap === investorIssued && (
