@@ -240,7 +240,7 @@ export default function Invest({
       summonToast(
         `tooExpensive${amount}`,
         'warning',
-        <Text>
+        <Text color={'black'}>
           You don{"'"}t have enough USDC, {cost} required
         </Text>
       )
