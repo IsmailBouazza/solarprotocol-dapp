@@ -234,6 +234,8 @@ export default function Invest({
   })
 
   async function investWrapper(amount: number) {
+    debugger
+    setToInvest(amount)
     if (!currentEpoch) return
     const cost = amount * currentEpoch.price
     if (cost > balance) {
