@@ -25,7 +25,7 @@ export default function WalletStats() {
           <Tooltip label="Max $nKELVIN allocation per wallet." hasArrow>
             <HStack justifySelf={{ base: 'center', '2xl': 'start' }}>
               <Text>Max. allocation: {Presale.userCap}$nKELVIN</Text>
-              <FiInfo />
+              <FiInfo color="white" />
             </HStack>
           </Tooltip>
         )}
@@ -35,7 +35,7 @@ export default function WalletStats() {
             <HStack justifySelf={'center'} textAlign="center">
               <Text>Tokens purchased: {Presale.tokensIssued}$nKELVIN</Text>
 
-              <FiInfo />
+              <FiInfo color="white" />
             </HStack>
           </Tooltip>
         )}
@@ -45,7 +45,7 @@ export default function WalletStats() {
               <Text>
                 Available: {Presale.userCap - Presale.tokensIssued}$nKELVIN
               </Text>
-              <FiInfo />
+              <FiInfo color="white" />
             </HStack>
           </Tooltip>
         )}
