@@ -17,7 +17,13 @@ import {
 import { BiWallet } from 'react-icons/bi'
 import { VscDebugDisconnect } from 'react-icons/vsc'
 import { useEffect } from 'react'
-import { useAccount, useConnect, useDisconnect, useNetwork } from 'wagmi'
+import {
+  useAccount,
+  useConnect,
+  useDisconnect,
+  useNetwork,
+  useSwitchNetwork,
+} from 'wagmi'
 import useMounted from '../../hooks/useMounted'
 import useWeb3Formatter from '../../hooks/useWeb3Formatter'
 import useToastHelper from '../../hooks/useToastHelper'
@@ -27,19 +33,20 @@ import { palette } from '../../config/constants'
 
 export default function ConnectWalletButton() {
   const mounted = useMounted()
-  const { connect, connectors, error, isError, isConnecting, isConnected } =
-    useConnect({
-      onConnect() {
-        onClose()
-        summonToast(
-          'connected',
-          'info',
-          <Text color={'white'} fontWeight="bold">
-            Wallet connected
-          </Text>
-        )
-      },
-    })
+  const { address, isConnected, isConnecting, connector } = useAccount()
+  const { connect, connectors, error, isError, isLoading } = useConnect({
+    chainId: 250,
+    onSuccess(data) {
+      onClose()
+      summonToast(
+        'connected',
+        'info',
+        <Text color={'white'} fontWeight="bold">
+          Wallet connected {data.account}
+        </Text>
+      )
+    },
+  })
   const { disconnect } = useDisconnect({
     onSuccess() {
       summonToast(
@@ -51,17 +58,15 @@ export default function ConnectWalletButton() {
       )
     },
   })
-  const { data } = useAccount()
-  const { activeChain, switchNetwork, isLoading } = useNetwork()
+
+  const { chain } = useNetwork()
+  const { switchNetwork } = useSwitchNetwork()
 
   const { trimmedAddress } = useWeb3Formatter()
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const { hasCopied, onCopy } = useClipboard(
-    data && data.address ? data.address : '',
-    {
-      timeout: 1000,
-    }
-  )
+  const { hasCopied, onCopy } = useClipboard(address ? address : '', {
+    timeout: 1000,
+  })
   const { summonToast } = useToastHelper()
 
   // Show toast on error
@@ -90,7 +95,7 @@ export default function ConnectWalletButton() {
         variant="solid"
         rounded="2xl"
       >
-        {isConnected ? 'Wallet' : 'Connect'}
+        {mounted && isConnected ? 'Wallet' : 'Connect'}
       </Button>
 
       <Modal
@@ -104,7 +109,7 @@ export default function ConnectWalletButton() {
         <ModalContent background={palette.background.gradient}>
           <ModalHeader justifyContent="center" py={2} px={4}>
             {isConnected ? (
-              <Text>Connected with {data?.connector?.name}</Text>
+              <Text>Connected with {connector?.name}</Text>
             ) : (
               <Text>Connect Wallet</Text>
             )}
@@ -116,9 +121,7 @@ export default function ConnectWalletButton() {
                 <HStack w="100%" justifyContent="space-between">
                   <HStack cursor="pointer" onClick={() => onCopy()}>
                     <BiWallet />
-                    <Text>
-                      {data && data.address && trimmedAddress(data.address)}
-                    </Text>
+                    <Text>{address && trimmedAddress(address)}</Text>
                   </HStack>
                   <IconButton
                     variant="ghost"
@@ -128,12 +131,12 @@ export default function ConnectWalletButton() {
                   />
                 </HStack>
                 <HStack w="100%" justifyContent="space-between">
-                  {activeChain?.id === 250 && data?.address ? (
+                  {chain?.id === 250 && address ? (
                     <>
                       <HStack>
                         <TokenTracker
                           tokenLogo="https://assets.coingecko.com/coins/images/4001/small/Fantom.png?1558015016"
-                          address={data.address}
+                          address={address}
                           watch={true}
                           cacheTime={5000}
                           chainId={250}
@@ -142,7 +145,7 @@ export default function ConnectWalletButton() {
                       </HStack>
                       <TokenTracker
                         tokenLogo="https://assets.coingecko.com/coins/images/6319/small/USD_Coin_icon.png?1547042389"
-                        address={data.address}
+                        address={address}
                         token="0x04068DA6C83AFCFA0e13ba15A6696662335D5B75"
                         watch={true}
                         cacheTime={5000}
@@ -181,7 +184,9 @@ export default function ConnectWalletButton() {
                         w="100%"
                         disabled={!connector.ready}
                         key={connector.id}
-                        onClick={() => connect(connector)}
+                        onClick={() =>
+                          connect({ chainId: 250, connector: connector })
+                        }
                         leftIcon={
                           <ConnectWalletButtonIcons
                             connector={connector.name}

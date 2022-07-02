@@ -16,7 +16,7 @@ import {
 } from '@chakra-ui/react'
 import { ethers } from 'ethers'
 import { watch } from 'fs'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useContext, useEffect, useState } from 'react'
 import { FiInfo } from 'react-icons/fi'
 import {
   chainId,
@@ -32,6 +32,7 @@ import {
   USDCAddress,
 } from '../../config/constants'
 import { IEpoch } from '../../config/types'
+import { SolarContext } from '../../context/SolarContext'
 import useToastHelper from '../../hooks/useToastHelper'
 import InvestButton from './InvestButton'
 
@@ -44,114 +45,10 @@ export default function Invest({
 }) {
   const { summonToast } = useToastHelper()
   // WEB3
-  const { data: userData } = useAccount()
-  // userCap
-  const [userCap, setUserCap] = useState<number>(0)
-  const {
-    isError: userCapErr,
-    isLoading: userCapLoad,
-    error,
-  } = useContractRead(presaleContractConfig, 'getUserCap', {
-    chainId: 250,
-    onSettled(data, error) {
-      if (error) console.log('📈 Error on userCap', error)
-      const formatted = Number(
-        ethers.utils.formatEther(data as unknown as string)
-      )
-      console.log('📈 userCap', formatted)
-      setUserCap(formatted)
-    },
-  })
+  const { address } = useAccount()
+  const { Presale } = useContext(SolarContext)
+  //  setIsApproved(Number(data) > 600 * 10 ** 6)
 
-  // investorIssued
-  const [investorIssued, setInvestorIssued] = useState<number>(0)
-  const { refetch: investorIssuedRefetch } = useContractRead(
-    presaleContractConfig,
-    'balanceOf',
-    {
-      chainId: 250,
-      args: [userData?.address],
-      onSettled(data, error) {
-        if (error) console.log('📈 Error on investorIssued', error)
-        if (!data) return
-        const formatted = Number(
-          ethers.utils.formatEther(data as unknown as string)
-        )
-        console.log('📈 investorIssued', formatted)
-        setInvestorIssued(formatted)
-      },
-    }
-  )
-
-  // step
-  const [step, setStep] = useState<number>(0)
-  const { isError: stepErr, isLoading: stepLoad } = useContractRead(
-    presaleContractConfig,
-    'getStep',
-    {
-      chainId: 250,
-      onSettled(data, error) {
-        if (error) console.log('📈 Error on getStep', error)
-        if (!data) return
-        const formatted = Number(
-          ethers.utils.formatEther(data as unknown as string)
-        )
-        console.log('📈 getStep', formatted)
-        setStep(formatted)
-      },
-    }
-  )
-  // currentEpoch
-  const [currentEpoch, setCurrentEpoch] = useState<IEpoch>()
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  function buildEpoch(data: any) {
-    const epoch: IEpoch = {
-      id: Number(data.epoch['id']),
-      duration: Number(data.epoch['duration']),
-      price: Number(data.epoch['price']),
-      epochUserCap: Number(data.epoch['epochUserCap']),
-      userCap: Number(data.epoch['userCap']),
-      epochTotalCap: Number(data.epoch['epochTotalCap']),
-      totalCap: Number(data.epoch['totalCap']),
-      whitelistIds: data.epoch[7].map((val: ethers.BigNumberish) => {
-        return Number(val)
-      }),
-      endsAt: Number(data.endsAt),
-    }
-    return epoch
-  }
-  const { isError: currentEpochErr, isLoading: currentEpochLoad } =
-    useContractRead(presaleContractConfig, 'getCurrentEpoch', {
-      chainId: 250,
-      onSettled(data, error) {
-        if (error) console.log('📈 Error on currentEpoch', error)
-        if (!data) return
-        console.log('📈 currentEpoch', buildEpoch(data))
-        setCurrentEpoch(buildEpoch(data))
-      },
-    })
-
-  // isApproved
-  const [isApproved, setIsApproved] = useState(false)
-  const { refetch: isApprovedRefetch } = useContractRead(
-    {
-      addressOrName: USDCAddress,
-      contractInterface: erc20ABI,
-    },
-    'allowance',
-    {
-      args: [
-        userData ? userData.address : ethers.constants.AddressZero,
-        presaleContractConfig.addressOrName,
-      ],
-      chainId: 250,
-      onSettled(data, error) {
-        if (error) console.log('📈 Error on allowance', error)
-        console.log('📈 allowance', Number(data))
-        setIsApproved(Number(data) > 600 * 10 ** 6)
-      },
-    }
-  )
   // toInvest
   const [toInvest, setToInvest] = useState(0)
   // invest
@@ -159,10 +56,15 @@ export default function Invest({
     isError: toInvestErr,
     isLoading: toInvestLoad,
     write: invest,
-  } = useContractWrite(presaleContractConfig, 'invest', {
+  } = useContractWrite({
+    ...presaleContractConfig,
+    functionName: 'invest',
     args: [
-      currentEpoch
-        ? ethers.utils.parseUnits((toInvest * currentEpoch.price).toString(), 6)
+      Presale.currentEpoch
+        ? ethers.utils.parseUnits(
+            (toInvest * Presale.currentEpoch.price).toString(),
+            6
+          )
         : 0,
     ],
     onSuccess(data) {
@@ -182,7 +84,7 @@ export default function Invest({
       )
     },
     onError(error) {
-      summonToast('investErr', 'error', <>{error.message}</>)
+      summonToast('investErr', 'error', <>{error.name} on invest</>)
     },
   })
   // approve
@@ -190,39 +92,35 @@ export default function Invest({
     isError: approveErr,
     isLoading: approveLoad,
     write: approve,
-  } = useContractWrite(
-    {
-      addressOrName: USDCAddress,
-      contractInterface: erc20ABI,
+  } = useContractWrite({
+    addressOrName: USDCAddress,
+    contractInterface: erc20ABI,
+    functionName: 'approve',
+    args: [presaleContractConfig.addressOrName, ethers.constants.MaxUint256],
+    onSuccess(data) {
+      summonToast(
+        'approve',
+        'info',
+        <>
+          Transaction submitted.{' '}
+          <Link
+            href={`https://ftmscan.com/tx/${data.hash}`}
+            rel="noreferrer"
+            target="_blank"
+          >
+            ftmscan
+          </Link>
+        </>
+      )
     },
-    'approve',
-    {
-      args: [presaleContractConfig.addressOrName, ethers.constants.MaxUint256],
-      onSuccess(data) {
-        summonToast(
-          'approve',
-          'info',
-          <>
-            Transaction submitted.{' '}
-            <Link
-              href={`https://ftmscan.com/tx/${data.hash}`}
-              rel="noreferrer"
-              target="_blank"
-            >
-              ftmscan
-            </Link>
-          </>
-        )
-      },
-      onError(error) {
-        summonToast('approveErr', 'error', <>{error.message}</>)
-      },
-    }
-  )
+    onError(error) {
+      summonToast('approveErr', 'error', <>{error.message}</>)
+    },
+  })
 
   const [balance, setBalance] = useState<number>(0)
   const { data, isError, isLoading } = useBalance({
-    addressOrName: userData ? userData.address : ethers.constants.AddressZero,
+    addressOrName: address ? address : ethers.constants.AddressZero,
     token: USDCAddress,
     watch: true,
     chainId: 250,
@@ -234,9 +132,9 @@ export default function Invest({
   })
 
   const investWrapper = useCallback(() => {
-    debugger
-    if (!currentEpoch) return
-    const cost = toInvest * currentEpoch.price
+    if (!Presale.currentEpoch) return
+    if (toInvest === 0) return
+    const cost = toInvest * Presale.currentEpoch.price
     if (cost > balance) {
       summonToast(
         `tooExpensive${toInvest}`,
@@ -248,19 +146,12 @@ export default function Invest({
       return
     }
     invest()
-  }, [balance, currentEpoch, invest, summonToast, toInvest])
+  }, [Presale.currentEpoch, balance, invest, summonToast, toInvest])
+
   useEffect(() => {
-    console.log('invest n changed')
     investWrapper()
   }, [toInvest])
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      isApprovedRefetch()
-      investorIssuedRefetch()
-    }, 5000)
-    return () => clearInterval(interval)
-  }, [investorIssuedRefetch, isApprovedRefetch])
   return (
     <>
       <Tooltip
@@ -283,7 +174,7 @@ export default function Invest({
         </HStack>
       </Tooltip>
       <Text fontSize={'lg'} textAlign="center">
-        1$nKELVIN = {currentEpoch && currentEpoch.price}$USDC
+        1$nKELVIN = {Presale.currentEpoch && Presale.currentEpoch.price}$USDC
       </Text>
 
       <Grid
@@ -292,88 +183,64 @@ export default function Invest({
           base: '1fr',
           md: 'repeat(2,1fr)',
           lg: 'repeat(3,1fr)',
-          xl: 'repeat(4,1fr)',
-          '2xl': 'repeat(6,1fr)',
         }}
       >
-        {currentEpoch && (
+        {Presale.currentEpoch && (
           <>
             {whitelistId === 0 ? (
-              <Text>You{"'"}re not whitelisted</Text>
+              <Text gridColumn={'1/-1'}>You{"'"}re not whitelisted</Text>
             ) : (
               <>
-                {currentEpoch.id === whitelistId ? (
+                {Presale.currentEpoch.whitelistIds.includes(whitelistId) ? (
                   <>
-                    {isApproved ? (
+                    {Presale.allowance && Presale.allowance > 600 * 10 ** 6 ? (
                       <>
-                        {userCap - investorIssued >= 5 && (
-                          <InvestButton
-                            isLoading={toInvestLoad}
-                            currentEpoch={currentEpoch}
-                            amount={5}
-                            issued={investorIssued}
-                            max={userCap}
-                            invest={setToInvest}
-                          />
+                        {Presale.userCap !== undefined &&
+                        Presale.tokensIssued !== undefined ? (
+                          <>
+                            {Presale.userCap - Presale.tokensIssued >= 5 && (
+                              <InvestButton
+                                isLoading={toInvestLoad}
+                                currentEpoch={Presale.currentEpoch}
+                                amount={5}
+                                issued={Presale.tokensIssued}
+                                max={Presale.userCap}
+                                invest={setToInvest}
+                              />
+                            )}
+                            {Presale.userCap - Presale.tokensIssued >= 10 && (
+                              <InvestButton
+                                isLoading={toInvestLoad}
+                                currentEpoch={Presale.currentEpoch}
+                                amount={10}
+                                issued={Presale.tokensIssued}
+                                max={Presale.userCap}
+                                invest={setToInvest}
+                              />
+                            )}
+                            {Presale.userCap - Presale.tokensIssued >= 30 && (
+                              <InvestButton
+                                isLoading={toInvestLoad}
+                                currentEpoch={Presale.currentEpoch}
+                                amount={30}
+                                issued={Presale.tokensIssued}
+                                max={Presale.userCap}
+                                invest={setToInvest}
+                              />
+                            )}
+                          </>
+                        ) : (
+                          <Text>Error loading wallet data</Text>
                         )}
-                        {userCap - investorIssued >= 10 && (
-                          <InvestButton
-                            isLoading={toInvestLoad}
-                            currentEpoch={currentEpoch}
-                            amount={10}
-                            issued={investorIssued}
-                            max={userCap}
-                            invest={setToInvest}
-                          />
-                        )}
-                        {userCap - investorIssued >= 15 && (
-                          <InvestButton
-                            isLoading={toInvestLoad}
-                            currentEpoch={currentEpoch}
-                            amount={15}
-                            issued={investorIssued}
-                            max={userCap}
-                            invest={setToInvest}
-                          />
-                        )}
-                        {userCap - investorIssued >= 20 && (
-                          <InvestButton
-                            isLoading={toInvestLoad}
-                            currentEpoch={currentEpoch}
-                            amount={20}
-                            issued={investorIssued}
-                            max={userCap}
-                            invest={setToInvest}
-                          />
-                        )}
-                        {userCap - investorIssued >= 25 && (
-                          <InvestButton
-                            isLoading={toInvestLoad}
-                            currentEpoch={currentEpoch}
-                            amount={25}
-                            issued={investorIssued}
-                            max={userCap}
-                            invest={setToInvest}
-                          />
-                        )}
-                        {userCap - investorIssued >= 30 && (
-                          <InvestButton
-                            isLoading={toInvestLoad}
-                            currentEpoch={currentEpoch}
-                            amount={30}
-                            issued={investorIssued}
-                            max={userCap}
-                            invest={setToInvest}
-                          />
-                        )}
-                        {userCap === investorIssued && (
+
+                        {Presale.userCap === Presale.tokensIssued && (
                           <Text textAlign={'center'} gridColumn={'1/-1'}>
                             Allocation limit per wallet reached.
                           </Text>
                         )}
                       </>
                     ) : (
-                      <VStack>
+                      <VStack gridColumn={'1/-1'}>
                         <Text>
                           You need to approve the Presale contract to spend your
                           USDC.
@@ -389,7 +256,9 @@ export default function Invest({
                     )}
                   </>
                 ) : (
-                  <Text>You{"'"}re not whitelisted for this epoch.</Text>
+                  <Text gridColumn={'1/-1'}>
+                    You{"'"}re not whitelisted for this epoch.
+                  </Text>
                 )}
               </>
             )}

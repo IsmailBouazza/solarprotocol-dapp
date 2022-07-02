@@ -3,13 +3,14 @@ import type { AppProps } from 'next/app'
 import '@fontsource/ubuntu'
 import { ChakraProvider } from '@chakra-ui/react'
 import { configureChains, createClient, WagmiConfig } from 'wagmi'
-import { CoinbaseWalletConnector } from 'wagmi/connectors/coinbaseWallet'
-import { MetaMaskConnector } from 'wagmi/connectors/metaMask'
-import { WalletConnectConnector } from 'wagmi/connectors/walletConnect'
 import { jsonRpcProvider } from 'wagmi/providers/jsonRpc'
 import { ftmChain } from '../config/constants'
 import SideBarWrapper from '../components/sidebar'
 import { theme } from '../config/theme'
+import { CoinbaseWalletConnector } from 'wagmi/connectors/coinbaseWallet'
+import { MetaMaskConnector } from 'wagmi/connectors/metaMask'
+import { WalletConnectConnector } from 'wagmi/connectors/walletConnect'
+import { SolarProvider } from '../context/SolarContext'
 
 const { provider } = configureChains(
   [ftmChain],
@@ -25,7 +26,7 @@ const { provider } = configureChains(
 
 const wagmiClient = createClient({
   autoConnect: true,
-
+  provider,
   connectors: [
     new MetaMaskConnector({ chains: [ftmChain] }),
     new CoinbaseWalletConnector({
@@ -41,17 +42,18 @@ const wagmiClient = createClient({
       },
     }),
   ],
-  provider,
 })
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <WagmiConfig client={wagmiClient}>
-      <ChakraProvider theme={theme}>
-        <SideBarWrapper>
-          <Component {...pageProps} />
-        </SideBarWrapper>
-      </ChakraProvider>
+      <SolarProvider>
+        <ChakraProvider theme={theme}>
+          <SideBarWrapper>
+            <Component {...pageProps} />
+          </SideBarWrapper>
+        </ChakraProvider>
+      </SolarProvider>
     </WagmiConfig>
   )
 }
