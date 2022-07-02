@@ -54,6 +54,18 @@ export default function PresaleContent() {
     },
   })
 
+  // whitelistId
+  const [whitelistId, setWhitelistId] = useState(0)
+  const {} = useContractRead(presaleContractConfig, 'getAccountWhitelist', {
+    args: [accData ? accData.address : ethers.constants.AddressZero],
+    chainId: 250,
+    onSettled(data, err) {
+      if (err) console.log('Error on whitelistId', err)
+      if (!data) return
+      setWhitelistId(Number(data))
+    },
+  })
+
   // isWhitelistedInPresale
   const [isWhitelistedInPresale, setIsWhitelistedInPresale] = useState(false)
   const {} = useContractRead(
@@ -130,7 +142,10 @@ export default function PresaleContent() {
             <>
               <PresaleStats />
               <WalletStats />
-              <Invest isWhitelisted={Boolean(isWhitelisted)} />
+              <Invest
+                whitelistId={whitelistId}
+                isWhitelisted={Boolean(isWhitelisted)}
+              />
             </>
           ) : (
             <>

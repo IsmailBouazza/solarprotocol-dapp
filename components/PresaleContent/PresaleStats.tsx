@@ -113,35 +113,49 @@ export default function PresaleStats() {
   )
   // getTotalIssued
   const [totalIssued, settotalIssued] = useState<number>(0)
-  const { isError: totalIssuedErr, isLoading: totalIssuedLoad } =
-    useContractRead(presaleContractConfig, 'getTotalIssued', {
-      chainId: 250,
-      onSettled(data, error) {
-        if (error) console.log('📅 Error on totalIssued', error)
-        const formatted = Number(
-          ethers.utils.formatEther(data as unknown as string)
-        )
-        console.log('📅 totalIssued', formatted)
-        settotalIssued(formatted)
-      },
-    })
+  const {
+    isError: totalIssuedErr,
+    isLoading: totalIssuedLoad,
+    refetch: totalIssuedRefetch,
+  } = useContractRead(presaleContractConfig, 'getTotalIssued', {
+    chainId: 250,
+    onSettled(data, error) {
+      if (error) console.log('📅 Error on totalIssued', error)
+      const formatted = Number(
+        ethers.utils.formatEther(data as unknown as string)
+      )
+      console.log('📅 totalIssued', formatted)
+      settotalIssued(formatted)
+    },
+  })
 
   // getTotalInvested
   const [totalInvested, setTotalInvested] = useState<number>(0)
-  const { isError: totalInvestedErr, isLoading: totalInvestedLoad } =
-    useContractRead(presaleContractConfig, 'getTotalInvested', {
-      chainId: 250,
-      onSettled(data, error) {
-        if (error) console.log('📅 Error on totalInvested', error)
-        const formatted = Number(
-          ethers.utils.formatUnits(data as unknown as string, 6)
-        )
-        console.log('📅 totalInvested', formatted)
-        setTotalInvested(formatted)
-      },
-    })
+  const {
+    isError: totalInvestedErr,
+    isLoading: totalInvestedLoad,
+    refetch: totalInvestedRefetch,
+  } = useContractRead(presaleContractConfig, 'getTotalInvested', {
+    chainId: 250,
+    onSettled(data, error) {
+      if (error) console.log('📅 Error on totalInvested', error)
+      if (!data) return
+      const formatted = Number(
+        ethers.utils.formatUnits(data as unknown as string, 6)
+      )
+      console.log('📅 totalInvested', formatted)
+      setTotalInvested(formatted)
+    },
+  })
   // Progress
   const [percent, setPercent] = useState(0)
+  useEffect(() => {
+    const interval = setInterval(() => {
+      totalIssuedRefetch()
+      totalInvestedRefetch()
+    }, 5000)
+    return () => clearInterval(interval)
+  }, [totalInvestedRefetch, totalIssuedRefetch])
   useEffect(() => {
     if (totalIssued && totalCap) setPercent((totalIssued / totalCap) * 100)
   }, [totalIssued, totalCap])
@@ -157,7 +171,7 @@ export default function PresaleStats() {
       ) : (
         <>
           {currentEpochErr ? (
-            <Text>
+            <Text textAlign={'center'}>
               There was an error fetching the current epoch&apos;s data.
             </Text>
           ) : currentEpochLoad ? (
@@ -165,21 +179,22 @@ export default function PresaleStats() {
           ) : (
             <>
               {' '}
-              <Text fontSize={'4xl'}>
+              <Text fontSize={'4xl'} textAlign={'center'}>
                 Presale{' '}
                 <b style={{ color: palette.main.buttonLightBorder }}>Stats</b>
               </Text>
               <Grid
                 templateColumns={{
                   base: '1fr',
-                  lg: 'repeat(2, 1fr)',
-                  xl: 'repeat(3, 1fr)',
+                  '2xl': 'repeat(3, 1fr)',
                 }}
                 fontSize={'xl'}
                 w="full"
                 justifyItems={'start'}
               >
-                <Text>Phase: {currentEpoch?.id}</Text>
+                <Text justifySelf={{ base: 'center', '2xl': 'start' }}>
+                  Phase: {currentEpoch?.id}
+                </Text>
                 <HStack justifySelf={'center'}>
                   <Text>Presale ends in:</Text>
                   {mounted && endsAtErr ? (
@@ -194,7 +209,7 @@ export default function PresaleStats() {
                     </>
                   )}
                 </HStack>
-                <HStack justifySelf={'end'}>
+                <HStack justifySelf={{ base: 'center', '2xl': 'end' }}>
                   <Text>Next phase in:</Text>
                   {mounted && currentEpoch && (
                     <Countdown
@@ -216,7 +231,7 @@ export default function PresaleStats() {
             w="full"
             justifyItems={'center'}
           >
-            <Text justifySelf="start">
+            <Text justifySelf={{ base: 'center', '2xl': 'start' }}>
               Tokens Sold{' '}
               {totalIssuedErr ? (
                 <>Error fetching totalIssued</>
@@ -243,14 +258,14 @@ export default function PresaleStats() {
               )}
             </Text>
             {totalInvestedErr ? (
-              <Text justifySelf="end">
+              <Text justifySelf={{ base: 'center', '2xl': 'end' }}>
                 There was an error fetching totalInvested
               </Text>
             ) : totalInvestedLoad ? (
               <Spinner />
             ) : (
-              <Text justifySelf="end">
-                USDC Raised: ${totalInvested.toFixed(2)}
+              <Text justifySelf={{ base: 'center', '2xl': 'end' }}>
+                USDC Raised: ${totalInvested.toLocaleString('en-GB')}
               </Text>
             )}
           </Grid>

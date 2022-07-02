@@ -8,18 +8,41 @@ import {
   Text,
   Button,
   HStack,
+  VStack,
+  Tooltip,
+  Flex,
+  Link,
+  Grid,
 } from '@chakra-ui/react'
 import { ethers } from 'ethers'
+import { watch } from 'fs'
 import { useEffect, useState } from 'react'
-import { erc20ABI, useAccount, useContractRead, useContractWrite } from 'wagmi'
+import { FiInfo } from 'react-icons/fi'
+import {
+  chainId,
+  erc20ABI,
+  useAccount,
+  useBalance,
+  useContractRead,
+  useContractWrite,
+} from 'wagmi'
 import {
   palette,
   presaleContractConfig,
   USDCAddress,
 } from '../../config/constants'
 import { IEpoch } from '../../config/types'
+import useToastHelper from '../../hooks/useToastHelper'
+import InvestButton from './InvestButton'
 
-export default function Invest({ isWhitelisted }: { isWhitelisted: boolean }) {
+export default function Invest({
+  isWhitelisted,
+  whitelistId,
+}: {
+  isWhitelisted: boolean
+  whitelistId: number
+}) {
+  const { summonToast } = useToastHelper()
   // WEB3
   const { data: userData } = useAccount()
   // userCap
@@ -50,6 +73,7 @@ export default function Invest({ isWhitelisted }: { isWhitelisted: boolean }) {
       args: [userData?.address],
       onSettled(data, error) {
         if (error) console.log('📈 Error on investorIssued', error)
+        if (!data) return
         const formatted = Number(
           ethers.utils.formatEther(data as unknown as string)
         )
@@ -140,12 +164,27 @@ export default function Invest({ isWhitelisted }: { isWhitelisted: boolean }) {
         ? ethers.utils.parseUnits((toInvest * currentEpoch.price).toString(), 6)
         : 0,
     ],
+    onSuccess(data) {
+      summonToast(
+        'invest',
+        'info',
+        <>
+          Transaction submitted.{' '}
+          <Link
+            href={`https://ftmscan.com/tx/${data.hash}`}
+            rel="noreferrer"
+            target="_blank"
+          >
+            ftmscan
+          </Link>
+        </>
+      )
+    },
     onError(error) {
-      console.log('📈 Error in invest', error)
+      summonToast('investErr', 'error', <>{error.message}</>)
     },
   })
   // approve
-  // invest
   const {
     isError: approveErr,
     isLoading: approveLoad,
@@ -158,11 +197,56 @@ export default function Invest({ isWhitelisted }: { isWhitelisted: boolean }) {
     'approve',
     {
       args: [presaleContractConfig.addressOrName, ethers.constants.MaxUint256],
+      onSuccess(data) {
+        summonToast(
+          'approve',
+          'info',
+          <>
+            Transaction submitted.{' '}
+            <Link
+              href={`https://ftmscan.com/tx/${data.hash}`}
+              rel="noreferrer"
+              target="_blank"
+            >
+              ftmscan
+            </Link>
+          </>
+        )
+      },
       onError(error) {
-        console.log('📈 Error in approve', error)
+        summonToast('approveErr', 'error', <>{error.message}</>)
       },
     }
   )
+
+  const [balance, setBalance] = useState<number>(0)
+  const { data, isError, isLoading } = useBalance({
+    addressOrName: userData ? userData.address : ethers.constants.AddressZero,
+    token: USDCAddress,
+    watch: true,
+    chainId: 250,
+    cacheTime: 3_000,
+    staleTime: 3_000,
+    onSuccess(data) {
+      setBalance(Number(ethers.utils.formatUnits(data.value, 6)))
+    },
+  })
+
+  async function investWrapper(amount: number) {
+    debugger
+    if (!currentEpoch) return
+    const cost = amount * currentEpoch.price
+    if (cost > balance) {
+      summonToast(
+        `tooExpensive${amount}`,
+        'warning',
+        <Text>
+          You don{"'"}t have enough USDC, {cost} required
+        </Text>
+      )
+      return
+    }
+  }
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -173,43 +257,134 @@ export default function Invest({ isWhitelisted }: { isWhitelisted: boolean }) {
   }, [investorIssuedRefetch, isApprovedRefetch])
   return (
     <>
-      <Text fontSize={'4xl'}>
-        <b style={{ color: palette.main.buttonLightBorder }}>Invest</b>
-      </Text>
-      <HStack>
-        <NumberInput
-          value={toInvest}
-          onChange={(val, valN) => setToInvest(valN)}
-          defaultValue={step}
-          max={userCap - investorIssued}
-          clampValueOnBlur={false}
-          step={step}
-          min={step}
-          color="white"
-        >
-          <NumberInputField />
-          <NumberInputStepper>
-            <NumberIncrementStepper />
-            <NumberDecrementStepper />
-          </NumberInputStepper>
-        </NumberInput>
+      <Tooltip
+        hasArrow
+        label={
+          'When buying $nKELVIN, you can only use this token to redeem for a Star at a later stage. \nYou are only able to buy in increments of 5 to ensure no $nKELVIN tokens are left unusable.'
+        }
+        aria-label="Disclaimer"
+      >
+        <HStack fontSize={'2xl'} margin={0}>
+          <Text
+            fontSize={'4xl'}
+            color={palette.main.buttonLightBorder}
+            fontWeight={'bold'}
+          >
+            Invest
+          </Text>
 
-        {isApproved ? (
-          isWhitelisted ? (
-            <Button onClick={() => invest()}>Invest</Button>
-          ) : (
-            <Button disabled onClick={() => invest()}>
-              Invest
-            </Button>
-          )
-        ) : isWhitelisted ? (
-          <Button onClick={() => approve()}>Approve</Button>
-        ) : (
-          <Button disabled onClick={() => invest()}>
-            Approve
-          </Button>
+          <FiInfo />
+        </HStack>
+      </Tooltip>
+
+      <Grid
+        gap={2}
+        templateColumns={{
+          base: '1fr',
+          md: 'repeat(2,1fr)',
+          lg: 'repeat(3,1fr)',
+          xl: 'repeat(4,1fr)',
+          '2xl': 'repeat(6,1fr)',
+        }}
+      >
+        {currentEpoch && (
+          <>
+            {whitelistId === 0 ? (
+              <Text>You{"'"}re not whitelisted</Text>
+            ) : (
+              <>
+                {currentEpoch.id === whitelistId ? (
+                  <>
+                    {isApproved ? (
+                      <>
+                        {userCap - investorIssued >= 5 && (
+                          <InvestButton
+                            isLoading={toInvestLoad}
+                            currentEpoch={currentEpoch}
+                            amount={5}
+                            issued={investorIssued}
+                            max={userCap}
+                            invest={investWrapper}
+                          />
+                        )}
+                        {userCap - investorIssued >= 10 && (
+                          <InvestButton
+                            isLoading={toInvestLoad}
+                            currentEpoch={currentEpoch}
+                            amount={10}
+                            issued={investorIssued}
+                            max={userCap}
+                            invest={investWrapper}
+                          />
+                        )}
+                        {userCap - investorIssued >= 15 && (
+                          <InvestButton
+                            isLoading={toInvestLoad}
+                            currentEpoch={currentEpoch}
+                            amount={15}
+                            issued={investorIssued}
+                            max={userCap}
+                            invest={investWrapper}
+                          />
+                        )}
+                        {userCap - investorIssued >= 20 && (
+                          <InvestButton
+                            isLoading={toInvestLoad}
+                            currentEpoch={currentEpoch}
+                            amount={20}
+                            issued={investorIssued}
+                            max={userCap}
+                            invest={investWrapper}
+                          />
+                        )}
+                        {userCap - investorIssued >= 25 && (
+                          <InvestButton
+                            isLoading={toInvestLoad}
+                            currentEpoch={currentEpoch}
+                            amount={25}
+                            issued={investorIssued}
+                            max={userCap}
+                            invest={investWrapper}
+                          />
+                        )}
+                        {userCap - investorIssued >= 30 && (
+                          <InvestButton
+                            isLoading={toInvestLoad}
+                            currentEpoch={currentEpoch}
+                            amount={30}
+                            issued={investorIssued}
+                            max={userCap}
+                            invest={investWrapper}
+                          />
+                        )}
+                        {userCap === investorIssued && (
+                          <Text>Allocation limit per wallet reached.</Text>
+                        )}
+                      </>
+                    ) : (
+                      <VStack>
+                        <Text>
+                          You need to approve the Presale contract to spend your
+                          USDC.
+                        </Text>
+                        {approveLoad ? (
+                          <Button isLoading onClick={() => approve()}>
+                            Approve
+                          </Button>
+                        ) : (
+                          <Button onClick={() => approve()}>Approve</Button>
+                        )}
+                      </VStack>
+                    )}
+                  </>
+                ) : (
+                  <Text>You{"'"}re not whitelisted for this epoch.</Text>
+                )}
+              </>
+            )}
+          </>
         )}
-      </HStack>
+      </Grid>
     </>
   )
 }

@@ -33,6 +33,7 @@ export default function WalletStats() {
       args: [userData?.address],
       onSettled(data, error) {
         if (error) console.log('💰 Error on investorIssued', error)
+        if (!data) return
         const formatted = Number(
           ethers.utils.formatEther(data as unknown as string)
         )
@@ -43,14 +44,13 @@ export default function WalletStats() {
 
   return (
     <>
-      <Text fontSize={'4xl'}>
+      <Text fontSize={'4xl'} textAlign={'center'}>
         Wallet <b style={{ color: palette.main.buttonLightBorder }}>Stats</b>
       </Text>
       <Grid
         templateColumns={{
           base: '1fr',
-          lg: 'repeat(2, 1fr)',
-          xl: 'repeat(3, 1fr)',
+          '2xl': 'repeat(3, 1fr)',
         }}
         fontSize={'xl'}
         w="full"
@@ -61,7 +61,9 @@ export default function WalletStats() {
         ) : userCapLoad ? (
           <Spinner />
         ) : (
-          <Text justifySelf={'start'}>Max. allocation: {userCap}$nKELVIN</Text>
+          <Text justifySelf={{ base: 'center', '2xl': 'start' }}>
+            Max. allocation: {userCap}$nKELVIN
+          </Text>
         )}
         {investorIssuedErr ? (
           <Text justifySelf={'center'}>Error fetching investorIssued</Text>
@@ -72,7 +74,7 @@ export default function WalletStats() {
             Tokens purchased: {investorIssued}$nKELVIN
           </Text>
         )}
-        <Text justifySelf={'end'}>
+        <Text justifySelf={{ base: 'center', '2xl': 'end' }}>
           Available: {userCap - investorIssued}$nKELVIN
         </Text>
       </Grid>
