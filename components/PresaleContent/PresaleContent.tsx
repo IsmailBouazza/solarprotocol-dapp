@@ -1,4 +1,4 @@
-import { Text, Heading, Spinner } from '@chakra-ui/react'
+import { Text, Heading, Spinner, Button, Image } from '@chakra-ui/react'
 import { ethers } from 'ethers'
 import { useState } from 'react'
 import Countdown, {
@@ -6,7 +6,7 @@ import Countdown, {
   CountdownRenderProps,
 } from 'react-countdown'
 import { useAccount, useContractRead } from 'wagmi'
-import { presaleContractConfig } from '../../config/constants'
+import { connectorIcons, presaleContractConfig } from '../../config/constants'
 import useMounted from '../../hooks/useMounted'
 import useWeb3Formatter from '../../hooks/useWeb3Formatter'
 import Invest from './Invest'
@@ -116,12 +116,67 @@ export default function PresaleContent() {
 
   const mounted = useMounted()
 
+  async function addToken(address: string, symbol: string) {
+    if (typeof window === undefined) return
+    const ethereum = window.ethereum
+    if (!ethereum) return
+    await ethereum.request({
+      method: 'wallet_watchAsset',
+      params: {
+        type: 'ERC20',
+        options: {
+          address: address,
+          symbol: symbol,
+          decimals: 18,
+        },
+      },
+    })
+  }
+
   return (
     <>
       {!mounted ? (
         <Spinner />
       ) : (
         <>
+          {window.ethereum ? (
+            <Button
+              position={'absolute'}
+              p={4}
+              py={6}
+              top={8}
+              left={8}
+              onClick={() =>
+                addToken(presaleContractConfig.addressOrName, 'nKELVIN')
+              }
+            >
+              <Image
+                src={connectorIcons['MetaMask'].logoURI}
+                alt="MetaMask logo"
+                minH="32px"
+              />
+              +
+            </Button>
+          ) : (
+            <Button
+              disabled
+              position={'absolute'}
+              p={4}
+              py={6}
+              top={8}
+              left={8}
+              onClick={() =>
+                addToken(presaleContractConfig.addressOrName, 'nKELVIN')
+              }
+            >
+              <Image
+                src={connectorIcons['MetaMask'].logoURI}
+                alt="MetaMask logo"
+                minH="32px"
+              />
+              +
+            </Button>
+          )}
           {isWhitelistedErr ? (
             <Text position={'absolute'} top={8} right={8}>
               Error
