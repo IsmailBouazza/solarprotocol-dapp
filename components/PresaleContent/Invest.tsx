@@ -362,7 +362,9 @@ export default function Invest({
                           />
                         )}
                         {userCap === investorIssued && (
-                          <Text>Allocation limit per wallet reached.</Text>
+                          <Text textAlign={'center'} gridColumn={'1/-1'}>
+                            Allocation limit per wallet reached.
+                          </Text>
                         )}
                       </>
                     ) : (

@@ -156,8 +156,8 @@ export default function PresaleContent() {
                 position={'absolute'}
                 p={4}
                 py={6}
-                top={8}
-                left={8}
+                top={{ base: 2, lg: 8 }}
+                left={{ base: 2, lg: 8 }}
                 onClick={() =>
                   addToken(presaleContractConfig.addressOrName, 'nKELVIN')
                 }
@@ -176,8 +176,8 @@ export default function PresaleContent() {
               position={'absolute'}
               p={4}
               py={6}
-              top={8}
-              left={8}
+              top={{ base: 2, lg: 8 }}
+              left={{ base: 2, lg: 8 }}
               onClick={() =>
                 addToken(presaleContractConfig.addressOrName, 'nKELVIN')
               }
@@ -191,18 +191,30 @@ export default function PresaleContent() {
             </Button>
           )}
           {isWhitelistedErr ? (
-            <Text position={'absolute'} top={8} right={8}>
+            <Text
+              position={'absolute'}
+              top={{ base: 2, lg: 8 }}
+              right={{ base: 2, lg: 8 }}
+            >
               Error
             </Text>
           ) : isWhitelistedLoad ? (
             <Spinner />
           ) : isWhitelisted ? (
-            <Text position={'absolute'} top={8} right={8}>
+            <Text
+              position={'absolute'}
+              top={{ base: 2, lg: 8 }}
+              right={{ base: 2, lg: 8 }}
+            >
               Whitelisted {isWhitelistedInPresale && '☀'}
               {isWhitelistedInNB && '🐻'}
             </Text>
           ) : (
-            <Text position={'absolute'} top={8} right={8}>
+            <Text
+              position={'absolute'}
+              top={{ base: 2, lg: 8 }}
+              right={{ base: 2, lg: 8 }}
+            >
               ❌ Not Whitelisted
             </Text>
           )}

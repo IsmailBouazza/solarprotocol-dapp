@@ -231,6 +231,7 @@ export default function PresaleStats() {
             fontSize={'xl'}
             w="full"
             justifyItems={'center'}
+            textAlign="center"
           >
             <Text justifySelf={{ base: 'center', '2xl': 'start' }}>
               Tokens Sold{' '}

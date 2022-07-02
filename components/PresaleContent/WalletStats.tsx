@@ -55,6 +55,7 @@ export default function WalletStats() {
         fontSize={'xl'}
         w="full"
         justifyItems={'center'}
+        textAlign="center"
       >
         {userCapErr ? (
           <Text>Error fetching userCap</Text>
