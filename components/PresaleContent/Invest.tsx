@@ -191,7 +191,8 @@ export default function Invest({
               <Text gridColumn={'1/-1'}>You{"'"}re not whitelisted</Text>
             ) : (
               <>
-                {Presale.currentEpoch.whitelistIds.includes(whitelistId) ? (
+                {Presale.currentEpoch.whitelistIds.includes(whitelistId) ||
+                Presale.currentEpoch.whitelistIds.length === 0 ? (
                   <>
                     {Presale.allowance && Presale.allowance > 600 * 10 ** 6 ? (
                       <>
