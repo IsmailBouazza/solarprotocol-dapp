@@ -41,7 +41,7 @@ export default function ConnectWalletButton() {
       summonToast(
         'connected',
         'info',
-        <Text color={'white'} fontWeight="bold">
+        <Text color={'black'} fontWeight="bold">
           Wallet connected {data.account}
         </Text>
       )
@@ -52,7 +52,7 @@ export default function ConnectWalletButton() {
       summonToast(
         'disconnected',
         'warning',
-        <Text color={'white'} fontWeight="bold">
+        <Text color={'black'} fontWeight="bold">
           Wallet disconnected
         </Text>
       )
