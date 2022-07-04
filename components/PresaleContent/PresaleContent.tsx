@@ -15,7 +15,6 @@ import { connectorIcons, presaleContractConfig } from '../../config/constants'
 import { SolarContext } from '../../context/SolarContext'
 import useMounted from '../../hooks/useMounted'
 import useWeb3Formatter from '../../hooks/useWeb3Formatter'
-import Invest from './Invest'
 import PresaleStats from './PresaleStats'
 import WalletStats from './WalletStats'
 
