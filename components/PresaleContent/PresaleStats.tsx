@@ -48,7 +48,7 @@ export default function PresaleStats() {
 
   useEffect(() => {
     if (!Presale.endsAt) return
-    setEnded(Presale.endsAt > Date.now())
+    setEnded(Presale.endsAt < Date.now())
   }, [Presale.endsAt])
   useEffect(() => {
     if (Presale.totalIssued && Presale.totalCap)
@@ -61,7 +61,7 @@ export default function PresaleStats() {
         <>
           <Heading>PRESALE HAS ENDED</Heading>
           <Heading>SOLAR LAUNCH IN</Heading>
-          <Countdown date={1657306800000} renderer={renderer} />
+          <Countdown date={1657911600000} renderer={renderer} />
         </>
       ) : (
         <>

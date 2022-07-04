@@ -144,7 +144,7 @@ export default function PresaleContent() {
             <>
               <PresaleStats />
               <WalletStats />
-              {Presale.whitelistId !== undefined && (
+              {/* {Presale.whitelistId !== undefined && (
                 <Invest
                   whitelistId={Presale.whitelistId}
                   isWhitelisted={Boolean(
@@ -152,7 +152,7 @@ export default function PresaleContent() {
                       Presale.whitelistId !== 0
                   )}
                 />
-              )}
+              )} */}
             </>
           ) : (
             <>
