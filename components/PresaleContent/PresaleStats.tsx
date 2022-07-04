@@ -59,8 +59,8 @@ export default function PresaleStats() {
     <>
       {ended ? (
         <>
-          <Heading>PRESALE HAS ENDED</Heading>
-          <Heading>SOLAR LAUNCH IN</Heading>
+          <Heading textAlign={'center'}>PRESALE HAS ENDED</Heading>
+          <Heading textAlign={'center'}>SOLAR LAUNCH IN</Heading>
           <Countdown date={1657911600000} renderer={renderer} />
         </>
       ) : (
