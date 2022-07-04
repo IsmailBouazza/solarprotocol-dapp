@@ -5,6 +5,7 @@ import {
   HStack,
   Progress,
   Text,
+  VStack,
 } from '@chakra-ui/react'
 import { useContext, useEffect, useState } from 'react'
 import Countdown, {
@@ -59,9 +60,11 @@ export default function PresaleStats() {
     <>
       {ended ? (
         <>
-          <Heading textAlign={'center'}>PRESALE HAS ENDED</Heading>
-          <Heading textAlign={'center'}>SOLAR LAUNCH IN</Heading>
-          <Countdown date={1657911600000} renderer={renderer} />
+          <VStack mt={'4rem'}>
+            <Heading textAlign={'center'}>PRESALE HAS ENDED</Heading>
+            <Heading textAlign={'center'}>SOLAR LAUNCH IN</Heading>
+            <Countdown date={1657911600000} renderer={renderer} />
+          </VStack>
         </>
       ) : (
         <>

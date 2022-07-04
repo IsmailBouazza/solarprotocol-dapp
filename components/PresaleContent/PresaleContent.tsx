@@ -121,7 +121,7 @@ export default function PresaleContent() {
               +
             </Button>
           )}
-          {Presale.whitelistId !== 0 ? (
+          {/* {Presale.whitelistId !== 0 ? (
             <Text
               position={'absolute'}
               top={{ base: 2, lg: 8 }}
@@ -138,7 +138,7 @@ export default function PresaleContent() {
             >
               ❌ Not Whitelisted
             </Text>
-          )}
+          )} */}
           {started ? (
             <>
               <PresaleStats />
