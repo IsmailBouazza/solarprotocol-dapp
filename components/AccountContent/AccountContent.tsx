@@ -1,3 +1,9 @@
+import { Text } from '@chakra-ui/react'
+
 export default function AccountContent() {
-  return <></>
+  return (
+    <>
+      <Text>Test</Text>
+    </>
+  )
 }
