@@ -169,6 +169,7 @@ const NavItem = ({ icon, link, children }: NavItemProps) => {
           ? `2px solid ${palette.main.buttonLightBorder}`
           : '2px solid transparent'
       }
+      textAlign="center"
     >
       <Icon
         fontSize="2xl"

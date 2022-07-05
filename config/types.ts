@@ -8,6 +8,13 @@ export interface IInvestInfo {
   epoch: IEpoch
 }
 
+export interface IStarCardProps {
+  [key: number]: {
+    starName: string
+    video: string
+  }
+}
+
 // State Interfaces
 export interface IEpoch {
   id: number
