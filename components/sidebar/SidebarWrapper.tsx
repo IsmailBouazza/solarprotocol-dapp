@@ -19,7 +19,7 @@ import {
 } from '@chakra-ui/react'
 import { FiHome, FiMenu, FiSun } from 'react-icons/fi'
 import { IconType } from 'react-icons'
-import ConnectWalletButton from '../connectWalletButton'
+import ConnectWalletButton from '../ConnectWalletButton'
 import { BiCalculator } from 'react-icons/bi'
 import { VscAccount } from 'react-icons/vsc'
 import { useRouter } from 'next/router'
