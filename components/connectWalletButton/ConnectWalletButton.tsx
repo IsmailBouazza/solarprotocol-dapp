@@ -27,9 +27,9 @@ import {
 import useMounted from '../../hooks/useMounted'
 import useWeb3Formatter from '../../hooks/useWeb3Formatter'
 import useToastHelper from '../../hooks/useToastHelper'
-import TokenTracker from '../TokenTracker'
 import ConnectWalletButtonIcons from './ConnectWalletButtonIcons'
 import { palette } from '../../config/constants'
+import TokenTracker from '../TokenTracker'
 
 export default function ConnectWalletButton() {
   const mounted = useMounted()
