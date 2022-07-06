@@ -49,7 +49,7 @@ export default function AccountContent() {
             <Tooltip label="Amount of $KELVIN yet to claim." hasArrow>
               <HStack>
                 <Text>Claimable $KELVIN</Text>
-                <FiInfo />
+                <FiInfo color="white" />
               </HStack>
             </Tooltip>
             <Text color={palette.main.buttonLightBorder}>3.14</Text>
