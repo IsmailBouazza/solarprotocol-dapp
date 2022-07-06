@@ -104,10 +104,10 @@ export default function StarCard({ tier }: { tier: number }) {
       <NetworkButton
         w="full"
         p={4}
-        variant="solid2"
+        variant="solid3"
         border={`2px solid ${palette.main.buttonBorder}`}
       >
-        Mint
+        Redeem
       </NetworkButton>
     </VStack>
   )

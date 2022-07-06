@@ -1,10 +1,13 @@
 import {
   Grid,
   Heading,
+  HStack,
   Text,
+  Tooltip,
   useBreakpointValue,
   VStack,
 } from '@chakra-ui/react'
+import { FiInfo } from 'react-icons/fi'
 import { palette } from '../../config/constants'
 import NetworkButton from '../NetworkButton'
 import StarCard from './StarCard'
@@ -13,7 +16,7 @@ export default function AccountContent() {
   const walletGridColumns = useBreakpointValue({
     base: '1fr',
     lg: 'repeat(2,1fr)',
-    '2xl': 'repeat(4,1fr)',
+    '2xl': 'repeat(3,1fr)',
   })
   const starGridColumns = useBreakpointValue({
     base: '1fr',
@@ -43,12 +46,12 @@ export default function AccountContent() {
           boxShadow={` rgba(255, 255, 255, 0.25) 0px 0px 25px`}
         >
           <VStack fontWeight={'bold'}>
-            <Text>Net worth</Text>
-            <Text color={palette.main.buttonLightBorder}>$5,141.92</Text>
-            <Text fontSize={'xs'}>&nbsp; </Text>
-          </VStack>
-          <VStack fontWeight={'bold'}>
-            <Text>$KELVIN Balance</Text>
+            <Tooltip label="Amount of $KELVIN yet to claim." hasArrow>
+              <HStack>
+                <Text>Claimable $KELVIN</Text>
+                <FiInfo />
+              </HStack>
+            </Tooltip>
             <Text color={palette.main.buttonLightBorder}>3.14</Text>
             <Text fontSize={'xs'}>~ $210.57</Text>
           </VStack>

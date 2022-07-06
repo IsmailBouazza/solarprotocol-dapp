@@ -36,16 +36,15 @@ const NetworkButton: NetworkButtonType = forwardRef(
                     disabled
                     onClick={() => switchNetworkWrapper()}
                     isLoading
-                  >
-                    Switching
-                  </Button>
+                    loadingText="Switching"
+                  />
                 ) : (
                   <Button
                     ref={ref}
                     {...props}
                     onClick={() => switchNetworkWrapper()}
                   >
-                    Switch Network
+                    Switch to Fantom
                   </Button>
                 )}
               </>
