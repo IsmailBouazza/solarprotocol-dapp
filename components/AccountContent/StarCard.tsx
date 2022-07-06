@@ -43,6 +43,8 @@ export default function StarCard({ tier }: { tier: number }) {
         h="full"
         overflow="hidden"
         border={`1px solid ${palette.main.buttonBorder}`}
+        style={{ transform: tier === 3 ? 'scaleX(-1)' : '' }}
+        justifyContent="center"
       >
         <video
           autoPlay
