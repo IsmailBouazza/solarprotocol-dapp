@@ -51,9 +51,11 @@ export default function StarCard({ tier }: { tier: number }) {
           muted
           loop
           controls={false}
+          playsInline
+          preload="auto"
           onContextMenu={handleContextMenu}
         >
-          <source src={Stars[tier].video} />
+          <source src={Stars[tier].video} type="video/mov" />
         </video>
       </Flex>
       <VStack
