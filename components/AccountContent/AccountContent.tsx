@@ -11,6 +11,7 @@ import { FiInfo } from 'react-icons/fi'
 import { palette } from '../../config/constants'
 import NetworkButton from '../NetworkButton'
 import StarCard from './StarCard'
+import StarList from './StarList'
 
 export default function AccountContent() {
   const walletGridColumns = useBreakpointValue({
@@ -68,11 +69,12 @@ export default function AccountContent() {
             CLAIM ALL
           </NetworkButton>
         </Grid>
-        <Grid w="full" templateColumns={starGridColumns} gap={6} pt={6}>
+        <Grid w="full" templateColumns={starGridColumns} gap={6} py={6}>
           <StarCard tier={1} />
           <StarCard tier={2} />
           <StarCard tier={3} />
         </Grid>
+        <StarList />
       </VStack>
     </>
   )

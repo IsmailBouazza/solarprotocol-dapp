@@ -78,27 +78,19 @@ export const theme = extendTheme({
         }),
         solid3: () => ({
           color: 'white',
-          background: '#f67447',
+          background: palette.main.button,
           borderRadius: '1em',
           border: '1px solid transparent',
           transition: '0.3s',
+
           _hover: {
-            background: '#f67447',
-            borderRadius: '1em',
-            border: '1px solid transparent',
-            transform: 'translate(0, -4px)',
+            background: palette.main.buttonHover,
           },
           _focus: {
-            background: '#f67447',
-            borderRadius: '1em',
-            border: '1px solid transparent',
-            transform: 'translate(0, -4px)',
+            background: palette.main.buttonHover,
           },
           _active: {
-            background: '#f67447',
-            borderRadius: '1em',
-            border: '1px solid transparent',
-            transform: 'translate(0, -4px)',
+            background: palette.main.buttonHover,
           },
         }),
       },

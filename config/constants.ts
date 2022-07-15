@@ -104,6 +104,8 @@ export const palette = {
     buttonBg: '#081429',
     buttonBorder: '#d34715',
     buttonLightBorder: '#f67447',
+    button: '#f67447',
+    buttonHover: '#c55d39',
     outerGlow: '#e87147',
   },
   footer: {
