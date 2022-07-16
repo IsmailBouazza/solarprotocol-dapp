@@ -63,7 +63,7 @@ export default function PresaleStats() {
           <VStack style={{ marginTop: '4rem' }}>
             <Heading textAlign={'center'}>PRESALE HAS ENDED</Heading>
             <Heading textAlign={'center'}>SOLAR LAUNCH IN</Heading>
-            <Countdown date={1657911600000} renderer={renderer} />
+            <Countdown date={1658170800000} renderer={renderer} />
           </VStack>
         </>
       ) : (
