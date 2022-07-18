@@ -1,11 +1,16 @@
 import { ethers } from 'ethers'
 import { Chain, defaultChains } from 'wagmi'
-import { PresaleABI } from './abis'
+import { DiamondABI, PresaleABI } from './abis'
 import { IConnectorIcon, INetworkDetails, ISecondsByDuration } from './types'
 
 export const presaleContractConfig = {
   addressOrName: '0x0642d02271eBC831583F54d726D5aC9BF6709E2d',
   contractInterface: PresaleABI,
+}
+
+export const diamondContractConfig = {
+  addressOrName: '0x628c21568b9b06453568488a001ac543ec1e78fe',
+  contractInterface: DiamondABI,
 }
 
 export const connectorIcons: IConnectorIcon = {
@@ -24,10 +29,10 @@ export const connectorIcons: IConnectorIcon = {
 
 export const networkDetails: INetworkDetails = {
   250: {
-    rpcUrl: 'https://rpc.ankr.com/fantom',
+    rpcUrl: 'https://rpc.tenderly.co/fork/a23a91aa-ea83-4ef9-aa07-7fb0fb9a5d7c',
 
     chainProviders: new ethers.providers.JsonRpcProvider(
-      'https://rpc.ankr.com/fantom'
+      'https://rpc.tenderly.co/fork/a23a91aa-ea83-4ef9-aa07-7fb0fb9a5d7c'
     ),
 
     blockExplorerURL: 'https://ftmscan.com',
@@ -77,7 +82,10 @@ export const ftmChain: Chain = {
   id: 250,
   name: 'Fantom',
   network: 'Fantom Opera',
-  rpcUrls: { default: 'https://rpc.ankr.com/fantom' },
+  rpcUrls: {
+    default:
+      'https://rpc.tenderly.co/fork/a23a91aa-ea83-4ef9-aa07-7fb0fb9a5d7c',
+  },
   blockExplorers: { default: { name: 'ftmscan', url: 'https://ftmscan.com' } },
   nativeCurrency: { name: 'Fantom', symbol: 'FTM', decimals: 18 },
 }
@@ -90,6 +98,8 @@ export const secondsByDuration: ISecondsByDuration = {
   month: 30 * 24 * 60 * 60,
   year: 365 * 24 * 60 * 60,
 }
+
+export const dateMask = 'Do of MMM YY'
 
 export const palette = {
   background: {

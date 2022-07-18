@@ -1,7 +1,10 @@
 import { ethers } from 'ethers'
 import { createContext, ReactNode, useEffect, useState } from 'react'
 import { erc20ABI, useAccount, useContractInfiniteReads } from 'wagmi'
-import { presaleContractConfig } from '../config/constants'
+import {
+  diamondContractConfig,
+  presaleContractConfig,
+} from '../config/constants'
 import { IEpoch, IPresale } from '../config/types'
 
 const emptyPresale: IPresale = {
@@ -105,10 +108,51 @@ export function SolarProvider({ children }: { children: ReactNode }) {
     staleTime: 3_000,
   })
 
+  // getStarInfo
+  const { refetch: refetchStars } = useContractInfiniteReads({
+    cacheKey: 'starData',
+    contracts: () => [
+      { ...diamondContractConfig, functionName: 'getNodeTypes' },
+      // {
+      //   ...diamondContractConfig,
+      //   functionName: 'getAccountWhitelist',
+      //   args: [address],
+      // },
+      {
+        addressOrName: '0x04068DA6C83AFCFA0e13ba15A6696662335D5B75',
+        contractInterface: erc20ABI,
+        functionName: 'allowance',
+        args: [address, diamondContractConfig.addressOrName],
+      },
+      {
+        addressOrName: diamondContractConfig.addressOrName,
+        contractInterface: erc20ABI,
+        functionName: 'allowance',
+        args: [address, diamondContractConfig.addressOrName],
+      },
+    ],
+    onSettled(data, error) {
+      if (error) {
+        console.log('⚙ BACKEND ERROR => getStarInfo')
+        return
+      }
+      if (!data) return
+      console.log('starData', data)
+    },
+    cacheTime: 3_000,
+    staleTime: 3_000,
+  })
   useEffect(() => {
     const interval = setInterval(() => {
       refetch()
     }, 3_000)
+    return () => clearInterval(interval)
+  }, [])
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      refetchStars()
+    }, 10000)
     return () => clearInterval(interval)
   }, [])
 

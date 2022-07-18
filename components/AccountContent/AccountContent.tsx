@@ -27,7 +27,7 @@ export default function AccountContent() {
 
   return (
     <>
-      <VStack w="full" mx={'15%'} px={'5%'}>
+      <VStack w="full" mx={'5%'} px={'5%'}>
         <Heading fontWeight={'normal'}>
           <b>Disclaimer:</b> This is a beta website and does not represent real
           values.

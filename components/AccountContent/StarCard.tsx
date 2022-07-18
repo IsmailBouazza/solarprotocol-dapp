@@ -79,21 +79,21 @@ export default function StarCard({ tier }: { tier: number }) {
         <Text textAlign="start" w="full">
           Claimable:
         </Text>
-        <Text justifySelf={'end'}> 5$KELVIN</Text>
+        <Text justifySelf={'end'}> 5 $KELVIN</Text>
 
         <Text textAlign="start" w="full">
           Daily:
         </Text>
-        <Text justifySelf={'end'}>0.25$KELVIN</Text>
+        <Text justifySelf={'end'}>0.25 $KELVIN</Text>
 
         <Text textAlign="start" w="full">
           Weekly:
         </Text>
-        <Text justifySelf={'end'}>1.75$KELVIN</Text>
+        <Text justifySelf={'end'}>1.75 $KELVIN</Text>
         <Text textAlign="start" w="full">
           Monthly:
         </Text>
-        <Text justifySelf={'end'}> 7.50$KELVIN</Text>
+        <Text justifySelf={'end'}> 7.50 $KELVIN</Text>
       </Grid>
 
       <NetworkButton

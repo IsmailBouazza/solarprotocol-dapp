@@ -68,3 +68,22 @@ export interface IConnectorIcon {
 export interface ISecondsByDuration {
   [key: string]: number
 }
+
+export interface IBalancerPool {
+  data: {
+    pool: {
+      address: string
+      swapFee: string
+      tokens: IToken[]
+    }
+  }
+}
+
+interface IToken {
+  address: string
+  balance: string
+  weight: string
+  decimals: number
+  name: string
+  symbol: string
+}
