@@ -45,13 +45,18 @@ export default function MintStarCard({
           {/* <FiInfo color="white" /> */}
         </HStack>
         {/* </Tooltip> */}
-        <Text>{balanceToNumber(starType.price, 18)}</Text>
-        <Text>{balanceToNumber(starType.stablePrice, 6)}</Text>
+
         <Text>
+          <b> Rewards per day:</b>{' '}
           {(
             balanceToNumber(starType.rewardsPerSecond, 18) *
             secondsByDuration['day']
           ).toFixed(2)}
+          $KELVIN
+        </Text>
+        <Text>
+          <b>Cost: </b> {balanceToNumber(starType.price, 18)} $KELVIN,{' '}
+          {balanceToNumber(starType.stablePrice, 6)} $USDC
         </Text>
       </VStack>
       {selectedType === starType.id ? (

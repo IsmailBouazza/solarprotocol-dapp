@@ -1,8 +1,12 @@
 import { Grid, HStack, Spinner, Text, VStack } from '@chakra-ui/react'
 import { useContext, useEffect, useState } from 'react'
-import { useContractWrite } from 'wagmi'
+import { erc20ABI, useContractWrite } from 'wagmi'
 import { toast } from 'react-toastify'
-import { diamondContractConfig, palette } from '../../config/constants'
+import {
+  diamondContractConfig,
+  palette,
+  USDCAddress,
+} from '../../config/constants'
 import { IBalancerPool } from '../../config/types'
 import { SolarContext } from '../../context/SolarContext'
 import useWeb3Formatter from '../../hooks/useWeb3Formatter'
@@ -10,6 +14,7 @@ import NetworkButton from '../NetworkButton'
 import KelvinStats from './KelvinStats'
 import MintStarCard from './MintStarCard'
 import SolarStats from './SolarStats'
+import { ethers } from 'ethers'
 
 export default function HomeContent({
   poolInfo,
@@ -20,8 +25,8 @@ export default function HomeContent({
 }) {
   const [liquidity, setLiquidity] = useState(0)
 
-  const { StarTypes } = useContext(SolarContext)
-  const { parseErrorReason } = useWeb3Formatter()
+  const { StarTypes, UserState } = useContext(SolarContext)
+  const { parseErrorReason, balanceToNumber } = useWeb3Formatter()
 
   const [selectedType, setSelectedType] = useState(0)
 
@@ -46,9 +51,45 @@ export default function HomeContent({
         })
         return
       }
-      console.log(`⭐ ${selectedType} data: `, data)
+      if (!data) return
+      toast.promise(data.wait(1), {
+        pending: '🌟 Minting a Star.',
+        success: '🌟 Star Minted.',
+        error: '💥 Star minting failed.',
+      })
     },
   })
+
+  const { isLoading: isLoadingApprove, write: writeApprove } = useContractWrite(
+    {
+      addressOrName: USDCAddress,
+      contractInterface: erc20ABI,
+      functionName: 'approve',
+      args: [diamondContractConfig.addressOrName, ethers.constants.MaxUint256],
+      onSettled(data, error) {
+        debugger
+        if (error) {
+          console.error(`🔐 USDC error: `, parseErrorReason(error.message))
+          toast.error(`Approve USDC:  ${parseErrorReason(error.message)}`, {
+            position: 'top-center',
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+          })
+          return
+        }
+        if (!data) return
+        toast.promise(data.wait(1), {
+          pending: '🔒🔑 Approving USDC.',
+          success: '🔓 USDC Approved.',
+          error: '🔒❌ USDC Approval failed.',
+        })
+      },
+    }
+  )
 
   useEffect(() => {
     const usdc = poolInfo.data.pool.tokens.filter(
@@ -104,17 +145,90 @@ export default function HomeContent({
               })}
             <HStack>
               {selectedType === 0 ? (
-                <NetworkButton disabled>Select a Star</NetworkButton>
+                <NetworkButton disabled variant="solid3">
+                  Select a Star
+                </NetworkButton>
               ) : (
                 <>
-                  {isLoading ? (
-                    <NetworkButton
-                      isLoading
-                      loadingText="Minting"
-                    ></NetworkButton>
+                  {UserState.usdcAllowance === undefined ||
+                  UserState.usdcAllowance <= 1000 ? (
+                    <>
+                      {isLoadingApprove ? (
+                        <NetworkButton
+                          isLoading
+                          loadingText="Approving"
+                          variant="solid3"
+                        >
+                          Approve $USDC
+                        </NetworkButton>
+                      ) : (
+                        <NetworkButton
+                          onClick={() => writeApprove()}
+                          variant="solid3"
+                        >
+                          Approve $USDC
+                        </NetworkButton>
+                      )}
+                    </>
                   ) : (
-                    <NetworkButton onClick={() => write()}>Mint</NetworkButton>
+                    <></>
                   )}
+                  <>
+                    {StarTypes.types &&
+                      StarTypes.types.filter(
+                        (val) => val.id === selectedType
+                      ) && (
+                        <>
+                          {UserState.usdcBalance === undefined ||
+                          UserState.usdcBalance <
+                            balanceToNumber(
+                              StarTypes.types.filter(
+                                (val) => val.id === selectedType
+                              )[0].stablePrice,
+                              6
+                            ) ? (
+                            <NetworkButton disabled variant={'solid3'}>
+                              Not enough $USDC{' '}
+                            </NetworkButton>
+                          ) : (
+                            <>
+                              {UserState.kelvinBalance === undefined ||
+                              UserState.kelvinBalance <
+                                balanceToNumber(
+                                  StarTypes.types.filter(
+                                    (val) => val.id === selectedType
+                                  )[0].price,
+                                  18
+                                ) ? (
+                                <>
+                                  <NetworkButton disabled variant={'solid3'}>
+                                    Not enough $KELVIN
+                                  </NetworkButton>
+                                </>
+                              ) : (
+                                <>
+                                  {isLoading ? (
+                                    <NetworkButton
+                                      isLoading
+                                      loadingText="Minting"
+                                      variant="solid3"
+                                    ></NetworkButton>
+                                  ) : (
+                                    <NetworkButton
+                                      onClick={() => write()}
+                                      variant="solid3"
+                                      className="smallglow"
+                                    >
+                                      Mint
+                                    </NetworkButton>
+                                  )}
+                                </>
+                              )}
+                            </>
+                          )}
+                        </>
+                      )}
+                  </>
                 </>
               )}
             </HStack>

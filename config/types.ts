@@ -64,7 +64,7 @@ export interface IStarType {
 
 export interface IStarTypes {
   loading: boolean
-  types?: IStarType[]
+  types?: IStarType[] // array of all 3 of the Star types
 }
 
 export interface IStar {
@@ -72,6 +72,15 @@ export interface IStar {
   typeId: number
   createdAt: number
   isPresale: boolean
+}
+
+export interface IUserState {
+  loading: boolean
+  usdcBalance?: number // User's USDC balance
+  kelvinBalance?: number // User's KELVIN balance
+  usdcAllowance?: number // Allowance  of USDC for the diamond to spend
+  kelvinAllowance?: number // Allowance of KELVIN for the diamond to spend
+  stars?: IStar[] // Array with all of the user's stars
 }
 
 // Config Interfaces

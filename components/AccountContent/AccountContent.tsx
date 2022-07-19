@@ -1,6 +1,5 @@
 import {
   Grid,
-  Heading,
   HStack,
   Text,
   Tooltip,
@@ -28,10 +27,6 @@ export default function AccountContent() {
   return (
     <>
       <VStack w="full" mx={'5%'} px={'5%'}>
-        <Heading fontWeight={'normal'}>
-          <b>Disclaimer:</b> This is a beta website and does not represent real
-          values.
-        </Heading>
         <Grid
           gap={6}
           w={'full'}

@@ -6,12 +6,22 @@ import {
   presaleContractConfig,
   USDCAddress,
 } from '../config/constants'
-import { IEpoch, IPresale, IStarType, IStarTypes } from '../config/types'
+import {
+  IEpoch,
+  IPresale,
+  IStarType,
+  IStarTypes,
+  IUserState,
+} from '../config/types'
 
 const emptyPresale: IPresale = {
   loading: true,
 }
 const emptyTypes: IStarTypes = {
+  loading: true,
+}
+
+const emptyUser: IUserState = {
   loading: true,
 }
 
@@ -52,14 +62,17 @@ function buildStarType(data: any, rewards: ethers.BigNumberish) {
 export const SolarContext = createContext<{
   Presale: IPresale
   StarTypes: IStarTypes
+  UserState: IUserState
 }>({
   Presale: emptyPresale,
   StarTypes: emptyTypes,
+  UserState: emptyUser,
 })
 
 export function SolarProvider({ children }: { children: ReactNode }) {
   const [presale, setPresale] = useState<IPresale>(emptyPresale)
   const [starTypes, setStarTypes] = useState<IStarTypes>(emptyTypes)
+  const [userState, setUserState] = useState<IUserState>(emptyUser)
 
   const { address } = useAccount()
 
@@ -131,9 +144,9 @@ export function SolarProvider({ children }: { children: ReactNode }) {
     staleTime: 5_000,
   })
 
-  // getStarInfo
+  // getStarTypes
   const { refetch: refetchStars } = useContractInfiniteReads({
-    cacheKey: 'starData',
+    cacheKey: 'typeData',
     contracts: () => [
       { ...diamondContractConfig, functionName: 'getNodeTypes' },
       {
@@ -151,26 +164,13 @@ export function SolarProvider({ children }: { children: ReactNode }) {
         functionName: 'getNodeTypeRewardsPerSecond',
         args: [3],
       },
-      {
-        addressOrName: USDCAddress,
-        contractInterface: erc20ABI,
-        functionName: 'allowance',
-        args: [address, diamondContractConfig.addressOrName],
-      },
-      {
-        addressOrName: diamondContractConfig.addressOrName,
-        contractInterface: erc20ABI,
-        functionName: 'allowance',
-        args: [address, diamondContractConfig.addressOrName],
-      },
     ],
     onSettled(data, error) {
       if (error) {
-        console.error('⚙ BACKEND ERROR => getStarInfo')
+        console.error('⚙ BACKEND ERROR => getStarTypes')
         return
       }
       if (!data) return
-      console.log('⚙ starData', data)
       try {
         const starTypes: IStarType[] = []
         data.pages[0][0].map((val: IStarType, idx: number) => {
@@ -180,16 +180,82 @@ export function SolarProvider({ children }: { children: ReactNode }) {
         })
         setStarTypes({ loading: false, types: starTypes })
       } catch {
-        console.error('⚙ BACKEND ERROR => getStarInfo')
+        console.error('⚙ BACKEND ERROR => getStarTypes')
       }
     },
     cacheTime: 5_000,
     staleTime: 5_000,
   })
+
+  // getUserData
+  const { refetch: refetchUserData } = useContractInfiniteReads({
+    cacheKey: 'userData',
+    contracts: () => [
+      {
+        ...diamondContractConfig,
+        functionName: 'balanceOf(address)',
+        args: [address ? address : ethers.constants.AddressZero],
+      },
+      {
+        addressOrName: USDCAddress,
+        contractInterface: erc20ABI,
+        functionName: 'balanceOf',
+        args: [address ? address : ethers.constants.AddressZero],
+      },
+      {
+        ...diamondContractConfig,
+        functionName: 'allowance',
+        args: [
+          address ? address : ethers.constants.AddressZero,
+          diamondContractConfig.addressOrName,
+        ],
+      },
+      {
+        addressOrName: USDCAddress,
+        contractInterface: erc20ABI,
+        functionName: 'allowance',
+        args: [
+          address ? address : ethers.constants.AddressZero,
+          diamondContractConfig.addressOrName,
+        ],
+      },
+      {
+        ...diamondContractConfig,
+        functionName: 'getNodesOwnedBy(address)',
+        args: [address ? address : ethers.constants.AddressZero],
+      },
+    ],
+    onSettled(data, error) {
+      if (error) {
+        console.error('⚙ BACKEND ERROR => getUserData')
+        return
+      }
+      if (!data) return
+      try {
+        console.log('👤 data: ', data)
+        const stateObj: IUserState = {
+          loading: false,
+          kelvinBalance: format(data.pages[0][0], 18),
+          usdcBalance: format(data.pages[0][1], 6),
+          kelvinAllowance: format(data.pages[0][2], 18),
+          usdcAllowance: format(data.pages[0][3], 6),
+          stars: data.pages[0][4],
+        }
+        console.log('👤 USER OBJ: ', stateObj)
+        setUserState(stateObj)
+      } catch (err) {
+        console.error('⚙ BACKEND ERROR => getUserData', err)
+      }
+    },
+    cacheTime: 5_000,
+    staleTime: 5_000,
+  })
+
   useEffect(() => {
     const interval = setInterval(() => {
       refetch()
       refetchStars()
+      refetchUserData()
     }, 5_000)
     return () => clearInterval(interval)
   }, [])
@@ -202,7 +268,9 @@ export function SolarProvider({ children }: { children: ReactNode }) {
   // }, [])
 
   return (
-    <SolarContext.Provider value={{ Presale: presale, StarTypes: starTypes }}>
+    <SolarContext.Provider
+      value={{ Presale: presale, StarTypes: starTypes, UserState: userState }}
+    >
       {children}
     </SolarContext.Provider>
   )
