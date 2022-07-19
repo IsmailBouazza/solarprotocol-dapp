@@ -1,4 +1,4 @@
-import { Grid, HStack, Text, Tooltip, VStack } from '@chakra-ui/react'
+import { Grid, HStack, Text, VStack } from '@chakra-ui/react'
 import { useContext, useEffect, useState } from 'react'
 import { palette } from '../../config/constants'
 import { IBalancerPool } from '../../config/types'
@@ -8,7 +8,6 @@ import proton from '../../src/proto.png'
 import quasar from '../../src/quasar.png'
 import neutron from '../../src/neutron.png'
 import Image, { StaticImageData } from 'next/image'
-import { FiInfo } from 'react-icons/fi'
 
 const imgs: { [key: number]: StaticImageData } = {
   1: proton,
