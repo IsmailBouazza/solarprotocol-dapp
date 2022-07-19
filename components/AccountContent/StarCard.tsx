@@ -1,7 +1,14 @@
-import { Flex, VStack, Text, Divider, Grid } from '@chakra-ui/react'
-import { useCallback } from 'react'
-import { palette } from '../../config/constants'
+import { Flex, VStack, Text, Divider, Grid, Tooltip } from '@chakra-ui/react'
+import { ethers } from 'ethers'
+import { useCallback, useState } from 'react'
+import { useAccount, useBalance, useContractWrite } from 'wagmi'
+import {
+  costPerTier,
+  diamondContractConfig,
+  palette,
+} from '../../config/constants'
 import { IStarCardProps } from '../../config/types'
+// import { toast } from 'react-toastify'
 import NetworkButton from '../NetworkButton'
 
 const Stars: IStarCardProps = {
@@ -24,6 +31,33 @@ export default function StarCard({ tier }: { tier: number }) {
   const handleContextMenu = useCallback((event: any) => {
     event.preventDefault()
   }, [])
+
+  const { address } = useAccount()
+  const [balance, setBalance] = useState<number>(0)
+  const {} = useBalance({
+    addressOrName: address ? address : ethers.constants.AddressZero,
+    token: '0x5a66Be10177c30Ae983792240E13401dF472822A',
+    watch: true,
+    chainId: 250,
+    cacheTime: 5_000,
+    staleTime: 5_000,
+    onSuccess(data) {
+      setBalance(Number(ethers.utils.formatUnits(data.value, 18)))
+    },
+  })
+
+  const { isLoading, write } = useContractWrite({
+    ...diamondContractConfig,
+    functionName: 'createPresaleNode',
+    args: [tier],
+    onSettled(data, error) {
+      if (error) {
+        console.error(`⭐ ${tier} error: `, error)
+        return
+      }
+      console.log(`⭐ ${tier} data: `, data)
+    },
+  })
   return (
     <VStack
       bg={palette.background.gradient}
@@ -96,15 +130,51 @@ export default function StarCard({ tier }: { tier: number }) {
         <Text justifySelf={'end'}> 7.50 $KELVIN</Text>
       </Grid>
 
-      <NetworkButton
-        rounded={'xl'}
-        roundedTop="0px"
-        w="full"
-        p={4}
-        variant="solid3"
-      >
-        Redeem
-      </NetworkButton>
+      {isLoading ? (
+        <NetworkButton
+          rounded={'xl'}
+          roundedTop="0px"
+          w="full"
+          p={4}
+          variant="solid3"
+          isLoading
+          loadingText="Redeeming"
+        >
+          Redeem
+        </NetworkButton>
+      ) : (
+        <>
+          {costPerTier[tier] + 1 > balance ? (
+            <Tooltip
+              label="Not enough $nKELVIN"
+              aria-label="Not enough $nKELVIN"
+              hasArrow
+            >
+              <NetworkButton
+                rounded={'xl'}
+                roundedTop="0px"
+                w="full"
+                p={4}
+                variant="solid3"
+                disabled
+              >
+                Redeem
+              </NetworkButton>
+            </Tooltip>
+          ) : (
+            <NetworkButton
+              rounded={'xl'}
+              roundedTop="0px"
+              w="full"
+              p={4}
+              variant="solid3"
+              onClick={() => write()}
+            >
+              Redeem
+            </NetworkButton>
+          )}
+        </>
+      )}
     </VStack>
   )
 }

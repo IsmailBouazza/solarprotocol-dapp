@@ -1,6 +1,7 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import HomeContent from '../components/HomeContent'
+import { calculateSpotPrice } from '../utils/balancerHelper'
 
 export const getStaticProps = async () => {
   // GraphQL Query
@@ -28,21 +29,24 @@ export const getStaticProps = async () => {
   )
 
   const res = await req.json()
+  const price = calculateSpotPrice(res, 'KNS', 'USDC')
   return {
     props: {
       poolInfo: res,
+      price: price,
     },
   }
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const Home: NextPage = ({ poolInfo }: any) => {
+const Home: NextPage = ({ poolInfo, price }: any) => {
+  console.log('price', price)
   return (
     <>
       <Head>
         <title>Home | Solar Protocol</title>
       </Head>
-      <HomeContent poolInfo={poolInfo} />
+      <HomeContent poolInfo={poolInfo} price={price} />
     </>
   )
 }

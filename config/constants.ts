@@ -1,7 +1,12 @@
 import { ethers } from 'ethers'
 import { Chain, defaultChains } from 'wagmi'
 import { DiamondABI, PresaleABI } from './abis'
-import { IConnectorIcon, INetworkDetails, ISecondsByDuration } from './types'
+import {
+  IConnectorIcon,
+  ICostPerTier,
+  INetworkDetails,
+  ISecondsByDuration,
+} from './types'
 
 export const presaleContractConfig = {
   addressOrName: '0x0642d02271eBC831583F54d726D5aC9BF6709E2d',
@@ -9,7 +14,7 @@ export const presaleContractConfig = {
 }
 
 export const diamondContractConfig = {
-  addressOrName: '0x628c21568b9b06453568488a001ac543ec1e78fe',
+  addressOrName: '0x0739a637EdC62a740E49d99e8F5f08e53CfA73cB',
   contractInterface: DiamondABI,
 }
 
@@ -29,10 +34,10 @@ export const connectorIcons: IConnectorIcon = {
 
 export const networkDetails: INetworkDetails = {
   250: {
-    rpcUrl: 'https://rpc.tenderly.co/fork/a23a91aa-ea83-4ef9-aa07-7fb0fb9a5d7c',
+    rpcUrl: 'https://rpc.fantom.network	',
 
     chainProviders: new ethers.providers.JsonRpcProvider(
-      'https://rpc.tenderly.co/fork/a23a91aa-ea83-4ef9-aa07-7fb0fb9a5d7c'
+      'https://rpc.fantom.network	'
     ),
 
     blockExplorerURL: 'https://ftmscan.com',
@@ -83,20 +88,25 @@ export const ftmChain: Chain = {
   name: 'Fantom',
   network: 'Fantom Opera',
   rpcUrls: {
-    default:
-      'https://rpc.tenderly.co/fork/a23a91aa-ea83-4ef9-aa07-7fb0fb9a5d7c',
+    default: 'https://rpc.fantom.network	',
   },
   blockExplorers: { default: { name: 'ftmscan', url: 'https://ftmscan.com' } },
   nativeCurrency: { name: 'Fantom', symbol: 'FTM', decimals: 18 },
 }
 
-export const USDCAddress = '0x04068DA6C83AFCFA0e13ba15A6696662335D5B75'
+export const USDCAddress = '0x619C5e45057801361d4f99a27bbdAc75A95DDDae'
 export const allChains: Chain[] = [...defaultChains, ftmChain]
 
 export const secondsByDuration: ISecondsByDuration = {
   week: 7 * 24 * 60 * 60,
   month: 30 * 24 * 60 * 60,
   year: 365 * 24 * 60 * 60,
+}
+
+export const costPerTier: ICostPerTier = {
+  1: 5,
+  2: 10,
+  3: 30,
 }
 
 export const dateMask = 'Do of MMM YY'

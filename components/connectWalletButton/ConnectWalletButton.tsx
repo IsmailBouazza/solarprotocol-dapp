@@ -148,9 +148,9 @@ export default function ConnectWalletButton() {
                         address={address}
                         token="0x04068DA6C83AFCFA0e13ba15A6696662335D5B75"
                         watch={true}
-                        cacheTime={5000}
+                        cacheTime={1000}
                         chainId={250}
-                        staleTime={5000}
+                        staleTime={1000}
                       />
                     </>
                   ) : (

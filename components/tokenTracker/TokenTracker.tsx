@@ -24,7 +24,7 @@ export default function TokenTracker({
   tokenLogo,
   state,
 }: TokenTrackerProps) {
-  const { data, isError, isLoading } = useBalance({
+  const { data, isLoading } = useBalance({
     addressOrName: address,
     token,
     watch,
@@ -33,11 +33,12 @@ export default function TokenTracker({
     staleTime,
     onSuccess(data) {
       if (!state) return
+      if (!data) return
       state(data.value)
     },
   })
   const { balanceToNumber, toFormattedValue } = useWeb3Formatter()
-  if (isError || isLoading) return <Spinner size="sm" />
+  if (isLoading) return <Spinner size="sm" />
   return (
     <HStack>
       <Image

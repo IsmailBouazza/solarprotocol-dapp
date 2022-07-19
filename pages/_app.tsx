@@ -3,6 +3,7 @@ import type { AppProps } from 'next/app'
 import '@fontsource/ubuntu'
 import { ChakraProvider } from '@chakra-ui/react'
 import { configureChains, createClient, WagmiConfig } from 'wagmi'
+import { ToastContainer } from 'react-toastify'
 import { jsonRpcProvider } from 'wagmi/providers/jsonRpc'
 import { ftmChain } from '../config/constants'
 import SideBarWrapper from '../components/sidebar'
@@ -11,6 +12,7 @@ import { CoinbaseWalletConnector } from 'wagmi/connectors/coinbaseWallet'
 import { MetaMaskConnector } from 'wagmi/connectors/metaMask'
 import { WalletConnectConnector } from 'wagmi/connectors/walletConnect'
 import { SolarProvider } from '../context/SolarContext'
+import 'react-toastify/dist/ReactToastify.css'
 
 const { provider } = configureChains(
   [ftmChain],
@@ -51,6 +53,17 @@ function MyApp({ Component, pageProps }: AppProps) {
         <ChakraProvider theme={theme}>
           <SideBarWrapper>
             <Component {...pageProps} />
+            <ToastContainer
+              position="top-center"
+              autoClose={5000}
+              hideProgressBar={false}
+              newestOnTop={false}
+              closeOnClick
+              rtl={false}
+              pauseOnFocusLoss
+              draggable
+              pauseOnHover
+            />
           </SideBarWrapper>
         </ChakraProvider>
       </SolarProvider>

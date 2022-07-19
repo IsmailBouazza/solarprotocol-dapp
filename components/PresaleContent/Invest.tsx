@@ -124,8 +124,8 @@ export default function Invest({
     token: USDCAddress,
     watch: true,
     chainId: 250,
-    cacheTime: 3_000,
-    staleTime: 3_000,
+    cacheTime: 5_000,
+    staleTime: 5_000,
     onSuccess(data) {
       setBalance(Number(ethers.utils.formatUnits(data.value, 6)))
     },

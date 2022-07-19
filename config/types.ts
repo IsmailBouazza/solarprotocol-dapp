@@ -47,6 +47,25 @@ export interface IPresale {
   allowance?: number
 }
 
+export interface IStarType {
+  id: number
+  name: string
+  price: number
+  stablePrice: number
+}
+
+export interface IStarTypes {
+  loading: boolean
+  types?: IStarType[]
+}
+
+export interface IStar {
+  tokenId: number
+  typeId: number
+  createdAt: number
+  isPresale: boolean
+}
+
 // Config Interfaces
 export interface INetworkDetails {
   [key: number]: {
@@ -67,6 +86,10 @@ export interface IConnectorIcon {
 
 export interface ISecondsByDuration {
   [key: string]: number
+}
+
+export interface ICostPerTier {
+  [key: number]: number
 }
 
 export interface IBalancerPool {

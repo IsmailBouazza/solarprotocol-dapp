@@ -4,10 +4,14 @@ import { erc20ABI, useAccount, useContractInfiniteReads } from 'wagmi'
 import {
   diamondContractConfig,
   presaleContractConfig,
+  USDCAddress,
 } from '../config/constants'
-import { IEpoch, IPresale } from '../config/types'
+import { IEpoch, IPresale, IStarType, IStarTypes } from '../config/types'
 
 const emptyPresale: IPresale = {
+  loading: true,
+}
+const emptyTypes: IStarTypes = {
   loading: true,
 }
 
@@ -31,12 +35,30 @@ function buildEpoch(data: any) {
   return epoch
 }
 
-export const SolarContext = createContext<{ Presale: IPresale }>({
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function buildStarType(data: any) {
+  if (!data) return
+  if (!data.length) return
+  const starType: IStarType = {
+    id: Number(data.id),
+    name: data.name,
+    price: Number(data.price),
+    stablePrice: Number(data.stablePrice),
+  }
+  return starType
+}
+
+export const SolarContext = createContext<{
+  Presale: IPresale
+  StarTypes: IStarTypes
+}>({
   Presale: emptyPresale,
+  StarTypes: emptyTypes,
 })
 
 export function SolarProvider({ children }: { children: ReactNode }) {
   const [presale, setPresale] = useState<IPresale>(emptyPresale)
+  const [starTypes, setStarTypes] = useState<IStarTypes>(emptyTypes)
 
   const { address } = useAccount()
 
@@ -72,7 +94,7 @@ export function SolarProvider({ children }: { children: ReactNode }) {
         args: [address],
       },
       {
-        addressOrName: '0x04068DA6C83AFCFA0e13ba15A6696662335D5B75',
+        addressOrName: USDCAddress,
         contractInterface: erc20ABI,
         functionName: 'allowance',
         args: [address, presaleContractConfig.addressOrName],
@@ -104,8 +126,8 @@ export function SolarProvider({ children }: { children: ReactNode }) {
       }
       setPresale(presaleObj)
     },
-    cacheTime: 3_000,
-    staleTime: 3_000,
+    cacheTime: 5_000,
+    staleTime: 5_000,
   })
 
   // getStarInfo
@@ -113,13 +135,17 @@ export function SolarProvider({ children }: { children: ReactNode }) {
     cacheKey: 'starData',
     contracts: () => [
       { ...diamondContractConfig, functionName: 'getNodeTypes' },
-      // {
-      //   ...diamondContractConfig,
-      //   functionName: 'getAccountWhitelist',
-      //   args: [address],
-      // },
       {
-        addressOrName: '0x04068DA6C83AFCFA0e13ba15A6696662335D5B75',
+        ...diamondContractConfig,
+        functionName: 'getNodeRewardsInfo(uint256[] calldata nodeIds)',
+        args: [
+          starTypes.types?.map((val) => {
+            return val.id
+          }),
+        ],
+      },
+      {
+        addressOrName: USDCAddress,
         contractInterface: erc20ABI,
         functionName: 'allowance',
         args: [address, diamondContractConfig.addressOrName],
@@ -133,31 +159,43 @@ export function SolarProvider({ children }: { children: ReactNode }) {
     ],
     onSettled(data, error) {
       if (error) {
-        console.log('⚙ BACKEND ERROR => getStarInfo')
+        console.error('⚙ BACKEND ERROR => getStarInfo')
         return
       }
       if (!data) return
-      console.log('starData', data)
+      console.log('⚙ starData', data)
+      try {
+        const starTypes: IStarType[] = []
+        data.pages[0][0].map((val: IStarType) => {
+          const starType = buildStarType(val)
+          if (!starType) return
+          starTypes.push(starType)
+        })
+        setStarTypes({ loading: false, types: starTypes })
+      } catch {
+        console.error('⚙ BACKEND ERROR => getStarInfo')
+      }
     },
-    cacheTime: 3_000,
-    staleTime: 3_000,
+    cacheTime: 5_000,
+    staleTime: 5_000,
   })
   useEffect(() => {
     const interval = setInterval(() => {
       refetch()
-    }, 3_000)
+      refetchStars()
+    }, 5_000)
     return () => clearInterval(interval)
   }, [])
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      refetchStars()
-    }, 10000)
-    return () => clearInterval(interval)
-  }, [])
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     refetchStars()
+  //   }, 10000)
+  //   return () => clearInterval(interval)
+  // }, [])
 
   return (
-    <SolarContext.Provider value={{ Presale: presale }}>
+    <SolarContext.Provider value={{ Presale: presale, StarTypes: starTypes }}>
       {children}
     </SolarContext.Provider>
   )

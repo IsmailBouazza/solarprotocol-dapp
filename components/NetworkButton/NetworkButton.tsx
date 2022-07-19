@@ -50,7 +50,7 @@ const NetworkButton: NetworkButtonType = forwardRef(
               </>
             ) : (
               <Button ref={ref} {...props}>
-                {children}
+                {mounted && children}
               </Button>
             )}
           </>
