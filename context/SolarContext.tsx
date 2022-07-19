@@ -17,7 +17,6 @@ import {
 
 const emptyPresale: IPresale = {
   loading: true,
-<<<<<<< HEAD
 }
 const emptyTypes: IStarTypes = {
   loading: true,
@@ -25,8 +24,6 @@ const emptyTypes: IStarTypes = {
 
 const emptyUser: IUserState = {
   loading: true,
-=======
->>>>>>> main
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

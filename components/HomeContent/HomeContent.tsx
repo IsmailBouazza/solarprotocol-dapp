@@ -96,7 +96,7 @@ export default function HomeContent({
       (val) => val.symbol === 'USDC'
     )[0]
     const kelvin = poolInfo.data.pool.tokens.filter(
-      (val) => val.symbol === 'KNS'
+      (val) => val.symbol === 'KELVIN'
     )[0]
     const usdcValue = Number(usdc.balance)
     const kelvinValue = Number(kelvin.balance) * price

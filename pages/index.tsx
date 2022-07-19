@@ -23,13 +23,13 @@ export const getStaticProps = async () => {
           'https://api.thegraph.com/subgraphs/name/beethovenxfi/beethovenx/graphql?query=query+knsPool+%7B%0A++pool%28id%3A+%220x28b8d52a695f485900a6de3ea0352b8e3891d2db0002000000000000000004f1%22%29+%7B%0A++++address%0A++++swapFee%0A++++tokens+%7B%0A++++++balance%0A++++++weight%0A++++++decimals%0A++++++name%0A++++++address%0A++++++symbol%0A++++%7D%0A++%7D%0A%7D',
         'Referrer-Policy': 'strict-origin-when-cross-origin',
       },
-      body: '{"query":"query knsPool {\\n  pool(id: \\"0x28b8d52a695f485900a6de3ea0352b8e3891d2db0002000000000000000004f1\\") {\\n    address\\n    swapFee\\n    tokens {\\n      balance\\n      weight\\n      decimals\\n      name\\n      address\\n      symbol\\n    }\\n  }\\n}","variables":null,"operationName":"knsPool","extensions":{"headers":null}}',
+      body: '{"query":"query knsPool {\\n  pool(id: \\"0x5c253890b145ba1d3fc3a71699d8431210a879c0000200000000000000000503\\") {\\n    address\\n    swapFee\\n    tokens {\\n      balance\\n      weight\\n      decimals\\n      name\\n      address\\n      symbol\\n    }\\n  }\\n}","variables":null,"operationName":"knsPool","extensions":{"headers":null}}',
       method: 'POST',
     }
   )
 
   const res = await req.json()
-  const price = calculateSpotPrice(res, 'KNS', 'USDC')
+  const price = calculateSpotPrice(res, 'USDC', 'KELVIN')
   return {
     props: {
       poolInfo: res,
