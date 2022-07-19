@@ -13,6 +13,7 @@ import {
   HStack,
   useClipboard,
   IconButton,
+  Image,
 } from '@chakra-ui/react'
 import { BiWallet } from 'react-icons/bi'
 import { VscDebugDisconnect } from 'react-icons/vsc'
@@ -27,9 +28,14 @@ import {
 import useMounted from '../../hooks/useMounted'
 import useWeb3Formatter from '../../hooks/useWeb3Formatter'
 import useToastHelper from '../../hooks/useToastHelper'
-import TokenTracker from '../tokenTracker'
 import ConnectWalletButtonIcons from './ConnectWalletButtonIcons'
-import { palette } from '../../config/constants'
+import {
+  connectorIcons,
+  diamondContractConfig,
+  palette,
+  USDCAddress,
+} from '../../config/constants'
+import TokenTracker from '../tokenTracker'
 
 export default function ConnectWalletButton() {
   const mounted = useMounted()
@@ -41,9 +47,13 @@ export default function ConnectWalletButton() {
       summonToast(
         'connected',
         'info',
+<<<<<<< HEAD
+        <Text fontWeight="bold">Wallet connected {data.account}</Text>
+=======
         <Text color={'black'} fontWeight="bold">
           Wallet connected {data.account}
         </Text>
+>>>>>>> main
       )
     },
   })
@@ -52,9 +62,13 @@ export default function ConnectWalletButton() {
       summonToast(
         'disconnected',
         'warning',
+<<<<<<< HEAD
+        <Text fontWeight="bold">Wallet disconnected</Text>
+=======
         <Text color={'black'} fontWeight="bold">
           Wallet disconnected
         </Text>
+>>>>>>> main
       )
     },
   })
@@ -67,6 +81,7 @@ export default function ConnectWalletButton() {
   const { hasCopied, onCopy } = useClipboard(address ? address : '', {
     timeout: 1000,
   })
+
   const { summonToast } = useToastHelper()
 
   // Show toast on error
@@ -85,6 +100,23 @@ export default function ConnectWalletButton() {
     if (!hasCopied) return
     summonToast('copy', 'info', <Text color={'black'}>Address copied</Text>)
   }, [hasCopied, summonToast])
+
+  async function addToken(address: string, symbol: string) {
+    if (typeof window === undefined) return
+    const ethereum = window.ethereum
+    if (!ethereum) return
+    await ethereum.request({
+      method: 'wallet_watchAsset',
+      params: {
+        type: 'ERC20',
+        options: {
+          address: address,
+          symbol: symbol,
+          decimals: 18,
+        },
+      },
+    })
+  }
 
   return (
     <>
@@ -117,7 +149,7 @@ export default function ConnectWalletButton() {
           <ModalCloseButton color={'white'} />
           <ModalBody px={4} color="white">
             {isConnected ? (
-              <VStack py={2} alignItems="start">
+              <VStack py={2} alignItems="start" gap={2}>
                 <HStack w="100%" justifyContent="space-between">
                   <HStack cursor="pointer" onClick={() => onCopy()}>
                     <BiWallet />
@@ -133,24 +165,23 @@ export default function ConnectWalletButton() {
                 <HStack w="100%" justifyContent="space-between">
                   {chain?.id === 250 && address ? (
                     <>
-                      <HStack>
-                        <TokenTracker
-                          tokenLogo="https://assets.coingecko.com/coins/images/4001/small/Fantom.png?1558015016"
-                          address={address}
-                          watch={true}
-                          cacheTime={5000}
-                          chainId={250}
-                          staleTime={5000}
-                        />
-                      </HStack>
                       <TokenTracker
-                        tokenLogo="https://assets.coingecko.com/coins/images/6319/small/USD_Coin_icon.png?1547042389"
+                        tokenLogo="https://assets.coingecko.com/coins/images/4001/small/Fantom.png?1558015016"
                         address={address}
-                        token="0x04068DA6C83AFCFA0e13ba15A6696662335D5B75"
                         watch={true}
                         cacheTime={5000}
                         chainId={250}
                         staleTime={5000}
+                      />
+
+                      <TokenTracker
+                        tokenLogo="https://assets.coingecko.com/coins/images/6319/small/USD_Coin_icon.png?1547042389"
+                        address={address}
+                        token={USDCAddress}
+                        watch={true}
+                        cacheTime={1000}
+                        chainId={250}
+                        staleTime={1000}
                       />
                     </>
                   ) : (
@@ -169,6 +200,23 @@ export default function ConnectWalletButton() {
                     </>
                   )}
                 </HStack>
+                {chain?.id === 250 && address && mounted && window.ethereum && (
+                  <Button
+                    variant={'solid'}
+                    leftIcon={
+                      <Image
+                        src={connectorIcons['MetaMask'].logoURI}
+                        alt="MetaMask logo"
+                        minH="32px"
+                      />
+                    }
+                    onClick={() =>
+                      addToken(diamondContractConfig.addressOrName, 'KELVIN')
+                    }
+                  >
+                    Add $KELVIN
+                  </Button>
+                )}
               </VStack>
             ) : (
               <VStack p={4}>

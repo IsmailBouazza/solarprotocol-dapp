@@ -17,7 +17,7 @@ import {
   Image,
   Divider,
 } from '@chakra-ui/react'
-import { FiHome, FiMenu, FiSun } from 'react-icons/fi'
+import { FiHome, FiMenu } from 'react-icons/fi'
 import { IconType } from 'react-icons'
 import ConnectWalletButton from '../connectWalletButton'
 import { BiCalculator } from 'react-icons/bi'
@@ -32,7 +32,6 @@ interface LinkItemProps {
   link: string
 }
 const LinkItems: Array<LinkItemProps> = [
-  { name: 'Presale', icon: FiSun, link: '/presale' },
   { name: 'Home', icon: FiHome, link: '/' },
   { name: 'Calculator', icon: BiCalculator, link: '/calculator' },
   { name: 'My account', icon: VscAccount, link: '/account' },
@@ -169,6 +168,7 @@ const NavItem = ({ icon, link, children }: NavItemProps) => {
           ? `2px solid ${palette.main.buttonLightBorder}`
           : '2px solid transparent'
       }
+      textAlign="center"
     >
       <Icon
         fontSize="2xl"

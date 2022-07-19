@@ -1,11 +1,21 @@
 import { ethers } from 'ethers'
 import { Chain, defaultChains } from 'wagmi'
-import { PresaleABI } from './abis'
-import { IConnectorIcon, INetworkDetails, ISecondsByDuration } from './types'
+import { DiamondABI, PresaleABI } from './abis'
+import {
+  IConnectorIcon,
+  ICostPerTier,
+  INetworkDetails,
+  ISecondsByDuration,
+} from './types'
 
 export const presaleContractConfig = {
   addressOrName: '0x0642d02271eBC831583F54d726D5aC9BF6709E2d',
   contractInterface: PresaleABI,
+}
+
+export const diamondContractConfig = {
+  addressOrName: '0x08d70A47D3f28BbF755ae050a783844b40ae5761',
+  contractInterface: DiamondABI,
 }
 
 export const connectorIcons: IConnectorIcon = {
@@ -24,10 +34,10 @@ export const connectorIcons: IConnectorIcon = {
 
 export const networkDetails: INetworkDetails = {
   250: {
-    rpcUrl: 'https://rpc.ankr.com/fantom',
+    rpcUrl: 'https://rpc.ankr.com/fantom	',
 
     chainProviders: new ethers.providers.JsonRpcProvider(
-      'https://rpc.ankr.com/fantom'
+      'https://rpc.ankr.com/fantom	'
     ),
 
     blockExplorerURL: 'https://ftmscan.com',
@@ -77,7 +87,9 @@ export const ftmChain: Chain = {
   id: 250,
   name: 'Fantom',
   network: 'Fantom Opera',
-  rpcUrls: { default: 'https://rpc.ankr.com/fantom' },
+  rpcUrls: {
+    default: 'https://rpc.ankr.com/fantom	',
+  },
   blockExplorers: { default: { name: 'ftmscan', url: 'https://ftmscan.com' } },
   nativeCurrency: { name: 'Fantom', symbol: 'FTM', decimals: 18 },
 }
@@ -86,10 +98,19 @@ export const USDCAddress = '0x04068DA6C83AFCFA0e13ba15A6696662335D5B75'
 export const allChains: Chain[] = [...defaultChains, ftmChain]
 
 export const secondsByDuration: ISecondsByDuration = {
+  day: 60 * 60 * 24,
   week: 7 * 24 * 60 * 60,
   month: 30 * 24 * 60 * 60,
   year: 365 * 24 * 60 * 60,
 }
+
+export const costPerTier: ICostPerTier = {
+  1: 5,
+  2: 10,
+  3: 30,
+}
+
+export const dateMask = 'Do of MMM YY'
 
 export const palette = {
   background: {
@@ -104,6 +125,8 @@ export const palette = {
     buttonBg: '#081429',
     buttonBorder: '#d34715',
     buttonLightBorder: '#f67447',
+    button: '#f67447',
+    buttonHover: '#c55d39',
     outerGlow: '#e87147',
   },
   footer: {

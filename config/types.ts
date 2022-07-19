@@ -1,4 +1,5 @@
 import { ethers } from 'ethers'
+import { Dispatch, SetStateAction } from 'react'
 
 // Component Interfaces
 export interface IInvestInfo {
@@ -6,6 +7,19 @@ export interface IInvestInfo {
   investorIssued: number
   step: number
   epoch: IEpoch
+}
+
+export interface IStarCardProps {
+  [key: number]: {
+    starName: string
+    video: string
+  }
+}
+
+export interface IMintStarCardProps {
+  selectedType: number
+  setSelectedType: Dispatch<SetStateAction<number>>
+  starType: IStarType
 }
 
 // State Interfaces
@@ -40,6 +54,39 @@ export interface IPresale {
   allowance?: number
 }
 
+export interface IStarType {
+  id: number
+  name: string
+  price: number
+  stablePrice: number
+  rewardsPerSecond: number
+}
+
+export interface IStarTypes {
+  loading: boolean
+  types?: IStarType[] // array of all 3 of the Star types
+  protoCount?: number // global number of Proto Stars
+  neutronCount?: number // global number of Neutron Stars
+  quasarCount?: number // global number of Quasar Stars
+}
+
+export interface IStar {
+  tokenId: number
+  typeId: number
+  createdAt: number
+  isPresale: boolean
+  pendingRewards: number
+}
+
+export interface IUserState {
+  loading: boolean
+  usdcBalance?: number // User's USDC balance
+  kelvinBalance?: number // User's KELVIN balance
+  usdcAllowance?: number // Allowance  of USDC for the diamond to spend
+  kelvinAllowance?: number // Allowance of KELVIN for the diamond to spend
+  stars?: IStar[] // Array with all of the user's stars
+}
+
 // Config Interfaces
 export interface INetworkDetails {
   [key: number]: {
@@ -60,4 +107,27 @@ export interface IConnectorIcon {
 
 export interface ISecondsByDuration {
   [key: string]: number
+}
+
+export interface ICostPerTier {
+  [key: number]: number
+}
+
+export interface IBalancerPool {
+  data: {
+    pool: {
+      address: string
+      swapFee: string
+      tokens: IToken[]
+    }
+  }
+}
+
+interface IToken {
+  address: string
+  balance: string
+  weight: string
+  decimals: number
+  name: string
+  symbol: string
 }

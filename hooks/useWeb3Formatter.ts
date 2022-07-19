@@ -29,11 +29,19 @@ export default function useWeb3Formatter() {
       useGrouping: false,
     })
   }
+
+  function parseErrorReason(message: string) {
+    return message.substring(
+      message.indexOf('reason="') + 'reason="'.length,
+      message.indexOf('",')
+    )
+  }
   return {
     trimmedAddress,
     balanceToNumber,
     toFormattedValue,
     toFormattedValueNoDeciamls,
     addLeadingZeroes,
+    parseErrorReason,
   }
 }

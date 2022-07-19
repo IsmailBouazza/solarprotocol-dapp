@@ -1,9 +1,5 @@
-import { extendTheme, ThemeConfig } from '@chakra-ui/react'
+import { extendTheme } from '@chakra-ui/react'
 import { palette } from './constants'
-
-const config: ThemeConfig = {
-  initialColorMode: 'dark',
-}
 
 export const theme = extendTheme({
   fonts: {
@@ -80,8 +76,25 @@ export const theme = extendTheme({
             transform: 'translate(0, -4px)',
           },
         }),
+        solid3: () => ({
+          color: 'white',
+          background: palette.main.button,
+          borderRadius: '1em',
+          border: '1px solid transparent',
+          transition: '0.3s',
+
+          _hover: {
+            background: palette.main.buttonHover,
+          },
+          _focus: {
+            background: palette.main.buttonHover,
+          },
+          _active: {
+            background: palette.main.buttonHover,
+          },
+        }),
       },
     },
   },
-  config,
+  initialColorMode: 'dark',
 })
