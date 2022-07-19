@@ -187,80 +187,65 @@ export default function Invest({
       >
         {Presale.currentEpoch && (
           <>
-            {whitelistId === 0 ? (
-              <Text gridColumn={'1/-1'}>You{"'"}re not whitelisted</Text>
-            ) : (
+            {Presale.allowance && Presale.allowance > 600 * 10 ** 6 ? (
               <>
-                {Presale.currentEpoch.whitelistIds.includes(whitelistId) ? (
+                {Presale.userCap !== undefined &&
+                Presale.tokensIssued !== undefined ? (
                   <>
-                    {Presale.allowance && Presale.allowance > 600 * 10 ** 6 ? (
-                      <>
-                        {Presale.userCap !== undefined &&
-                        Presale.tokensIssued !== undefined ? (
-                          <>
-                            {Presale.userCap - Presale.tokensIssued >= 5 && (
-                              <InvestButton
-                                isLoading={toInvestLoad}
-                                currentEpoch={Presale.currentEpoch}
-                                amount={5}
-                                issued={Presale.tokensIssued}
-                                max={Presale.userCap}
-                                invest={setToInvest}
-                              />
-                            )}
-                            {Presale.userCap - Presale.tokensIssued >= 10 && (
-                              <InvestButton
-                                isLoading={toInvestLoad}
-                                currentEpoch={Presale.currentEpoch}
-                                amount={10}
-                                issued={Presale.tokensIssued}
-                                max={Presale.userCap}
-                                invest={setToInvest}
-                              />
-                            )}
-                            {Presale.userCap - Presale.tokensIssued >= 30 && (
-                              <InvestButton
-                                isLoading={toInvestLoad}
-                                currentEpoch={Presale.currentEpoch}
-                                amount={30}
-                                issued={Presale.tokensIssued}
-                                max={Presale.userCap}
-                                invest={setToInvest}
-                              />
-                            )}
-                          </>
-                        ) : (
-                          <Text>Error loading wallet data</Text>
-                        )}
-
-                        {Presale.userCap === Presale.tokensIssued && (
-                          <Text textAlign={'center'} gridColumn={'1/-1'}>
-                            Allocation limit per wallet reached.
-                          </Text>
-                        )}
-                      </>
-                    ) : (
-                      <VStack gridColumn={'1/-1'}>
-                        <Text>
-                          You need to approve the Presale contract to spend your
-                          USDC.
-                        </Text>
-                        {approveLoad ? (
-                          <Button isLoading onClick={() => approve()}>
-                            Approve
-                          </Button>
-                        ) : (
-                          <Button onClick={() => approve()}>Approve</Button>
-                        )}
-                      </VStack>
+                    {Presale.userCap - Presale.tokensIssued >= 5 && (
+                      <InvestButton
+                        isLoading={toInvestLoad}
+                        currentEpoch={Presale.currentEpoch}
+                        amount={5}
+                        issued={Presale.tokensIssued}
+                        max={Presale.userCap}
+                        invest={setToInvest}
+                      />
+                    )}
+                    {Presale.userCap - Presale.tokensIssued >= 10 && (
+                      <InvestButton
+                        isLoading={toInvestLoad}
+                        currentEpoch={Presale.currentEpoch}
+                        amount={10}
+                        issued={Presale.tokensIssued}
+                        max={Presale.userCap}
+                        invest={setToInvest}
+                      />
+                    )}
+                    {Presale.userCap - Presale.tokensIssued >= 30 && (
+                      <InvestButton
+                        isLoading={toInvestLoad}
+                        currentEpoch={Presale.currentEpoch}
+                        amount={30}
+                        issued={Presale.tokensIssued}
+                        max={Presale.userCap}
+                        invest={setToInvest}
+                      />
                     )}
                   </>
                 ) : (
-                  <Text gridColumn={'1/-1'}>
-                    You{"'"}re not whitelisted for this epoch.
+                  <Text>Error loading wallet data</Text>
+                )}
+
+                {Presale.userCap === Presale.tokensIssued && (
+                  <Text textAlign={'center'} gridColumn={'1/-1'}>
+                    Allocation limit per wallet reached.
                   </Text>
                 )}
               </>
+            ) : (
+              <VStack gridColumn={'1/-1'}>
+                <Text>
+                  You need to approve the Presale contract to spend your USDC.
+                </Text>
+                {approveLoad ? (
+                  <Button isLoading onClick={() => approve()}>
+                    Approve
+                  </Button>
+                ) : (
+                  <Button onClick={() => approve()}>Approve</Button>
+                )}
+              </VStack>
             )}
           </>
         )}

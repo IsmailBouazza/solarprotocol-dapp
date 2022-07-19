@@ -15,7 +15,6 @@ import { connectorIcons, presaleContractConfig } from '../../config/constants'
 import { SolarContext } from '../../context/SolarContext'
 import useMounted from '../../hooks/useMounted'
 import useWeb3Formatter from '../../hooks/useWeb3Formatter'
-import Invest from './Invest'
 import PresaleStats from './PresaleStats'
 import WalletStats from './WalletStats'
 
@@ -75,7 +74,7 @@ export default function PresaleContent() {
   return (
     <>
       {!mounted || Presale.loading ? (
-        <Spinner />
+        <Spinner color="white" />
       ) : (
         <>
           {window.ethereum ? (
@@ -122,7 +121,7 @@ export default function PresaleContent() {
               +
             </Button>
           )}
-          {Presale.whitelistId !== 0 ? (
+          {/* {Presale.whitelistId !== 0 ? (
             <Text
               position={'absolute'}
               top={{ base: 2, lg: 8 }}
@@ -139,12 +138,12 @@ export default function PresaleContent() {
             >
               ❌ Not Whitelisted
             </Text>
-          )}
+          )} */}
           {started ? (
             <>
               <PresaleStats />
               <WalletStats />
-              {Presale.whitelistId !== undefined && (
+              {/* {Presale.whitelistId !== undefined && (
                 <Invest
                   whitelistId={Presale.whitelistId}
                   isWhitelisted={Boolean(
@@ -152,7 +151,7 @@ export default function PresaleContent() {
                       Presale.whitelistId !== 0
                   )}
                 />
-              )}
+              )} */}
             </>
           ) : (
             <>
