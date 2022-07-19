@@ -132,7 +132,12 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
           opacity={1}
         />
         {LinkItems.map((link) => (
-          <NavItem key={link.name} icon={link.icon} link={link.link}>
+          <NavItem
+            key={link.name}
+            icon={link.icon}
+            link={link.link}
+            onClose={onClose}
+          >
             {link.name}
           </NavItem>
         ))}
@@ -145,8 +150,9 @@ interface NavItemProps extends FlexProps {
   icon: IconType
   link: string
   children: ReactText
+  onClose: () => void
 }
-const NavItem = ({ icon, link, children }: NavItemProps) => {
+const NavItem = ({ icon, link, children, onClose }: NavItemProps) => {
   const router = useRouter()
   const isSelected = useMemo(() => {
     return router.pathname === link
@@ -155,7 +161,10 @@ const NavItem = ({ icon, link, children }: NavItemProps) => {
     <VStack
       w="90%"
       p={4}
-      onClick={() => router.push(link, undefined, { shallow: true })}
+      onClick={() => {
+        onClose()
+        router.push(link, undefined, { shallow: true })
+      }}
       borderRadius="lg"
       role="group"
       cursor="pointer"

@@ -3,7 +3,7 @@ import Head from 'next/head'
 import HomeContent from '../components/HomeContent'
 import { calculateSpotPrice } from '../utils/balancerHelper'
 
-export const getStaticProps = async () => {
+export const getServerSideProps = async () => {
   // GraphQL Query
   const req = await fetch(
     'https://api.thegraph.com/subgraphs/name/beethovenxfi/beethovenx',

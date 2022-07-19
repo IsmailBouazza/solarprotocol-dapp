@@ -120,7 +120,7 @@ export default function AccountContent({ price }: { price: number }) {
         >
           <VStack fontWeight={'bold'}>
             <Tooltip label="Amount of $KELVIN yet to claim." hasArrow>
-              <HStack>
+              <HStack w="full" textAlign={'center'} p={2}>
                 <Text>Claimable $KELVIN</Text>
                 <FiInfo color="white" />
               </HStack>
