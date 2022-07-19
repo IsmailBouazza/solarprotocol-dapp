@@ -28,6 +28,8 @@ export default function MintStarCard({
       p={4}
       gap={4}
       className="smallglow"
+      cursor={'pointer'}
+      onClick={() => setSelectedType(starType.id)}
     >
       <Image
         src={imgs[starType.id]}
