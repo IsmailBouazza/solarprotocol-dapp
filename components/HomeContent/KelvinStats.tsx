@@ -15,6 +15,7 @@ export default function KelvinStats({
       rounded={'xl'}
       p={4}
       justifyContent={'center'}
+      position="relative"
       border={`2px solid ${palette.main.buttonLightBorder}`}
     >
       <Text fontSize={'4xl'} textAlign={'center'}>

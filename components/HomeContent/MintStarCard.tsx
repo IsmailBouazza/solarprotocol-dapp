@@ -1,4 +1,4 @@
-import { HStack, VStack, Radio, Text } from '@chakra-ui/react'
+import { HStack, VStack, Radio, Text, Tooltip } from '@chakra-ui/react'
 import Image, { StaticImageData } from 'next/image'
 import { palette, secondsByDuration } from '../../config/constants'
 import { IMintStarCardProps } from '../../config/types'
@@ -6,6 +6,7 @@ import proton from '../../src/proto.png'
 import quasar from '../../src/quasar.png'
 import neutron from '../../src/neutron.png'
 import useWeb3Formatter from '../../hooks/useWeb3Formatter'
+import { FiInfo } from 'react-icons/fi'
 
 const imgs: { [key: number]: StaticImageData } = {
   1: proton,
@@ -48,14 +49,26 @@ export default function MintStarCard({
         </HStack>
         {/* </Tooltip> */}
 
-        <Text>
-          <b> Rewards per day:</b>{' '}
-          {(
+        <Tooltip
+          label={`Rewards are rounded to 2 decimals, actual number is ${
             balanceToNumber(starType.rewardsPerSecond, 18) *
             secondsByDuration['day']
-          ).toFixed(2)}
-          $KELVIN
-        </Text>
+          }`}
+          hasArrow
+          aria-label="Real rewards"
+        >
+          <HStack>
+            <Text>
+              <b> Rewards per day:</b>{' '}
+              {(
+                balanceToNumber(starType.rewardsPerSecond, 18) *
+                secondsByDuration['day']
+              ).toFixed(2)}
+              $KELVIN
+            </Text>
+            <FiInfo color="white" />
+          </HStack>
+        </Tooltip>
         <Text>
           <b>Cost: </b> {balanceToNumber(starType.price, 18)} $KELVIN,{' '}
           {balanceToNumber(starType.stablePrice, 6)} $USDC
