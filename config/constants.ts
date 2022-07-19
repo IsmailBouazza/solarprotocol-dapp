@@ -9,12 +9,12 @@ import {
 } from './types'
 
 export const presaleContractConfig = {
-  addressOrName: '0x0eE771Ce4335a25c5FC3BC4752e326b963Ac1cFd',
+  addressOrName: '0x0642d02271eBC831583F54d726D5aC9BF6709E2d',
   contractInterface: PresaleABI,
 }
 
 export const diamondContractConfig = {
-  addressOrName: '0x5478a72Cf63dA2F923485BF6FC287d2c66D77F67',
+  addressOrName: '0x08d70A47D3f28BbF755ae050a783844b40ae5761',
   contractInterface: DiamondABI,
 }
 
@@ -94,7 +94,7 @@ export const ftmChain: Chain = {
   nativeCurrency: { name: 'Fantom', symbol: 'FTM', decimals: 18 },
 }
 
-export const USDCAddress = '0x53e8fc8eb238c85603D96cDe46462532446Dc881'
+export const USDCAddress = '0x04068DA6C83AFCFA0e13ba15A6696662335D5B75'
 export const allChains: Chain[] = [...defaultChains, ftmChain]
 
 export const secondsByDuration: ISecondsByDuration = {
