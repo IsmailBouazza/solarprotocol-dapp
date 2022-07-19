@@ -63,6 +63,7 @@ function MyApp({ Component, pageProps }: AppProps) {
               pauseOnFocusLoss
               draggable
               pauseOnHover
+              theme="dark"
             />
           </SideBarWrapper>
         </ChakraProvider>

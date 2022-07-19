@@ -9,12 +9,12 @@ import {
 } from './types'
 
 export const presaleContractConfig = {
-  addressOrName: '0x0642d02271eBC831583F54d726D5aC9BF6709E2d',
+  addressOrName: '0x0eE771Ce4335a25c5FC3BC4752e326b963Ac1cFd',
   contractInterface: PresaleABI,
 }
 
 export const diamondContractConfig = {
-  addressOrName: '0x0739a637EdC62a740E49d99e8F5f08e53CfA73cB',
+  addressOrName: '0x5478a72Cf63dA2F923485BF6FC287d2c66D77F67',
   contractInterface: DiamondABI,
 }
 
@@ -34,10 +34,10 @@ export const connectorIcons: IConnectorIcon = {
 
 export const networkDetails: INetworkDetails = {
   250: {
-    rpcUrl: 'https://rpc.fantom.network	',
+    rpcUrl: 'https://rpc.ankr.com/fantom	',
 
     chainProviders: new ethers.providers.JsonRpcProvider(
-      'https://rpc.fantom.network	'
+      'https://rpc.ankr.com/fantom	'
     ),
 
     blockExplorerURL: 'https://ftmscan.com',
@@ -88,16 +88,17 @@ export const ftmChain: Chain = {
   name: 'Fantom',
   network: 'Fantom Opera',
   rpcUrls: {
-    default: 'https://rpc.fantom.network	',
+    default: 'https://rpc.ankr.com/fantom	',
   },
   blockExplorers: { default: { name: 'ftmscan', url: 'https://ftmscan.com' } },
   nativeCurrency: { name: 'Fantom', symbol: 'FTM', decimals: 18 },
 }
 
-export const USDCAddress = '0x619C5e45057801361d4f99a27bbdAc75A95DDDae'
+export const USDCAddress = '0x53e8fc8eb238c85603D96cDe46462532446Dc881'
 export const allChains: Chain[] = [...defaultChains, ftmChain]
 
 export const secondsByDuration: ISecondsByDuration = {
+  day: 60 * 60 * 24,
   week: 7 * 24 * 60 * 60,
   month: 30 * 24 * 60 * 60,
   year: 365 * 24 * 60 * 60,

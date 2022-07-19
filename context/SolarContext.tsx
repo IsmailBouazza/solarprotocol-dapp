@@ -36,7 +36,7 @@ function buildEpoch(data: any) {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-function buildStarType(data: any) {
+function buildStarType(data: any, rewards: ethers.BigNumberish) {
   if (!data) return
   if (!data.length) return
   const starType: IStarType = {
@@ -44,6 +44,7 @@ function buildStarType(data: any) {
     name: data.name,
     price: Number(data.price),
     stablePrice: Number(data.stablePrice),
+    rewardsPerSecond: Number(rewards),
   }
   return starType
 }
@@ -137,12 +138,18 @@ export function SolarProvider({ children }: { children: ReactNode }) {
       { ...diamondContractConfig, functionName: 'getNodeTypes' },
       {
         ...diamondContractConfig,
-        functionName: 'getNodeRewardsInfo(uint256[] calldata nodeIds)',
-        args: [
-          starTypes.types?.map((val) => {
-            return val.id
-          }),
-        ],
+        functionName: 'getNodeTypeRewardsPerSecond',
+        args: [1],
+      },
+      {
+        ...diamondContractConfig,
+        functionName: 'getNodeTypeRewardsPerSecond',
+        args: [2],
+      },
+      {
+        ...diamondContractConfig,
+        functionName: 'getNodeTypeRewardsPerSecond',
+        args: [3],
       },
       {
         addressOrName: USDCAddress,
@@ -166,8 +173,8 @@ export function SolarProvider({ children }: { children: ReactNode }) {
       console.log('⚙ starData', data)
       try {
         const starTypes: IStarType[] = []
-        data.pages[0][0].map((val: IStarType) => {
-          const starType = buildStarType(val)
+        data.pages[0][0].map((val: IStarType, idx: number) => {
+          const starType = buildStarType(val, data.pages[0][idx + 1])
           if (!starType) return
           starTypes.push(starType)
         })

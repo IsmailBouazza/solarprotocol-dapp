@@ -1,19 +1,15 @@
-import { Grid, HStack, Text, VStack } from '@chakra-ui/react'
+import { Grid, HStack, Spinner, Text, VStack } from '@chakra-ui/react'
 import { useContext, useEffect, useState } from 'react'
-import { palette } from '../../config/constants'
+import { useContractWrite } from 'wagmi'
+import { toast } from 'react-toastify'
+import { diamondContractConfig, palette } from '../../config/constants'
 import { IBalancerPool } from '../../config/types'
 import { SolarContext } from '../../context/SolarContext'
 import useWeb3Formatter from '../../hooks/useWeb3Formatter'
-import proton from '../../src/proto.png'
-import quasar from '../../src/quasar.png'
-import neutron from '../../src/neutron.png'
-import Image, { StaticImageData } from 'next/image'
-
-const imgs: { [key: number]: StaticImageData } = {
-  1: proton,
-  2: neutron,
-  3: quasar,
-}
+import NetworkButton from '../NetworkButton'
+import KelvinStats from './KelvinStats'
+import MintStarCard from './MintStarCard'
+import SolarStats from './SolarStats'
 
 export default function HomeContent({
   poolInfo,
@@ -25,7 +21,34 @@ export default function HomeContent({
   const [liquidity, setLiquidity] = useState(0)
 
   const { StarTypes } = useContext(SolarContext)
-  const { balanceToNumber } = useWeb3Formatter()
+  const { parseErrorReason } = useWeb3Formatter()
+
+  const [selectedType, setSelectedType] = useState(0)
+
+  const { isLoading, write } = useContractWrite({
+    ...diamondContractConfig,
+    functionName: 'createNode',
+    args: [selectedType],
+    onSettled(data, error) {
+      if (error) {
+        console.error(
+          `⭐ ${selectedType} error: `,
+          parseErrorReason(error.message)
+        )
+        toast.error(parseErrorReason(error.message), {
+          position: 'top-center',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        })
+        return
+      }
+      console.log(`⭐ ${selectedType} data: `, data)
+    },
+  })
 
   useEffect(() => {
     const usdc = poolInfo.data.pool.tokens.filter(
@@ -39,6 +62,7 @@ export default function HomeContent({
     const mcap = usdcValue + kelvinValue
     setLiquidity(mcap)
   }, [poolInfo, price])
+
   return (
     <Grid
       mx={'5%'}
@@ -48,41 +72,7 @@ export default function HomeContent({
       gap={4}
       rowGap={4}
     >
-      <VStack
-        w="full"
-        bg={palette.background.gradient}
-        rounded={'xl'}
-        p={4}
-        justifyContent={'center'}
-        border={`2px solid ${palette.main.buttonLightBorder}`}
-      >
-        <Text fontSize={'4xl'} textAlign={'center'}>
-          $KELVIN <b style={{ color: palette.main.buttonLightBorder }}>Stats</b>
-        </Text>
-        <Grid templateColumns={'repeat(2,1fr)'} w="100%" justifyItems={'start'}>
-          <Text alignSelf={'start'} fontWeight="bold">
-            Market Cap
-          </Text>
-          <Text alignSelf={'end'}>
-            ${(1000000 * price).toLocaleString('en-GB')}
-          </Text>
-
-          <Text alignSelf={'start'} fontWeight="bold">
-            Liquidity
-          </Text>
-          <Text alignSelf={'end'}>${liquidity.toLocaleString('en-GB')}</Text>
-          <Text alignSelf={'start'} fontWeight="bold">
-            Total Supply
-          </Text>
-          <Text alignSelf={'end'}>
-            {(1000000).toLocaleString('en-GB')} $KELVIN
-          </Text>
-          <Text alignSelf={'start'} fontWeight="bold">
-            Price
-          </Text>
-          <Text alignSelf={'end'}>${price.toLocaleString('en-GB')}</Text>
-        </Grid>
-      </VStack>
+      <KelvinStats price={price} liquidity={liquidity} />
       <VStack
         gridRow={'span 2'}
         w="full"
@@ -97,75 +87,41 @@ export default function HomeContent({
         <Text fontSize={'4xl'} textAlign={'center'}>
           Mint <b style={{ color: palette.main.buttonLightBorder }}>Stars</b>
         </Text>
-        {StarTypes.types &&
-          StarTypes.types.map((val) => {
-            return (
-              <HStack
-                w="full"
-                key={val.name}
-                border={`2px solid ${palette.main.buttonLightBorder}`}
-                rounded="xl"
-                p={4}
-                gap={4}
-                className="smallglow"
-              >
-                <Image
-                  src={imgs[val.id]}
-                  objectFit="contain"
-                  alt={'star logo'}
-                  width="128px"
-                  height={'128px'}
-                />
-                <VStack w="100%" alignItems={'start'}>
-                  {/* <Tooltip label="Quasar" hasArrow> */}
-                  <HStack>
-                    <Text fontWeight={'bold'} fontSize="lg">
-                      {val.name}
-                    </Text>
-                    {/* <FiInfo color="white" /> */}
-                  </HStack>
-                  {/* </Tooltip> */}
-                  <Text>{balanceToNumber(val.price, 18)}</Text>
-                  <Text>{balanceToNumber(val.stablePrice, 6)}</Text>
-                  <Text>{val.id} </Text>
-                </VStack>
-              </HStack>
-            )
-          })}
+        {StarTypes.loading ? (
+          <Spinner size={'xl'} color="white" />
+        ) : (
+          <>
+            {StarTypes.types &&
+              StarTypes.types.map((val) => {
+                return (
+                  <MintStarCard
+                    key={val.id}
+                    selectedType={selectedType}
+                    setSelectedType={setSelectedType}
+                    starType={val}
+                  />
+                )
+              })}
+            <HStack>
+              {selectedType === 0 ? (
+                <NetworkButton disabled>Select a Star</NetworkButton>
+              ) : (
+                <>
+                  {isLoading ? (
+                    <NetworkButton
+                      isLoading
+                      loadingText="Minting"
+                    ></NetworkButton>
+                  ) : (
+                    <NetworkButton onClick={() => write()}>Mint</NetworkButton>
+                  )}
+                </>
+              )}
+            </HStack>
+          </>
+        )}
       </VStack>
-      <VStack
-        w="full"
-        bg={palette.background.gradient}
-        rounded={'xl'}
-        p={4}
-        justifyContent={'center'}
-        border={`2px solid ${palette.main.buttonLightBorder}`}
-      >
-        <Text fontSize={'4xl'} textAlign={'center'}>
-          SOLAR <b style={{ color: palette.main.buttonLightBorder }}>Stats</b>
-        </Text>
-        <Grid templateColumns={'repeat(2,1fr)'} w="100%" justifyItems={'start'}>
-          <Text alignSelf={'start'} fontWeight="bold">
-            TVL
-          </Text>
-          <Text alignSelf={'end'}>
-            ${(1000000 * price).toLocaleString('en-GB')}
-          </Text>
-
-          <Text alignSelf={'start'} fontWeight="bold">
-            Proto Stars
-          </Text>
-          <Text alignSelf={'end'}>10</Text>
-          <Text alignSelf={'start'} fontWeight="bold">
-            Neutron Stars
-          </Text>
-          <Text alignSelf={'end'}>5</Text>
-          <Text alignSelf={'start'} fontWeight="bold">
-            Quasars
-          </Text>
-          <Text alignSelf={'end'}>10</Text>
-        </Grid>
-      </VStack>
+      <SolarStats price={price} />
     </Grid>
   )
 }

@@ -5,7 +5,6 @@ export function calculateSpotPrice(
   assetInSymbol: string,
   assetOutSymbol: string
 ) {
-  debugger
   const input = pool.data.pool.tokens.filter(
     (val) => val.symbol === assetInSymbol
   )

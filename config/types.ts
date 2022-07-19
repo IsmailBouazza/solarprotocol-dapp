@@ -1,4 +1,5 @@
 import { ethers } from 'ethers'
+import { Dispatch, SetStateAction } from 'react'
 
 // Component Interfaces
 export interface IInvestInfo {
@@ -13,6 +14,12 @@ export interface IStarCardProps {
     starName: string
     video: string
   }
+}
+
+export interface IMintStarCardProps {
+  selectedType: number
+  setSelectedType: Dispatch<SetStateAction<number>>
+  starType: IStarType
 }
 
 // State Interfaces
@@ -52,6 +59,7 @@ export interface IStarType {
   name: string
   price: number
   stablePrice: number
+  rewardsPerSecond: number
 }
 
 export interface IStarTypes {
