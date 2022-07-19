@@ -65,6 +65,9 @@ export interface IStarType {
 export interface IStarTypes {
   loading: boolean
   types?: IStarType[] // array of all 3 of the Star types
+  protoCount?: number // global number of Proto Stars
+  neutronCount?: number // global number of Neutron Stars
+  quasarCount?: number // global number of Quasar Stars
 }
 
 export interface IStar {
@@ -72,6 +75,7 @@ export interface IStar {
   typeId: number
   createdAt: number
   isPresale: boolean
+  pendingRewards: number
 }
 
 export interface IUserState {

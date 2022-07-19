@@ -235,7 +235,7 @@ export default function HomeContent({
           </>
         )}
       </VStack>
-      <SolarStats price={price} />
+      <SolarStats price={price} stars={StarTypes} />
     </Grid>
   )
 }

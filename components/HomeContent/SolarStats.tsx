@@ -1,7 +1,14 @@
 import { VStack, Grid, Text } from '@chakra-ui/react'
 import { palette } from '../../config/constants'
+import { IStarTypes } from '../../config/types'
 
-export default function SolarStats({ price }: { price: number }) {
+export default function SolarStats({
+  price,
+  stars,
+}: {
+  price: number
+  stars: IStarTypes
+}) {
   return (
     <VStack
       w="full"
@@ -25,15 +32,15 @@ export default function SolarStats({ price }: { price: number }) {
         <Text alignSelf={'start'} fontWeight="bold">
           Proto Stars
         </Text>
-        <Text alignSelf={'end'}>10</Text>
+        <Text alignSelf={'end'}>{stars.protoCount}</Text>
         <Text alignSelf={'start'} fontWeight="bold">
           Neutron Stars
         </Text>
-        <Text alignSelf={'end'}>5</Text>
+        <Text alignSelf={'end'}>{stars.neutronCount}</Text>
         <Text alignSelf={'start'} fontWeight="bold">
           Quasars
         </Text>
-        <Text alignSelf={'end'}>10</Text>
+        <Text alignSelf={'end'}>{stars.quasarCount}</Text>
       </Grid>
     </VStack>
   )

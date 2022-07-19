@@ -9,6 +9,7 @@ import {
 import {
   IEpoch,
   IPresale,
+  IStar,
   IStarType,
   IStarTypes,
   IUserState,
@@ -57,6 +58,19 @@ function buildStarType(data: any, rewards: ethers.BigNumberish) {
     rewardsPerSecond: Number(rewards),
   }
   return starType
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function buildStar(data: any, rewards: any) {
+  if (!data) return
+  const star: IStar = {
+    createdAt: Number(data.createdAt),
+    isPresale: data.isPresale,
+    tokenId: Number(data.tokenId),
+    typeId: Number(data.typeId),
+    pendingRewards: rewards ? Number(rewards.pendingRewards) : 0,
+  }
+  return star
 }
 
 export const SolarContext = createContext<{
@@ -164,6 +178,21 @@ export function SolarProvider({ children }: { children: ReactNode }) {
         functionName: 'getNodeTypeRewardsPerSecond',
         args: [3],
       },
+      {
+        ...diamondContractConfig,
+        functionName: 'getTotalNodesOfType',
+        args: [1],
+      },
+      {
+        ...diamondContractConfig,
+        functionName: 'getTotalNodesOfType',
+        args: [2],
+      },
+      {
+        ...diamondContractConfig,
+        functionName: 'getTotalNodesOfType',
+        args: [3],
+      },
     ],
     onSettled(data, error) {
       if (error) {
@@ -178,7 +207,13 @@ export function SolarProvider({ children }: { children: ReactNode }) {
           if (!starType) return
           starTypes.push(starType)
         })
-        setStarTypes({ loading: false, types: starTypes })
+        setStarTypes({
+          loading: false,
+          types: starTypes,
+          protoCount: Number(data.pages[0][4]),
+          neutronCount: Number(data.pages[0][5]),
+          quasarCount: Number(data.pages[0][6]),
+        })
       } catch {
         console.error('⚙ BACKEND ERROR => getStarTypes')
       }
@@ -224,6 +259,15 @@ export function SolarProvider({ children }: { children: ReactNode }) {
         functionName: 'getNodesOwnedBy(address)',
         args: [address ? address : ethers.constants.AddressZero],
       },
+      {
+        ...diamondContractConfig,
+        functionName: 'getNodeRewardsInfo(uint256[])',
+        args: [
+          userState.stars?.map((val) => {
+            return val.tokenId
+          }),
+        ],
+      },
     ],
     onSettled(data, error) {
       if (error) {
@@ -239,8 +283,14 @@ export function SolarProvider({ children }: { children: ReactNode }) {
           usdcBalance: format(data.pages[0][1], 6),
           kelvinAllowance: format(data.pages[0][2], 18),
           usdcAllowance: format(data.pages[0][3], 6),
-          stars: data.pages[0][4],
+          stars: data.pages[0][4].map((val: IStar, idx: number) => {
+            return buildStar(
+              val,
+              data.pages[0][5] ? data.pages[0][5][idx] : undefined
+            )
+          }),
         }
+
         console.log('👤 USER OBJ: ', stateObj)
         setUserState(stateObj)
       } catch (err) {
