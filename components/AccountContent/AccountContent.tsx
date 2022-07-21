@@ -1,6 +1,7 @@
 import {
   Grid,
   HStack,
+  Spinner,
   Text,
   Tooltip,
   useBreakpointValue,
@@ -141,40 +142,47 @@ export default function AccountContent({ price }: { price: number }) {
               ~ ${toFormattedValue(dailyEmissions * price)}
             </Text>
           </VStack>
-          {isLoading ? (
-            <NetworkButton
-              backgroundColor={'#081429'}
-              rounded="lg"
-              color={palette.main.buttonLightBorder}
-              isLoading
-              loadingText="Claiming"
-            >
-              CLAIM ALL
-            </NetworkButton>
-          ) : (
-            <>
-              {pendingRewards === 0 ? (
-                <NetworkButton
-                  backgroundColor={'#081429'}
-                  rounded="lg"
-                  color={palette.main.buttonLightBorder}
-                  onClick={() => write()}
-                  disabled
-                >
-                  NO REWARDS
-                </NetworkButton>
-              ) : (
-                <NetworkButton
-                  backgroundColor={'#081429'}
-                  rounded="lg"
-                  color={palette.main.buttonLightBorder}
-                  onClick={() => write()}
-                >
-                  CLAIM ALL
-                </NetworkButton>
-              )}
-            </>
-          )}
+          <VStack>
+            {isLoading ? (
+              <NetworkButton
+                backgroundColor={'#081429'}
+                rounded="lg"
+                color={palette.main.buttonLightBorder}
+                isLoading
+                loadingText="Claiming"
+              >
+                CLAIM ALL
+              </NetworkButton>
+            ) : (
+              <>
+                {pendingRewards === 0 ? (
+                  <NetworkButton
+                    backgroundColor={'#081429'}
+                    rounded="lg"
+                    color={palette.main.buttonLightBorder}
+                    onClick={() => write()}
+                    disabled
+                  >
+                    NO REWARDS
+                  </NetworkButton>
+                ) : (
+                  <NetworkButton
+                    backgroundColor={'#081429'}
+                    rounded="lg"
+                    color={palette.main.buttonLightBorder}
+                    onClick={() => write()}
+                  >
+                    CLAIM ALL
+                  </NetworkButton>
+                )}
+              </>
+            )}
+            {StarTypes.claimTax === undefined ? (
+              <Spinner color="white" size="md" />
+            ) : (
+              <Text fontSize={'lg'}>Claim tax: {StarTypes.claimTax}%</Text>
+            )}
+          </VStack>
         </Grid>
         <Grid w="full" templateColumns={starGridColumns} gap={6} py={6}>
           <StarCard tier={1} />

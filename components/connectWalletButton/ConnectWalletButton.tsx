@@ -163,6 +163,16 @@ export default function ConnectWalletButton() {
                       />
 
                       <TokenTracker
+                        tokenLogo="https://raw.githubusercontent.com/SolarProtocol/Media/main/LOGOS%20SOLAR%20PROTOCOL%20PNG/4%20SOLAR%20simbolo%20fondo%20transparente.png"
+                        address={address}
+                        token={diamondContractConfig.addressOrName}
+                        watch={true}
+                        cacheTime={1000}
+                        chainId={250}
+                        staleTime={1000}
+                      />
+
+                      <TokenTracker
                         tokenLogo="https://assets.coingecko.com/coins/images/6319/small/USD_Coin_icon.png?1547042389"
                         address={address}
                         token={USDCAddress}

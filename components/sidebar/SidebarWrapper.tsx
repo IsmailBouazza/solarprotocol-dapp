@@ -16,8 +16,9 @@ import {
   VStack,
   Image,
   Divider,
+  Link,
 } from '@chakra-ui/react'
-import { FiHome, FiMenu } from 'react-icons/fi'
+import { FiExternalLink, FiHome, FiMenu } from 'react-icons/fi'
 import { IconType } from 'react-icons'
 import ConnectWalletButton from '../connectWalletButton'
 import { BiCalculator } from 'react-icons/bi'
@@ -48,7 +49,7 @@ export default function SideBarWrapper({ children }: { children: ReactNode }) {
     >
       <SidebarContent
         onClose={() => onClose}
-        display={{ base: 'none', md: 'block' }}
+        display={{ base: 'none', md: 'flex' }}
       />
       <Drawer
         autoFocus={false}
@@ -103,13 +104,15 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
       backgroundColor="rgba(50, 50, 50, 0.2)"
       borderRight="2px"
       borderRightColor={palette.main.buttonLightBorder}
+      justifyContent="space-between"
       color={palette.main.buttonLightBorder}
+      py={4}
       w={{ base: 'full', md: '10rem' }}
       pos="fixed"
       h="full"
       {...rest}
     >
-      <VStack>
+      <VStack w="full">
         <Flex h="20" alignItems="center" w="full" justifyContent={'center'}>
           <Image
             onClick={() => router.push('/', undefined, { shallow: true })}
@@ -141,6 +144,18 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
             {link.name}
           </NavItem>
         ))}
+      </VStack>
+      <VStack w="full">
+        <Link
+          href="https://beets.fi/#/trade/0x04068da6c83afcfa0e13ba15a6696662335d5b75/0x08d70A47D3f28BbF755ae050a783844b40ae5761"
+          isExternal
+          color={'white'}
+          fontWeight="bold"
+          gap={4}
+        >
+          Buy $KELVIN
+          <FiExternalLink />
+        </Link>
       </VStack>
     </VStack>
   )

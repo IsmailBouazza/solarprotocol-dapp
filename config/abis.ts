@@ -1808,6 +1808,19 @@ export const DiamondABI = [
     type: 'function',
   },
   {
+    inputs: [],
+    name: 'getClaimTax',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
     inputs: [
       {
         internalType: 'uint256',
@@ -1906,6 +1919,38 @@ export const DiamondABI = [
         internalType: 'uint256',
         name: 'rewards',
         type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: 'typeId',
+        type: 'uint256',
+      },
+    ],
+    name: 'getPendingNodeRewardsForType',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: 'rewards',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'getRewardsVaultAddress',
+    outputs: [
+      {
+        internalType: 'address',
+        name: '',
+        type: 'address',
       },
     ],
     stateMutability: 'view',

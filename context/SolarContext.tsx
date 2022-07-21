@@ -193,6 +193,10 @@ export function SolarProvider({ children }: { children: ReactNode }) {
         functionName: 'getTotalNodesOfType',
         args: [3],
       },
+      {
+        ...diamondContractConfig,
+        functionName: 'getClaimTax',
+      },
     ],
     onSettled(data, error) {
       if (error) {
@@ -213,6 +217,7 @@ export function SolarProvider({ children }: { children: ReactNode }) {
           protoCount: Number(data.pages[0][4]),
           neutronCount: Number(data.pages[0][5]),
           quasarCount: Number(data.pages[0][6]),
+          claimTax: Number(data.pages[0][7]),
         })
       } catch {
         console.error('⚙ BACKEND ERROR => getStarTypes')
