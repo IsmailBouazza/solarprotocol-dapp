@@ -13,6 +13,8 @@ import { MetaMaskConnector } from 'wagmi/connectors/metaMask'
 import { WalletConnectConnector } from 'wagmi/connectors/walletConnect'
 import { SolarProvider } from '../context/SolarContext'
 import 'react-toastify/dist/ReactToastify.css'
+import useMounted from '../hooks/useMounted'
+import { useEffect } from 'react'
 
 const { provider } = configureChains(
   [ftmChain],
@@ -47,6 +49,14 @@ const wagmiClient = createClient({
 })
 
 function MyApp({ Component, pageProps }: AppProps) {
+  const mounted = useMounted()
+
+  useEffect(() => {
+    if (!mounted) return
+    const item = localStorage.getItem('chakra-ui-color-mode')
+    if (!item || item === 'dark') return
+    localStorage.setItem('chakra-ui-color-mode', 'dark')
+  }, [mounted])
   return (
     <WagmiConfig client={wagmiClient}>
       <SolarProvider>

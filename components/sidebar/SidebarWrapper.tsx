@@ -151,7 +151,10 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
           isExternal
           color={'white'}
           fontWeight="bold"
-          gap={4}
+          gap={2}
+          display="flex"
+          alignItems={'center'}
+          flexDirection="row"
         >
           Buy $KELVIN
           <FiExternalLink />
