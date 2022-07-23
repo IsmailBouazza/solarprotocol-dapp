@@ -1,4 +1,12 @@
-import { Flex, VStack, Text, Divider, Grid, Tooltip } from '@chakra-ui/react'
+import {
+  Flex,
+  VStack,
+  Text,
+  Divider,
+  Grid,
+  Tooltip,
+  Spinner,
+} from '@chakra-ui/react'
 import { ethers } from 'ethers'
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { toast } from 'react-toastify'
@@ -39,9 +47,9 @@ export default function StarCard({ tier }: { tier: number }) {
 
   const { UserState, StarTypes } = useContext(SolarContext)
 
-  const [starCount, setStarCount] = useState(0)
+  const [starCount, setStarCount] = useState<number | undefined>()
   const [rewardsPerSecond, setRewardsPerSeonc] = useState(0)
-  const [claimable, setClaimable] = useState(0)
+  const [claimable, setClaimable] = useState<number | undefined>()
 
   const tierInfo = useMemo(() => {
     if (!StarTypes.types) return
@@ -158,8 +166,11 @@ export default function StarCard({ tier }: { tier: number }) {
         <Text textAlign="start" w="full">
           Owned:
         </Text>
-        <Text justifySelf={'end'}>{starCount}</Text>
-
+        {starCount === undefined ? (
+          <Spinner size="sm" color="white" justifySelf={'end'} />
+        ) : (
+          <Text justifySelf={'end'}>{starCount}</Text>
+        )}
         <Divider
           gridColumn={'1/-1'}
           borderBottomColor={'#984a34'}
@@ -169,39 +180,58 @@ export default function StarCard({ tier }: { tier: number }) {
         <Text textAlign="start" w="full">
           Claimable:
         </Text>
-        <Text justifySelf={'end'}> {toFormattedValue(claimable)} $KELVIN</Text>
+        {claimable === undefined ? (
+          <Spinner size="sm" color="white" justifySelf={'end'} />
+        ) : (
+          <Text justifySelf={'end'}>
+            {' '}
+            {toFormattedValue(claimable)} $KELVIN
+          </Text>
+        )}
 
         <Text textAlign="start" w="full">
           Daily:
         </Text>
-        <Text justifySelf={'end'}>
-          {balanceToNumber(
-            rewardsPerSecond * starCount * secondsByDuration['day'],
-            18
-          ).toFixed(2)}{' '}
-          $KELVIN
-        </Text>
+        {starCount === undefined ? (
+          <Spinner size="sm" color="white" justifySelf={'end'} />
+        ) : (
+          <Text justifySelf={'end'}>
+            {balanceToNumber(
+              rewardsPerSecond * starCount * secondsByDuration['day'],
+              18
+            ).toFixed(2)}{' '}
+            $KELVIN
+          </Text>
+        )}
 
         <Text textAlign="start" w="full">
           Weekly:
         </Text>
-        <Text justifySelf={'end'}>
-          {balanceToNumber(
-            rewardsPerSecond * starCount * secondsByDuration['week'],
-            18
-          ).toFixed(2)}{' '}
-          $KELVIN
-        </Text>
+        {starCount === undefined ? (
+          <Spinner size="sm" color="white" justifySelf={'end'} />
+        ) : (
+          <Text justifySelf={'end'}>
+            {balanceToNumber(
+              rewardsPerSecond * starCount * secondsByDuration['week'],
+              18
+            ).toFixed(2)}{' '}
+            $KELVIN
+          </Text>
+        )}
         <Text textAlign="start" w="full">
           Monthly:
         </Text>
-        <Text justifySelf={'end'}>
-          {balanceToNumber(
-            rewardsPerSecond * starCount * secondsByDuration['month'],
-            18
-          ).toFixed(2)}{' '}
-          $KELVIN
-        </Text>
+        {starCount === undefined ? (
+          <Spinner size="sm" color="white" justifySelf={'end'} />
+        ) : (
+          <Text justifySelf={'end'}>
+            {balanceToNumber(
+              rewardsPerSecond * starCount * secondsByDuration['month'],
+              18
+            ).toFixed(2)}{' '}
+            $KELVIN
+          </Text>
+        )}
       </Grid>
 
       {isLoading ? (

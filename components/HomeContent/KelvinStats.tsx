@@ -1,5 +1,15 @@
-import { VStack, Grid, Text } from '@chakra-ui/react'
-import { palette } from '../../config/constants'
+import { VStack, Grid, Text, Spinner } from '@chakra-ui/react'
+import { useState } from 'react'
+import { useContractReads } from 'wagmi'
+import {
+  diamondContractConfig,
+  palette,
+  vaultLiquidityAddress,
+  vaultProjectAddress,
+  vaultRewardsAddress,
+  vaultTreasuryAddress,
+} from '../../config/constants'
+import useWeb3Formatter from '../../hooks/useWeb3Formatter'
 
 export default function KelvinStats({
   price,
@@ -8,6 +18,39 @@ export default function KelvinStats({
   price: number
   liquidity: number
 }) {
+  const [circulatingSupply, setCirculatingSupply] = useState<
+    number | undefined
+  >()
+  const { balanceToNumber } = useWeb3Formatter()
+  const {} = useContractReads({
+    contracts: [
+      {
+        ...diamondContractConfig,
+        functionName: 'balanceOf(address)',
+        args: [vaultRewardsAddress],
+      },
+      {
+        ...diamondContractConfig,
+        functionName: 'balanceOf(address)',
+        args: [vaultLiquidityAddress],
+      },
+      {
+        ...diamondContractConfig,
+        functionName: 'balanceOf(address)',
+        args: [vaultProjectAddress],
+      },
+      {
+        ...diamondContractConfig,
+        functionName: 'balanceOf(address)',
+        args: [vaultTreasuryAddress],
+      },
+    ],
+    onSuccess(data) {
+      let circulating = 0
+      data.map((val) => (circulating += balanceToNumber(Number(val), 18)))
+      setCirculatingSupply(1000000 - circulating)
+    },
+  })
   return (
     <VStack
       w="full"
@@ -25,9 +68,13 @@ export default function KelvinStats({
         <Text alignSelf={'start'} fontWeight="bold">
           Market Cap
         </Text>
-        <Text alignSelf={'end'}>
-          ${(1000000 * price).toLocaleString('en-GB')}
-        </Text>
+        {circulatingSupply === undefined ? (
+          <Spinner size="xs" color="white" />
+        ) : (
+          <Text alignSelf={'end'}>
+            ${(circulatingSupply * price).toLocaleString('en-GB')}
+          </Text>
+        )}
 
         <Text alignSelf={'start'} fontWeight="bold">
           Liquidity

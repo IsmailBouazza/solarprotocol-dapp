@@ -37,7 +37,7 @@ export default function AccountContent({ price }: { price: number }) {
   const { UserState, StarTypes } = useContext(SolarContext)
   const { toFormattedValue, balanceToNumber } = useWeb3Formatter()
 
-  const [dailyEmissions, setDailyEmissions] = useState(0)
+  const [dailyEmissions, setDailyEmissions] = useState<undefined | number>()
 
   useEffect(() => {
     if (!StarTypes.types) return
@@ -126,21 +126,33 @@ export default function AccountContent({ price }: { price: number }) {
                 <FiInfo color="white" />
               </HStack>
             </Tooltip>
-            <Text color={palette.main.buttonLightBorder}>
-              {toFormattedValue(pendingRewards)}
-            </Text>
-            <Text fontSize={'xs'}>
-              ~ ${toFormattedValue(pendingRewards * price)}
-            </Text>
+            {pendingRewards === 0 ? (
+              <Spinner size="sm" color="white" />
+            ) : (
+              <>
+                <Text color={palette.main.buttonLightBorder}>
+                  {toFormattedValue(pendingRewards)}
+                </Text>
+                <Text fontSize={'xs'}>
+                  ~ ${toFormattedValue(pendingRewards * price)}
+                </Text>
+              </>
+            )}
           </VStack>
           <VStack fontWeight={'bold'}>
             <Text>Daily emissions</Text>
-            <Text color={palette.main.buttonLightBorder}>
-              {toFormattedValue(dailyEmissions)}
-            </Text>
-            <Text fontSize={'xs'}>
-              ~ ${toFormattedValue(dailyEmissions * price)}
-            </Text>
+            {dailyEmissions === undefined ? (
+              <Spinner size="sm" color="white" />
+            ) : (
+              <>
+                <Text color={palette.main.buttonLightBorder}>
+                  {toFormattedValue(dailyEmissions)}
+                </Text>
+                <Text fontSize={'xs'}>
+                  ~ ${toFormattedValue(dailyEmissions * price)}
+                </Text>
+              </>
+            )}
           </VStack>
           <VStack>
             {isLoading ? (
