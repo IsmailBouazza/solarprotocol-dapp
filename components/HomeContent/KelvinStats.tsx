@@ -66,7 +66,7 @@ export default function KelvinStats({
       </Text>
       <Grid templateColumns={'repeat(2,1fr)'} w="100%" justifyItems={'start'}>
         <Text alignSelf={'start'} fontWeight="bold">
-          Market Cap
+          Marketcap
         </Text>
         {circulatingSupply === undefined ? (
           <Spinner size="xs" color="white" />
