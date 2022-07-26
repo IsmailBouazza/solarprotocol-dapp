@@ -10,8 +10,8 @@ import {
 
 export const vaultRewardsAddress = '0xface17433e59378E8fc6Cf2804e27D49b0D19fa2'
 export const vaultLiquidityAddress =
-  '0x7a642851722BC2A5a4E58c19848D92877F014687'
-export const vaultSPBAddress = '0x7a642851722BC2A5a4E58c19848D92877F014687'
+  '0x0e9889766710Bc87b9BcEd6D42Ac0dBE2C59b842'
+export const vaultSPBAddress = '0x0e9889766710Bc87b9BcEd6D42Ac0dBE2C59b842'
 export const vaultProjectAddress = '0xbCc56aEa6c165269853DA1E996a61b76Aaa29E78'
 export const vaultTreasuryAddress = '0xE7f19F214fCef16C76Ff134207Eef02D00F9dF83'
 
