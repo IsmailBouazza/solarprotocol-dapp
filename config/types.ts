@@ -132,3 +132,10 @@ interface IToken {
   name: string
   symbol: string
 }
+
+// Request Interfaces
+
+export interface IAPY {
+  id: number
+  apy: number
+}

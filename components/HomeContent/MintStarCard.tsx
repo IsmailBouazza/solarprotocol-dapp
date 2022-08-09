@@ -41,7 +41,7 @@ export default function MintStarCard({
       />
       <VStack w="100%" alignItems={'start'}>
         {/* <Tooltip label="Quasar" hasArrow> */}
-        <HStack>
+        <HStack w="full" justifyContent={'space-between'}>
           <Text fontWeight={'bold'} fontSize="lg">
             {starType.name}
           </Text>

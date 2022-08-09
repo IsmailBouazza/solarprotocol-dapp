@@ -1,5 +1,5 @@
 import { ethers } from 'ethers'
-import { Chain, defaultChains } from 'wagmi'
+import { Chain, defaultChains, erc20ABI } from 'wagmi'
 import { DiamondABI, PresaleABI } from './abis'
 import {
   IConnectorIcon,
@@ -23,6 +23,12 @@ export const presaleContractConfig = {
 export const diamondContractConfig = {
   addressOrName: '0x08d70A47D3f28BbF755ae050a783844b40ae5761',
   contractInterface: DiamondABI,
+}
+export const USDCAddress = '0x04068DA6C83AFCFA0e13ba15A6696662335D5B75'
+
+export const usdcContractConfig = {
+  addressOrName: USDCAddress,
+  contractInterface: erc20ABI,
 }
 
 export const connectorIcons: IConnectorIcon = {
@@ -101,7 +107,6 @@ export const ftmChain: Chain = {
   nativeCurrency: { name: 'Fantom', symbol: 'FTM', decimals: 18 },
 }
 
-export const USDCAddress = '0x04068DA6C83AFCFA0e13ba15A6696662335D5B75'
 export const allChains: Chain[] = [...defaultChains, ftmChain]
 
 export const secondsByDuration: ISecondsByDuration = {

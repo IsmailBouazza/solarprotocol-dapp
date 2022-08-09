@@ -7,7 +7,7 @@ import {
   palette,
   USDCAddress,
 } from '../../config/constants'
-import { IBalancerPool } from '../../config/types'
+import { IAPY, IBalancerPool } from '../../config/types'
 import { SolarContext } from '../../context/SolarContext'
 import useWeb3Formatter from '../../hooks/useWeb3Formatter'
 import NetworkButton from '../NetworkButton'
@@ -19,9 +19,11 @@ import { ethers } from 'ethers'
 export default function HomeContent({
   poolInfo,
   price,
+  apys,
 }: {
   poolInfo: IBalancerPool
   price: number
+  apys: IAPY[]
 }) {
   const [liquidity, setLiquidity] = useState(0)
 
@@ -235,7 +237,7 @@ export default function HomeContent({
           </>
         )}
       </VStack>
-      <SolarStats price={price} stars={StarTypes} />
+      <SolarStats price={price} stars={StarTypes} apys={apys} />
     </Grid>
   )
 }

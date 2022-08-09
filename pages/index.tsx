@@ -1,6 +1,7 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import HomeContent from '../components/HomeContent'
+import { IAPY } from '../config/types'
 import { calculateSpotPrice } from '../utils/balancerHelper'
 
 export const getServerSideProps = async () => {
@@ -27,26 +28,29 @@ export const getServerSideProps = async () => {
       method: 'POST',
     }
   )
-
   const res = await req.json()
   const price = calculateSpotPrice(res, 'USDC', 'KELVIN')
+  const apysReq = await fetch('https://api.solarprotocol.io/api/apy')
+  const apyRes = (await apysReq.json()) as IAPY[]
+  console.log(apyRes)
   return {
     props: {
       poolInfo: res,
       price: price,
+      apys: apyRes,
     },
   }
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const Home: NextPage = ({ poolInfo, price }: any) => {
-  console.log('price', price)
+const Home: NextPage = ({ poolInfo, price, apys }: any) => {
+  console.table({ poolInfo, price, apys })
   return (
     <>
       <Head>
         <title>Home | Solar Protocol</title>
       </Head>
-      <HomeContent poolInfo={poolInfo} price={price} />
+      <HomeContent poolInfo={poolInfo} price={price} apys={apys} />
     </>
   )
 }

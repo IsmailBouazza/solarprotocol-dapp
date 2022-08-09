@@ -1,18 +1,27 @@
-import { VStack, Grid, Text, Spinner, Tooltip } from '@chakra-ui/react'
+import { VStack, Grid, Text, Spinner, Tooltip, Divider } from '@chakra-ui/react'
+import { ethers } from 'ethers'
 import { useMemo, useState } from 'react'
 import { FiInfo } from 'react-icons/fi'
-import { palette } from '../../config/constants'
-import { IStarTypes } from '../../config/types'
+import { useBalance } from 'wagmi'
+import {
+  diamondContractConfig,
+  palette,
+  USDCAddress,
+  vaultSPBAddress,
+} from '../../config/constants'
+import { IAPY, IStarTypes } from '../../config/types'
 import useWeb3Formatter from '../../hooks/useWeb3Formatter'
 
 export default function SolarStats({
   price,
   stars,
+  apys,
 }: {
   price: number
   stars: IStarTypes
+  apys: IAPY[]
 }) {
-  const { balanceToNumber } = useWeb3Formatter()
+  const { balanceToNumber, toFormattedValue } = useWeb3Formatter()
   const tvl = useMemo(() => {
     if (
       !stars.neutronCount ||
@@ -44,6 +53,22 @@ export default function SolarStats({
     stars.types,
   ])
 
+  const SPBUSDCBalance = useBalance({
+    addressOrName: vaultSPBAddress,
+    chainId: 250,
+    token: USDCAddress,
+    watch: true,
+    staleTime: 3_000,
+  })
+
+  const SPBKELVINBalance = useBalance({
+    addressOrName: vaultSPBAddress,
+    chainId: 250,
+    token: diamondContractConfig.addressOrName,
+    watch: true,
+    staleTime: 3_000,
+  })
+
   const [isOpen, setIsOpen] = useState<boolean>(false)
   return (
     <VStack
@@ -51,6 +76,7 @@ export default function SolarStats({
       bg={palette.background.gradient}
       rounded={'xl'}
       p={4}
+      gap={4}
       justifyContent={'center'}
       border={`2px solid ${palette.main.buttonLightBorder}`}
     >
@@ -95,29 +121,48 @@ export default function SolarStats({
         )}
 
         <Text alignSelf={'start'} fontWeight="bold">
-          Proto Stars
+          SPB $KELVIN
         </Text>
-        {stars.protoCount === undefined ? (
+        {SPBKELVINBalance.isLoading ? (
           <Spinner size="sm" color="white" />
         ) : (
-          <Text alignSelf={'end'}>{stars.protoCount}</Text>
+          <Text alignSelf={'end'}>
+            ${toFormattedValue(Number(SPBKELVINBalance.data?.formatted))}
+          </Text>
         )}
         <Text alignSelf={'start'} fontWeight="bold">
-          Neutron Stars
+          SPB $USDC
         </Text>
-        {stars.neutronCount === undefined ? (
+        {SPBUSDCBalance.isLoading ? (
           <Spinner size="sm" color="white" />
         ) : (
-          <Text alignSelf={'end'}>{stars.neutronCount}</Text>
+          <Text alignSelf={'end'}>
+            $
+            {toFormattedValue(
+              Number(
+                ethers.utils.formatUnits(
+                  SPBUSDCBalance.data?.value.toString() ?? '0',
+                  6
+                )
+              )
+            )}
+          </Text>
         )}
-        <Text alignSelf={'start'} fontWeight="bold">
-          Quasars
-        </Text>
-        {stars.quasarCount === undefined ? (
-          <Spinner size="sm" color="white" />
-        ) : (
-          <Text alignSelf={'end'}>{stars.quasarCount}</Text>
-        )}
+      </Grid>
+      <Divider w="80%" opacity={1} />
+      <Grid templateColumns={'repeat(4,1fr)'} w="full" gap={2} rowGap={2}>
+        <Text></Text>
+        <Text fontWeight={'bold'}>PROTOSTAR</Text>
+        <Text fontWeight={'bold'}>NEUTRON</Text>
+        <Text fontWeight={'bold'}>QUASAR</Text>
+        <Text fontWeight={'bold'}>COUNT</Text>
+        <Text>{stars.protoCount}</Text>
+        <Text>{stars.neutronCount}</Text>
+        <Text>{stars.quasarCount}</Text>
+        <Text fontWeight={'bold'}>APYs</Text>
+        <Text>{apys.find((v) => v.id === 1)?.apy.toFixed(2)}%</Text>
+        <Text>{apys.find((v) => v.id === 2)?.apy.toFixed(2)}%</Text>
+        <Text>{apys.find((v) => v.id === 3)?.apy.toFixed(2)}%</Text>
       </Grid>
     </VStack>
   )
