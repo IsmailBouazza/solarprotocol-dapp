@@ -3,6 +3,7 @@ import {
   Grid,
   HStack,
   Text,
+  useDisclosure,
   useMediaQuery,
   VStack,
 } from '@chakra-ui/react'
@@ -11,15 +12,15 @@ import { toast } from 'react-toastify'
 import { useContractWrite } from 'wagmi'
 import { diamondContractConfig, palette } from '../../config/constants'
 import { SolarContext } from '../../context/SolarContext'
-import useWeb3Formatter from '../../hooks/useWeb3Formatter'
 import NetworkButton from '../NetworkButton'
 import StarListElement from './StarListElement'
 
 export default function StarList() {
   const isLargerThan1400 = useMediaQuery('(min-width: 1400px)')[0]
 
+  const { isOpen, onOpen, onClose } = useDisclosure()
+
   const { UserState } = useContext(SolarContext)
-  const { parseErrorReason } = useWeb3Formatter()
 
   const stars = useMemo(() => {
     if (!UserState.stars) return
@@ -43,11 +44,8 @@ export default function StarList() {
     args: [stars],
     onSettled(data, error) {
       if (error) {
-        console.error(
-          `⭐ Claiming all error: `,
-          parseErrorReason(error.message)
-        )
-        toast.error(parseErrorReason(error.message), {
+        console.error(`⭐ Claiming all error: `, error.name)
+        toast.error(error.name, {
           position: 'top-center',
           autoClose: 5000,
           hideProgressBar: false,
@@ -141,7 +139,15 @@ export default function StarList() {
         /> */}
         {UserState.stars &&
           UserState.stars.map((val) => {
-            return <StarListElement star={val} key={val.tokenId} />
+            return (
+              <StarListElement
+                star={val}
+                isOpen={isOpen}
+                onOpen={onOpen}
+                onClose={onClose}
+                key={val.tokenId}
+              />
+            )
           })}
       </Grid>
     </VStack>

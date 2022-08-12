@@ -28,7 +28,7 @@ export default function HomeContent({
   const [liquidity, setLiquidity] = useState(0)
 
   const { StarTypes, UserState } = useContext(SolarContext)
-  const { parseErrorReason, balanceToNumber } = useWeb3Formatter()
+  const { balanceToNumber } = useWeb3Formatter()
 
   const [selectedType, setSelectedType] = useState(0)
 
@@ -38,11 +38,8 @@ export default function HomeContent({
     args: [selectedType],
     onSettled(data, error) {
       if (error) {
-        console.error(
-          `⭐ ${selectedType} error: `,
-          parseErrorReason(error.message)
-        )
-        toast.error(parseErrorReason(error.message), {
+        console.error(`⭐ ${selectedType} error: `, error.name)
+        toast.error(error.name, {
           position: 'top-center',
           autoClose: 5000,
           hideProgressBar: false,
@@ -71,8 +68,8 @@ export default function HomeContent({
       onSettled(data, error) {
         debugger
         if (error) {
-          console.error(`🔐 USDC error: `, parseErrorReason(error.message))
-          toast.error(`Approve USDC:  ${parseErrorReason(error.message)}`, {
+          console.error(`🔐 USDC error: `, error.name)
+          toast.error(`Approve USDC:  ${error.name}`, {
             position: 'top-center',
             autoClose: 5000,
             hideProgressBar: false,

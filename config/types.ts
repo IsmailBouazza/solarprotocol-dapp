@@ -68,6 +68,7 @@ export interface IStarTypes {
   protoCount?: number // global number of Proto Stars
   neutronCount?: number // global number of Neutron Stars
   quasarCount?: number // global number of Quasar Stars
+  nebulaCount?: number // global number of Nebula Stars
   claimTax?: number // % of claim tax
 }
 

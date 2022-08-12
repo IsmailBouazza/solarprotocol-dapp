@@ -1547,6 +1547,211 @@ export const DiamondABI = [
         type: 'uint256',
       },
     ],
+    name: 'TokenNotFungible',
+    type: 'error',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'string',
+        name: 'name',
+        type: 'string',
+      },
+      {
+        internalType: 'string',
+        name: 'symbol',
+        type: 'string',
+      },
+    ],
+    name: 'createFungibleToken',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: 'tokenId',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'string[]',
+        name: 'names',
+        type: 'string[]',
+      },
+      {
+        internalType: 'string[]',
+        name: 'symbols',
+        type: 'string[]',
+      },
+    ],
+    name: 'createFungibleTokens',
+    outputs: [
+      {
+        internalType: 'uint256[]',
+        name: 'tokenIds',
+        type: 'uint256[]',
+      },
+    ],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'account',
+        type: 'address',
+      },
+      {
+        internalType: 'uint256',
+        name: 'tokenId',
+        type: 'uint256',
+      },
+      {
+        internalType: 'uint256',
+        name: 'amount',
+        type: 'uint256',
+      },
+    ],
+    name: 'mintFungible',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'account',
+        type: 'address',
+      },
+      {
+        internalType: 'uint256[]',
+        name: 'tokenIds',
+        type: 'uint256[]',
+      },
+      {
+        internalType: 'uint256[]',
+        name: 'amounts',
+        type: 'uint256[]',
+      },
+    ],
+    name: 'mintFungibleBatch',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'account',
+        type: 'address',
+      },
+    ],
+    name: 'mintNft',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: 'tokenId',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'account',
+        type: 'address',
+      },
+      {
+        internalType: 'uint256',
+        name: 'amount',
+        type: 'uint256',
+      },
+    ],
+    name: 'mintNftBatch',
+    outputs: [
+      {
+        internalType: 'uint256[]',
+        name: 'tokenIds',
+        type: 'uint256[]',
+      },
+    ],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: 'tokenId',
+        type: 'uint256',
+      },
+      {
+        internalType: 'string',
+        name: 'name',
+        type: 'string',
+      },
+      {
+        internalType: 'string',
+        name: 'symbol',
+        type: 'string',
+      },
+    ],
+    name: 'updateFungibleToken',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint256[]',
+        name: 'tokenIds',
+        type: 'uint256[]',
+      },
+      {
+        internalType: 'string[]',
+        name: 'names',
+        type: 'string[]',
+      },
+      {
+        internalType: 'string[]',
+        name: 'symbols',
+        type: 'string[]',
+      },
+    ],
+    name: 'updateFungibleTokens',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: 'tokenId',
+        type: 'uint256',
+      },
+    ],
+    name: 'TokenNotFound',
+    type: 'error',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: 'tokenId',
+        type: 'uint256',
+      },
+    ],
     name: 'getFungibleToken',
     outputs: [
       {
@@ -1652,6 +1857,259 @@ export const DiamondABI = [
     ],
     stateMutability: 'view',
     type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'FeeStepLimit',
+    type: 'error',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: 'numberDays',
+        type: 'uint256',
+      },
+    ],
+    name: 'FeeTimeLimit',
+    type: 'error',
+  },
+  {
+    inputs: [],
+    name: 'NodeExpireTimeLimit',
+    type: 'error',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: 'nodeId',
+        type: 'uint256',
+      },
+    ],
+    name: 'NodeIsExpired',
+    type: 'error',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: 'tokenId',
+        type: 'uint256',
+      },
+    ],
+    name: 'NodeNotFound',
+    type: 'error',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: 'id',
+        type: 'uint256',
+      },
+      {
+        internalType: 'address',
+        name: 'account',
+        type: 'address',
+      },
+    ],
+    name: 'NotOwnerOf',
+    type: 'error',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'bytes32',
+        name: 'id',
+        type: 'bytes32',
+      },
+    ],
+    name: 'StrategyNotFound',
+    type: 'error',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: 'uint256',
+        name: 'nodeId',
+        type: 'uint256',
+      },
+      {
+        indexed: true,
+        internalType: 'address',
+        name: 'account',
+        type: 'address',
+      },
+    ],
+    name: 'NodeFeePaid',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: 'uint256',
+        name: 'typeId',
+        type: 'uint256',
+      },
+      {
+        indexed: true,
+        internalType: 'address',
+        name: 'account',
+        type: 'address',
+      },
+    ],
+    name: 'NodeFeePaidByType',
+    type: 'event',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: 'nodeTypeId',
+        type: 'uint256',
+      },
+      {
+        internalType: 'uint256',
+        name: 'numberDays',
+        type: 'uint256',
+      },
+    ],
+    name: 'calculateFeeAmount',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: 'feeAmount',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: 'nodeId',
+        type: 'uint256',
+      },
+    ],
+    name: 'getNodeFee',
+    outputs: [
+      {
+        components: [
+          {
+            internalType: 'uint256',
+            name: 'totalPaid',
+            type: 'uint256',
+          },
+          {
+            internalType: 'uint256',
+            name: 'lastPaidAt',
+            type: 'uint256',
+          },
+          {
+            internalType: 'uint256',
+            name: 'expiresAt',
+            type: 'uint256',
+          },
+        ],
+        internalType: 'struct INodeFee.NodeFee',
+        name: 'nodeFee',
+        type: 'tuple',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: 'nodeTypeId',
+        type: 'uint256',
+      },
+    ],
+    name: 'getNodeTypeFee',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: 'feeAmount',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: 'nodeId',
+        type: 'uint256',
+      },
+    ],
+    name: 'isNodeExpired',
+    outputs: [
+      {
+        internalType: 'bool',
+        name: '',
+        type: 'bool',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: 'nodeId',
+        type: 'uint256',
+      },
+      {
+        internalType: 'uint256',
+        name: 'numberDays',
+        type: 'uint256',
+      },
+    ],
+    name: 'payFee',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint256[]',
+        name: 'nodeIds',
+        type: 'uint256[]',
+      },
+      {
+        internalType: 'uint256',
+        name: 'numberDays',
+        type: 'uint256',
+      },
+    ],
+    name: 'payFees',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: 'nodeId',
+        type: 'uint256',
+      },
+    ],
+    name: 'NodeIsExpired',
+    type: 'error',
   },
   {
     inputs: [
@@ -2005,6 +2463,19 @@ export const DiamondABI = [
       },
     ],
     stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: 'claimTax',
+        type: 'uint256',
+      },
+    ],
+    name: 'setClaimTax',
+    outputs: [],
+    stateMutability: 'nonpayable',
     type: 'function',
   },
   {
@@ -2369,7 +2840,13 @@ export const DiamondABI = [
       },
     ],
     name: 'createNodeType',
-    outputs: [],
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
     stateMutability: 'nonpayable',
     type: 'function',
   },
@@ -2755,6 +3232,134 @@ export const DiamondABI = [
       },
     ],
     stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'string',
+        name: 'foo',
+        type: 'string',
+      },
+      {
+        internalType: 'string',
+        name: 'bar',
+        type: 'string',
+      },
+    ],
+    name: 'fooBar2',
+    outputs: [
+      {
+        internalType: 'string',
+        name: 'baz',
+        type: 'string',
+      },
+    ],
+    stateMutability: 'pure',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'string',
+        name: 'foo',
+        type: 'string',
+      },
+      {
+        internalType: 'string',
+        name: 'bar',
+        type: 'string',
+      },
+    ],
+    name: 'fooBar',
+    outputs: [
+      {
+        internalType: 'string',
+        name: 'baz',
+        type: 'string',
+      },
+    ],
+    stateMutability: 'pure',
+    type: 'function',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: 'address',
+        name: 'sender',
+        type: 'address',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: 'amount',
+        type: 'uint256',
+      },
+    ],
+    name: 'EtherReceived',
+    type: 'event',
+  },
+  {
+    inputs: [],
+    name: 'receiveFallback',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'bytes32',
+        name: 'id',
+        type: 'bytes32',
+      },
+    ],
+    name: 'StrategyNotFound',
+    type: 'error',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'bytes32',
+        name: 'strategyId',
+        type: 'bytes32',
+      },
+    ],
+    name: 'getTokenDistributionStrategy',
+    outputs: [
+      {
+        components: [
+          {
+            internalType: 'contract IERC20',
+            name: 'token',
+            type: 'address',
+          },
+          {
+            components: [
+              {
+                internalType: 'address',
+                name: 'destination',
+                type: 'address',
+              },
+              {
+                internalType: 'uint256',
+                name: 'proportion',
+                type: 'uint256',
+              },
+            ],
+            internalType: 'struct ITokenDitributor.Distribution[]',
+            name: 'distributions',
+            type: 'tuple[]',
+          },
+        ],
+        internalType: 'struct ITokenDitributor.Strategy',
+        name: '',
+        type: 'tuple',
+      },
+    ],
+    stateMutability: 'view',
     type: 'function',
   },
 ]

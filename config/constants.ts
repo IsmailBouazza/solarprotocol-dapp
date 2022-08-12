@@ -41,7 +41,7 @@ export const connectorIcons: IConnectorIcon = {
   },
   WalletConnect: {
     logoURI:
-      'https://raw.githubusercontent.com/WalletConnect/walletconnect-assets/master/png/circle/walletconnect-circle-blue.png',
+      'https://raw.githubusercontent.com/WalletConnect/walletconnect-assets/master/Logo/Blue%20(Default)/Logo.png',
   },
 }
 

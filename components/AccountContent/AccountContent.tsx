@@ -78,11 +78,8 @@ export default function AccountContent({ price }: { price: number }) {
     args: [stars],
     onSettled(data, error) {
       if (error) {
-        console.error(
-          `⭐ Claiming all error: `,
-          parseErrorReason(error.message)
-        )
-        toast.error(parseErrorReason(error.message), {
+        console.error(`⭐ Claiming all error: `, error.name)
+        toast.error(error.name, {
           position: 'top-center',
           autoClose: 5000,
           hideProgressBar: false,
@@ -155,10 +152,17 @@ export default function AccountContent({ price }: { price: number }) {
             )}
           </VStack>
           <VStack>
+            {/* <Button
+              w="full"
+              backgroundColor={'#081429'}
+              color={palette.main.buttonLightBorder}
+            >
+              COMPOUND
+            </Button> */}
             {isLoading ? (
               <NetworkButton
+                w="full"
                 backgroundColor={'#081429'}
-                rounded="lg"
                 color={palette.main.buttonLightBorder}
                 isLoading
                 loadingText="Claiming"
@@ -169,8 +173,8 @@ export default function AccountContent({ price }: { price: number }) {
               <>
                 {pendingRewards === 0 ? (
                   <NetworkButton
+                    w="full"
                     backgroundColor={'#081429'}
-                    rounded="lg"
                     color={palette.main.buttonLightBorder}
                     onClick={() => write()}
                     disabled
@@ -179,8 +183,8 @@ export default function AccountContent({ price }: { price: number }) {
                   </NetworkButton>
                 ) : (
                   <NetworkButton
+                    w="full"
                     backgroundColor={'#081429'}
-                    rounded="lg"
                     color={palette.main.buttonLightBorder}
                     onClick={() => write()}
                   >

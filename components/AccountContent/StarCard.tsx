@@ -102,8 +102,8 @@ export default function StarCard({ tier }: { tier: number }) {
     args: [tier],
     onSettled(data, error) {
       if (error) {
-        console.error(`⭐ ${tier}} error: `, parseErrorReason(error.message))
-        toast.error(parseErrorReason(error.message), {
+        console.error(`⭐ ${tier}} error: `, error.name)
+        toast.error(error.name, {
           position: 'top-center',
           autoClose: 5000,
           hideProgressBar: false,

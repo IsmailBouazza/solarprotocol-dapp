@@ -10,6 +10,7 @@ import {
   vaultSPBAddress,
 } from '../../config/constants'
 import { IAPY, IStarTypes } from '../../config/types'
+import useMounted from '../../hooks/useMounted'
 import useWeb3Formatter from '../../hooks/useWeb3Formatter'
 
 export default function SolarStats({
@@ -22,6 +23,7 @@ export default function SolarStats({
   apys: IAPY[]
 }) {
   const { balanceToNumber, toFormattedValue } = useWeb3Formatter()
+  const mounted = useMounted()
   const tvl = useMemo(() => {
     if (
       !stars.neutronCount ||
@@ -123,29 +125,32 @@ export default function SolarStats({
         <Text alignSelf={'start'} fontWeight="bold">
           SPB $KELVIN
         </Text>
-        {SPBKELVINBalance.isLoading ? (
+        {mounted && SPBKELVINBalance.isLoading ? (
           <Spinner size="sm" color="white" />
         ) : (
           <Text alignSelf={'end'}>
-            ${toFormattedValue(Number(SPBKELVINBalance.data?.formatted))}
+            {mounted &&
+              toFormattedValue(Number(SPBKELVINBalance.data?.formatted))}{' '}
+            $KELVIN
           </Text>
         )}
         <Text alignSelf={'start'} fontWeight="bold">
           SPB $USDC
         </Text>
-        {SPBUSDCBalance.isLoading ? (
+        {mounted && SPBUSDCBalance.isLoading ? (
           <Spinner size="sm" color="white" />
         ) : (
           <Text alignSelf={'end'}>
-            $
-            {toFormattedValue(
-              Number(
-                ethers.utils.formatUnits(
-                  SPBUSDCBalance.data?.value.toString() ?? '0',
-                  6
+            {mounted &&
+              toFormattedValue(
+                Number(
+                  ethers.utils.formatUnits(
+                    SPBUSDCBalance.data?.value.toString() ?? '0',
+                    6
+                  )
                 )
-              )
-            )}
+              )}{' '}
+            $USDC
           </Text>
         )}
       </Grid>

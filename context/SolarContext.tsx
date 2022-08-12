@@ -180,6 +180,11 @@ export function SolarProvider({ children }: { children: ReactNode }) {
       },
       {
         ...diamondContractConfig,
+        functionName: 'getNodeTypeRewardsPerSecond',
+        args: [4],
+      },
+      {
+        ...diamondContractConfig,
         functionName: 'getTotalNodesOfType',
         args: [1],
       },
@@ -192,6 +197,11 @@ export function SolarProvider({ children }: { children: ReactNode }) {
         ...diamondContractConfig,
         functionName: 'getTotalNodesOfType',
         args: [3],
+      },
+      {
+        ...diamondContractConfig,
+        functionName: 'getTotalNodesOfType',
+        args: [4],
       },
       {
         ...diamondContractConfig,
@@ -214,10 +224,11 @@ export function SolarProvider({ children }: { children: ReactNode }) {
         setStarTypes({
           loading: false,
           types: starTypes,
-          protoCount: Number(data.pages[0][4]),
-          neutronCount: Number(data.pages[0][5]),
-          quasarCount: Number(data.pages[0][6]),
-          claimTax: Number(data.pages[0][7]),
+          protoCount: Number(data.pages[0][5]),
+          neutronCount: Number(data.pages[0][6]),
+          quasarCount: Number(data.pages[0][7]),
+          nebulaCount: Number(data.pages[0][8]),
+          claimTax: Number(data.pages[0][9]),
         })
       } catch {
         console.error('⚙ BACKEND ERROR => getStarTypes')
