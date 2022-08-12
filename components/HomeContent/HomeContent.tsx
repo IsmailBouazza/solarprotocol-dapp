@@ -133,6 +133,7 @@ export default function HomeContent({
           <>
             {StarTypes.types &&
               StarTypes.types.map((val) => {
+                if (val.id > 3) return
                 return (
                   <MintStarCard
                     key={val.id}
