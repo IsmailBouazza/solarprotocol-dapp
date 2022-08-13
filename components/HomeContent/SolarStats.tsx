@@ -159,6 +159,9 @@ export default function SolarStats({
         <Text fontWeight={'bold'}>STAR</Text>
         <Text fontWeight={'bold'}>APY</Text>
         <Text fontWeight={'bold'}>COUNT</Text>
+        <Text>NEBULA</Text>
+        <Text>{apys.find((v) => v.id === 4)?.apy.toFixed(2)}%</Text>
+        <Text>{stars.nebulaCount}</Text>
         <Text>PROTOSTAR</Text>
         <Text>{apys.find((v) => v.id === 1)?.apy.toFixed(2)}%</Text>
         <Text>{stars.protoCount}</Text>
@@ -168,9 +171,6 @@ export default function SolarStats({
         <Text>QUASAR</Text>
         <Text>{apys.find((v) => v.id === 3)?.apy.toFixed(2)}%</Text>
         <Text>{stars.quasarCount}</Text>
-        <Text>NEBULA</Text>
-        <Text>{apys.find((v) => v.id === 4)?.apy.toFixed(2)}%</Text>
-        <Text>{stars.nebulaCount}</Text>
       </Grid>
     </VStack>
   )
