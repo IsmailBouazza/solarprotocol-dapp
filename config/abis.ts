@@ -2029,6 +2029,42 @@ export const DiamondABI = [
   {
     inputs: [
       {
+        internalType: 'uint256[]',
+        name: 'nodeIds',
+        type: 'uint256[]',
+      },
+    ],
+    name: 'getNodeFees',
+    outputs: [
+      {
+        components: [
+          {
+            internalType: 'uint256',
+            name: 'totalPaid',
+            type: 'uint256',
+          },
+          {
+            internalType: 'uint256',
+            name: 'lastPaidAt',
+            type: 'uint256',
+          },
+          {
+            internalType: 'uint256',
+            name: 'expiresAt',
+            type: 'uint256',
+          },
+        ],
+        internalType: 'struct INodeFee.NodeFee[]',
+        name: '',
+        type: 'tuple[]',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
         internalType: 'uint256',
         name: 'nodeTypeId',
         type: 'uint256',

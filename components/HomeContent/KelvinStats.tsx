@@ -90,6 +90,10 @@ export default function KelvinStats({
           Price
         </Text>
         <Text alignSelf={'end'}>${price.toLocaleString('en-GB')}</Text>
+        <Text alignSelf={'start'} fontWeight="bold">
+          SPB Threshold
+        </Text>
+        <Text alignSelf={'end'}>$74.5 - $64.5</Text>
       </Grid>
     </VStack>
   )

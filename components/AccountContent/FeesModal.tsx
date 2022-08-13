@@ -14,7 +14,8 @@ import {
   Spinner,
 } from '@chakra-ui/react'
 import { ethers } from 'ethers'
-import React, { useContext, useState } from 'react'
+import moment from 'moment'
+import React, { useContext, useMemo, useState } from 'react'
 import { toast } from 'react-toastify'
 import { erc20ABI, useContractRead, useContractWrite } from 'wagmi'
 import {
@@ -22,19 +23,18 @@ import {
   palette,
   USDCAddress,
 } from '../../config/constants'
+import { IStar } from '../../config/types'
 import { SolarContext } from '../../context/SolarContext'
 import NetworkButton from '../NetworkButton'
 
 function ModalFee({
   isOpen,
   onClose,
-  tokenId,
-  starTypeId,
+  star,
 }: {
   isOpen: boolean
   onClose: () => void
-  tokenId: number
-  starTypeId: number
+  star: IStar
 }) {
   const [days, setDays] = useState(30)
 
@@ -42,19 +42,18 @@ function ModalFee({
   const { isLoading: feesLoading } = useContractRead({
     ...diamondContractConfig,
     functionName: 'calculateFeeAmount',
-    args: [starTypeId, days],
+    args: [star.typeId, days],
     onSuccess(data) {
-      debugger
       setCost(Number(ethers.utils.formatUnits(data, 6)))
     },
   })
   const { isLoading, write } = useContractWrite({
     ...diamondContractConfig,
     functionName: 'payFee',
-    args: [tokenId, days],
+    args: [star.tokenId, days],
     onSettled(data, error) {
       if (error) {
-        console.error(`⭐ #${tokenId} error: `, error.name)
+        console.error(`⭐ #${star.tokenId} error: `, error.name)
         toast.error(error.name, {
           position: 'top-center',
           autoClose: 5000,
@@ -68,8 +67,8 @@ function ModalFee({
       }
       if (!data) return
       toast.promise(data.wait(1), {
-        pending: `🏦 Paying fees for Star ${tokenId}.`,
-        success: `🤑 Payed fees for Star ${tokenId}.`,
+        pending: `🏦 Paying fees for Star ${star.tokenId}.`,
+        success: `🤑 Payed fees for Star ${star.tokenId}.`,
         error: '🔥 Paying fees failed.',
       })
     },
@@ -81,7 +80,6 @@ function ModalFee({
       functionName: 'approve',
       args: [diamondContractConfig.addressOrName, ethers.constants.MaxUint256],
       onSettled(data, error) {
-        debugger
         if (error) {
           console.error(`🔐 USDC error: `, error.name)
           toast.error(`Approve USDC:  ${error.name}`, {
@@ -105,6 +103,13 @@ function ModalFee({
     }
   )
 
+  const daysPaidFor = useMemo(() => {
+    if (star.fees.expiresAt === 0) return -1
+    const start = moment()
+    const end = moment(star.fees.expiresAt * 1000)
+    return end.diff(start, 'days')
+  }, [star])
+
   const { UserState } = useContext(SolarContext)
   return (
     <Modal
@@ -117,7 +122,7 @@ function ModalFee({
       <ModalOverlay backdropFilter="blur(4px)" />
       <ModalContent background={palette.background.gradient}>
         <ModalHeader justifyContent="center" py={2} px={4}>
-          Maintenance fees for Star#{tokenId}
+          Maintenance fees for Star#{star.tokenId}
         </ModalHeader>
         <ModalCloseButton color={'white'} />
         <ModalBody px={4} color="white">
@@ -125,39 +130,66 @@ function ModalFee({
             <Text alignSelf="start" fontSize={'lg'}>
               Pay Fees for:
             </Text>
-            <RadioGroup
-              onChange={(item) => setDays(Number(item))}
-              value={days}
-              colorScheme="orange"
-              py={4}
-            >
-              <Grid
-                templateColumns="repeat(5,1fr)"
-                w="full"
-                justifyItems={'center'}
-                alignItems="center"
-                gap={4}
-              >
-                <Radio value={30} />
-                <Radio value={60} />
-                <Radio value={90} />
-                <Radio value={120} />
-                <Radio value={150} />
-                <Text>30 days</Text>
-                <Text>60 days</Text>
-                <Text>90 days</Text>
-                <Text>120 days</Text>
-                <Text>150 days</Text>
-              </Grid>
-            </RadioGroup>
-            <HStack w="full">
-              <Text>Total Cost: </Text>
-              {feesLoading ? (
-                <Spinner size="sm" color="white" />
-              ) : (
-                <Text>{cost} $USDC</Text>
-              )}
-            </HStack>
+
+            {daysPaidFor === -1 ? (
+              <Spinner size="md" color="white" />
+            ) : (
+              <>
+                <RadioGroup
+                  onChange={(item) => setDays(Number(item))}
+                  value={days}
+                  colorScheme="orange"
+                  py={4}
+                >
+                  <Grid
+                    templateColumns="repeat(5,1fr)"
+                    w="full"
+                    justifyItems={'center'}
+                    alignItems="center"
+                    gap={4}
+                  >
+                    {180 - daysPaidFor < 30 ? (
+                      <Radio value={30} isDisabled />
+                    ) : (
+                      <Radio value={30} />
+                    )}
+                    {180 - daysPaidFor < 60 ? (
+                      <Radio value={60} isDisabled />
+                    ) : (
+                      <Radio value={60} />
+                    )}
+                    {180 - daysPaidFor < 90 ? (
+                      <Radio value={90} isDisabled />
+                    ) : (
+                      <Radio value={90} />
+                    )}
+                    {180 - daysPaidFor < 120 ? (
+                      <Radio value={120} isDisabled />
+                    ) : (
+                      <Radio value={120} />
+                    )}
+                    {180 - daysPaidFor < 150 ? (
+                      <Radio value={150} isDisabled />
+                    ) : (
+                      <Radio value={150} />
+                    )}
+                    <Text>30 days</Text>
+                    <Text>60 days</Text>
+                    <Text>90 days</Text>
+                    <Text>120 days</Text>
+                    <Text>150 days</Text>
+                  </Grid>
+                </RadioGroup>
+                <HStack w="full">
+                  <Text>Total Cost: </Text>
+                  {feesLoading ? (
+                    <Spinner size="sm" color="white" />
+                  ) : (
+                    <Text>{cost} $USDC</Text>
+                  )}
+                </HStack>
+              </>
+            )}
             {UserState.usdcAllowance &&
             UserState.usdcAllowance >= (cost ?? 90) ? (
               <>

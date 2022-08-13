@@ -120,9 +120,11 @@ export const costPerTier: ICostPerTier = {
   1: 5,
   2: 10,
   3: 30,
+  4: 1,
 }
 
 export const dateMask = 'Do of MMM YY'
+export const dateMaskHour = 'Do of MMM YY HH:MM'
 
 export const palette = {
   background: {

@@ -66,7 +66,6 @@ export default function HomeContent({
       functionName: 'approve',
       args: [diamondContractConfig.addressOrName, ethers.constants.MaxUint256],
       onSettled(data, error) {
-        debugger
         if (error) {
           console.error(`🔐 USDC error: `, error.name)
           toast.error(`Approve USDC:  ${error.name}`, {
@@ -112,14 +111,12 @@ export default function HomeContent({
       gap={4}
       rowGap={4}
     >
-      <KelvinStats price={price} liquidity={liquidity} />
       <VStack
-        gridRow={'span 2'}
+        gridColumn={'span 2'}
         w="full"
         bg={palette.background.gradient}
         rounded={'xl'}
         p={4}
-        minH="80vh"
         justifyContent={'center'}
         border={`2px solid ${palette.main.buttonLightBorder}`}
         gap={4}
@@ -131,18 +128,48 @@ export default function HomeContent({
           <Spinner size={'xl'} color="white" />
         ) : (
           <>
-            {StarTypes.types &&
-              StarTypes.types.map((val) => {
-                if (val.id > 3) return
-                return (
+            <Grid
+              templateColumns={{ base: '1fr', xl: 'repeat(2,1fr)' }}
+              gap={2}
+              rowGap={2}
+            >
+              {StarTypes.types && StarTypes.types[3] && (
+                <>
                   <MintStarCard
-                    key={val.id}
                     selectedType={selectedType}
                     setSelectedType={setSelectedType}
-                    starType={val}
+                    starType={StarTypes.types[3]}
                   />
-                )
-              })}
+                </>
+              )}
+              {StarTypes.types && StarTypes.types[0] && (
+                <>
+                  <MintStarCard
+                    selectedType={selectedType}
+                    setSelectedType={setSelectedType}
+                    starType={StarTypes.types[0]}
+                  />
+                </>
+              )}
+              {StarTypes.types && StarTypes.types[1] && (
+                <>
+                  <MintStarCard
+                    selectedType={selectedType}
+                    setSelectedType={setSelectedType}
+                    starType={StarTypes.types[1]}
+                  />
+                </>
+              )}
+              {StarTypes.types && StarTypes.types[2] && (
+                <>
+                  <MintStarCard
+                    selectedType={selectedType}
+                    setSelectedType={setSelectedType}
+                    starType={StarTypes.types[2]}
+                  />
+                </>
+              )}
+            </Grid>
             <HStack>
               {selectedType === 0 ? (
                 <NetworkButton disabled variant="solid3">
@@ -235,6 +262,7 @@ export default function HomeContent({
           </>
         )}
       </VStack>
+      <KelvinStats price={price} liquidity={liquidity} />
       <SolarStats price={price} stars={StarTypes} apys={apys} />
     </Grid>
   )

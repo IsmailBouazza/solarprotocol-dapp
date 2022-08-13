@@ -37,6 +37,10 @@ const Stars: IStarCardProps = {
     starName: 'Quasar',
     video: './quasar.mov',
   },
+  4: {
+    starName: 'Nebula',
+    video: './proto.mov',
+  },
 }
 
 export default function StarCard({ tier }: { tier: number }) {

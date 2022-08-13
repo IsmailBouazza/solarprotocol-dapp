@@ -31,7 +31,7 @@ export default function AccountContent({ price }: { price: number }) {
   const starGridColumns = useBreakpointValue({
     base: '1fr',
     lg: 'repeat(2,1fr)',
-    '2xl': 'repeat(3,1fr)',
+    // '2xl': 'repeat(3,1fr)',
   })
 
   const { UserState, StarTypes } = useContext(SolarContext)
@@ -199,6 +199,7 @@ export default function AccountContent({ price }: { price: number }) {
           </VStack>
         </Grid>
         <Grid w="full" templateColumns={starGridColumns} gap={6} py={6}>
+          <StarCard tier={4} />
           <StarCard tier={1} />
           <StarCard tier={2} />
           <StarCard tier={3} />

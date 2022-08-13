@@ -71,6 +71,10 @@ export interface IStarTypes {
   nebulaCount?: number // global number of Nebula Stars
   claimTax?: number // % of claim tax
 }
+interface IStarFees {
+  expiresAt: number
+  lastPaidAt: number
+}
 
 export interface IStar {
   tokenId: number
@@ -78,6 +82,7 @@ export interface IStar {
   createdAt: number
   isPresale: boolean
   pendingRewards: number
+  fees: IStarFees
 }
 
 export interface IUserState {
