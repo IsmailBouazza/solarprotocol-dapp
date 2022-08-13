@@ -57,8 +57,7 @@ export default function StarCard({ tier }: { tier: number }) {
     return res
   }, [StarTypes.types, tier])
 
-  const { balanceToNumber, toFormattedValue, parseErrorReason } =
-    useWeb3Formatter()
+  const { balanceToNumber, toFormattedValue } = useWeb3Formatter()
 
   useEffect(() => {
     if (!UserState.stars) return

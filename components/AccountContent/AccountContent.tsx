@@ -63,8 +63,6 @@ export default function AccountContent({ price }: { price: number }) {
     setPendingRewards(balanceToNumber(rewards, 18))
   }, [UserState.stars, balanceToNumber])
 
-  const { parseErrorReason } = useWeb3Formatter()
-
   const stars = useMemo(() => {
     if (!UserState.stars) return
     return UserState.stars.map((val) => {
