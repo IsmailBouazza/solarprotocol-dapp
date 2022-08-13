@@ -107,12 +107,12 @@ export default function HomeContent({
       mx={'5%'}
       px={'5%'}
       w="full"
-      templateColumns={{ base: '1fr', xl: 'repeat(2,1fr)' }}
+      templateColumns={{ base: '1fr', md: '1fr', xl: 'repeat(2,1fr)' }}
       gap={4}
       rowGap={4}
     >
       <VStack
-        gridColumn={'span 2'}
+        gridColumn={{ base: '1', md: '1', xl: 'span 2' }}
         w="full"
         bg={palette.background.gradient}
         rounded={'xl'}
