@@ -37,6 +37,10 @@ const Stars: IStarCardProps = {
     starName: 'Quasar',
     video: './quasar.mov',
   },
+  4: {
+    starName: 'Nebula',
+    video: './proto.mov',
+  },
 }
 
 export default function StarCard({ tier }: { tier: number }) {
@@ -57,8 +61,7 @@ export default function StarCard({ tier }: { tier: number }) {
     return res
   }, [StarTypes.types, tier])
 
-  const { balanceToNumber, toFormattedValue, parseErrorReason } =
-    useWeb3Formatter()
+  const { balanceToNumber, toFormattedValue } = useWeb3Formatter()
 
   useEffect(() => {
     if (!UserState.stars) return
@@ -102,8 +105,8 @@ export default function StarCard({ tier }: { tier: number }) {
     args: [tier],
     onSettled(data, error) {
       if (error) {
-        console.error(`⭐ ${tier}} error: `, parseErrorReason(error.message))
-        toast.error(parseErrorReason(error.message), {
+        console.error(`⭐ ${tier}} error: `, error.name)
+        toast.error(error.name, {
           position: 'top-center',
           autoClose: 5000,
           hideProgressBar: false,

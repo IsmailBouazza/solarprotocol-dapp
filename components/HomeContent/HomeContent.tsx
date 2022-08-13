@@ -28,7 +28,7 @@ export default function HomeContent({
   const [liquidity, setLiquidity] = useState(0)
 
   const { StarTypes, UserState } = useContext(SolarContext)
-  const { parseErrorReason, balanceToNumber } = useWeb3Formatter()
+  const { balanceToNumber } = useWeb3Formatter()
 
   const [selectedType, setSelectedType] = useState(0)
 
@@ -38,11 +38,8 @@ export default function HomeContent({
     args: [selectedType],
     onSettled(data, error) {
       if (error) {
-        console.error(
-          `⭐ ${selectedType} error: `,
-          parseErrorReason(error.message)
-        )
-        toast.error(parseErrorReason(error.message), {
+        console.error(`⭐ ${selectedType} error: `, error.name)
+        toast.error(error.name, {
           position: 'top-center',
           autoClose: 5000,
           hideProgressBar: false,
@@ -69,10 +66,9 @@ export default function HomeContent({
       functionName: 'approve',
       args: [diamondContractConfig.addressOrName, ethers.constants.MaxUint256],
       onSettled(data, error) {
-        debugger
         if (error) {
-          console.error(`🔐 USDC error: `, parseErrorReason(error.message))
-          toast.error(`Approve USDC:  ${parseErrorReason(error.message)}`, {
+          console.error(`🔐 USDC error: `, error.name)
+          toast.error(`Approve USDC:  ${error.name}`, {
             position: 'top-center',
             autoClose: 5000,
             hideProgressBar: false,
@@ -111,18 +107,16 @@ export default function HomeContent({
       mx={'5%'}
       px={'5%'}
       w="full"
-      templateColumns={{ base: '1fr', xl: 'repeat(2,1fr)' }}
+      templateColumns={{ base: '1fr', md: '1fr', xl: 'repeat(2,1fr)' }}
       gap={4}
       rowGap={4}
     >
-      <KelvinStats price={price} liquidity={liquidity} />
       <VStack
-        gridRow={'span 2'}
+        gridColumn={{ base: '1', md: '1', xl: 'span 2' }}
         w="full"
         bg={palette.background.gradient}
         rounded={'xl'}
         p={4}
-        minH="80vh"
         justifyContent={'center'}
         border={`2px solid ${palette.main.buttonLightBorder}`}
         gap={4}
@@ -134,17 +128,48 @@ export default function HomeContent({
           <Spinner size={'xl'} color="white" />
         ) : (
           <>
-            {StarTypes.types &&
-              StarTypes.types.map((val) => {
-                return (
+            <Grid
+              templateColumns={{ base: '1fr', xl: 'repeat(2,1fr)' }}
+              gap={2}
+              rowGap={2}
+            >
+              {StarTypes.types && StarTypes.types[3] && (
+                <>
                   <MintStarCard
-                    key={val.id}
                     selectedType={selectedType}
                     setSelectedType={setSelectedType}
-                    starType={val}
+                    starType={StarTypes.types[3]}
                   />
-                )
-              })}
+                </>
+              )}
+              {StarTypes.types && StarTypes.types[0] && (
+                <>
+                  <MintStarCard
+                    selectedType={selectedType}
+                    setSelectedType={setSelectedType}
+                    starType={StarTypes.types[0]}
+                  />
+                </>
+              )}
+              {StarTypes.types && StarTypes.types[1] && (
+                <>
+                  <MintStarCard
+                    selectedType={selectedType}
+                    setSelectedType={setSelectedType}
+                    starType={StarTypes.types[1]}
+                  />
+                </>
+              )}
+              {StarTypes.types && StarTypes.types[2] && (
+                <>
+                  <MintStarCard
+                    selectedType={selectedType}
+                    setSelectedType={setSelectedType}
+                    starType={StarTypes.types[2]}
+                  />
+                </>
+              )}
+            </Grid>
             <HStack>
               {selectedType === 0 ? (
                 <NetworkButton disabled variant="solid3">
@@ -237,6 +262,7 @@ export default function HomeContent({
           </>
         )}
       </VStack>
+      <KelvinStats price={price} liquidity={liquidity} />
       <SolarStats price={price} stars={StarTypes} apys={apys} />
     </Grid>
   )

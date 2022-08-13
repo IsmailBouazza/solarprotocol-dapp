@@ -41,7 +41,7 @@ export const connectorIcons: IConnectorIcon = {
   },
   WalletConnect: {
     logoURI:
-      'https://raw.githubusercontent.com/WalletConnect/walletconnect-assets/master/png/circle/walletconnect-circle-blue.png',
+      'https://raw.githubusercontent.com/WalletConnect/walletconnect-assets/master/Logo/Blue%20(Default)/Logo.png',
   },
 }
 
@@ -120,9 +120,11 @@ export const costPerTier: ICostPerTier = {
   1: 5,
   2: 10,
   3: 30,
+  4: 1,
 }
 
 export const dateMask = 'Do of MMM YY'
+export const dateMaskHour = 'Do of MMM YY HH:MM'
 
 export const palette = {
   background: {

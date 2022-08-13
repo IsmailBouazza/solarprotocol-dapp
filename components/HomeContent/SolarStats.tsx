@@ -10,6 +10,7 @@ import {
   vaultSPBAddress,
 } from '../../config/constants'
 import { IAPY, IStarTypes } from '../../config/types'
+import useMounted from '../../hooks/useMounted'
 import useWeb3Formatter from '../../hooks/useWeb3Formatter'
 
 export default function SolarStats({
@@ -22,6 +23,7 @@ export default function SolarStats({
   apys: IAPY[]
 }) {
   const { balanceToNumber, toFormattedValue } = useWeb3Formatter()
+  const mounted = useMounted()
   const tvl = useMemo(() => {
     if (
       !stars.neutronCount ||
@@ -123,46 +125,52 @@ export default function SolarStats({
         <Text alignSelf={'start'} fontWeight="bold">
           SPB $KELVIN
         </Text>
-        {SPBKELVINBalance.isLoading ? (
+        {mounted && SPBKELVINBalance.isLoading ? (
           <Spinner size="sm" color="white" />
         ) : (
           <Text alignSelf={'end'}>
-            ${toFormattedValue(Number(SPBKELVINBalance.data?.formatted))}
+            {mounted &&
+              toFormattedValue(Number(SPBKELVINBalance.data?.formatted))}{' '}
+            $KELVIN
           </Text>
         )}
         <Text alignSelf={'start'} fontWeight="bold">
           SPB $USDC
         </Text>
-        {SPBUSDCBalance.isLoading ? (
+        {mounted && SPBUSDCBalance.isLoading ? (
           <Spinner size="sm" color="white" />
         ) : (
           <Text alignSelf={'end'}>
-            $
-            {toFormattedValue(
-              Number(
-                ethers.utils.formatUnits(
-                  SPBUSDCBalance.data?.value.toString() ?? '0',
-                  6
+            {mounted &&
+              toFormattedValue(
+                Number(
+                  ethers.utils.formatUnits(
+                    SPBUSDCBalance.data?.value.toString() ?? '0',
+                    6
+                  )
                 )
-              )
-            )}
+              )}{' '}
+            $USDC
           </Text>
         )}
       </Grid>
       <Divider w="80%" opacity={1} />
-      <Grid templateColumns={'repeat(4,1fr)'} w="full" gap={2} rowGap={2}>
-        <Text></Text>
-        <Text fontWeight={'bold'}>PROTOSTAR</Text>
-        <Text fontWeight={'bold'}>NEUTRON</Text>
-        <Text fontWeight={'bold'}>QUASAR</Text>
+      <Grid templateColumns={'repeat(3,1fr)'} w="full" gap={2} rowGap={2}>
+        <Text fontWeight={'bold'}>STAR</Text>
+        <Text fontWeight={'bold'}>APY</Text>
         <Text fontWeight={'bold'}>COUNT</Text>
-        <Text>{stars.protoCount}</Text>
-        <Text>{stars.neutronCount}</Text>
-        <Text>{stars.quasarCount}</Text>
-        <Text fontWeight={'bold'}>APYs</Text>
+        <Text>PROTOSTAR</Text>
         <Text>{apys.find((v) => v.id === 1)?.apy.toFixed(2)}%</Text>
+        <Text>{stars.protoCount}</Text>
+        <Text>NEUTRON</Text>
         <Text>{apys.find((v) => v.id === 2)?.apy.toFixed(2)}%</Text>
+        <Text>{stars.neutronCount}</Text>
+        <Text>QUASAR</Text>
         <Text>{apys.find((v) => v.id === 3)?.apy.toFixed(2)}%</Text>
+        <Text>{stars.quasarCount}</Text>
+        <Text>NEBULA</Text>
+        <Text>{apys.find((v) => v.id === 4)?.apy.toFixed(2)}%</Text>
+        <Text>{stars.nebulaCount}</Text>
       </Grid>
     </VStack>
   )

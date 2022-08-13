@@ -12,6 +12,7 @@ const imgs: { [key: number]: StaticImageData } = {
   1: proton,
   2: neutron,
   3: quasar,
+  4: quasar,
 }
 
 export default function MintStarCard({

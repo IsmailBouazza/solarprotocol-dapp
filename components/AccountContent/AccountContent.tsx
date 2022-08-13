@@ -31,7 +31,7 @@ export default function AccountContent({ price }: { price: number }) {
   const starGridColumns = useBreakpointValue({
     base: '1fr',
     lg: 'repeat(2,1fr)',
-    '2xl': 'repeat(3,1fr)',
+    // '2xl': 'repeat(3,1fr)',
   })
 
   const { UserState, StarTypes } = useContext(SolarContext)
@@ -63,8 +63,6 @@ export default function AccountContent({ price }: { price: number }) {
     setPendingRewards(balanceToNumber(rewards, 18))
   }, [UserState.stars, balanceToNumber])
 
-  const { parseErrorReason } = useWeb3Formatter()
-
   const stars = useMemo(() => {
     if (!UserState.stars) return
     return UserState.stars.map((val) => {
@@ -78,11 +76,8 @@ export default function AccountContent({ price }: { price: number }) {
     args: [stars],
     onSettled(data, error) {
       if (error) {
-        console.error(
-          `⭐ Claiming all error: `,
-          parseErrorReason(error.message)
-        )
-        toast.error(parseErrorReason(error.message), {
+        console.error(`⭐ Claiming all error: `, error.name)
+        toast.error(error.name, {
           position: 'top-center',
           autoClose: 5000,
           hideProgressBar: false,
@@ -155,10 +150,17 @@ export default function AccountContent({ price }: { price: number }) {
             )}
           </VStack>
           <VStack>
+            {/* <Button
+              w="full"
+              backgroundColor={'#081429'}
+              color={palette.main.buttonLightBorder}
+            >
+              COMPOUND
+            </Button> */}
             {isLoading ? (
               <NetworkButton
+                w="full"
                 backgroundColor={'#081429'}
-                rounded="lg"
                 color={palette.main.buttonLightBorder}
                 isLoading
                 loadingText="Claiming"
@@ -169,8 +171,8 @@ export default function AccountContent({ price }: { price: number }) {
               <>
                 {pendingRewards === 0 ? (
                   <NetworkButton
+                    w="full"
                     backgroundColor={'#081429'}
-                    rounded="lg"
                     color={palette.main.buttonLightBorder}
                     onClick={() => write()}
                     disabled
@@ -179,8 +181,8 @@ export default function AccountContent({ price }: { price: number }) {
                   </NetworkButton>
                 ) : (
                   <NetworkButton
+                    w="full"
                     backgroundColor={'#081429'}
-                    rounded="lg"
                     color={palette.main.buttonLightBorder}
                     onClick={() => write()}
                   >
@@ -197,6 +199,7 @@ export default function AccountContent({ price }: { price: number }) {
           </VStack>
         </Grid>
         <Grid w="full" templateColumns={starGridColumns} gap={6} py={6}>
+          <StarCard tier={4} />
           <StarCard tier={1} />
           <StarCard tier={2} />
           <StarCard tier={3} />
