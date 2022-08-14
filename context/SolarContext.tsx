@@ -46,8 +46,16 @@ function buildEpoch(data: any) {
   return epoch
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function buildStarType(data: any, rewards: ethers.BigNumberish) {
+const feeMultiplier = 1e11
+const formatFee = (fee: ethers.BigNumber) =>
+  Math.ceil(fee.div(feeMultiplier).mul(30).toNumber() / 1e6)
+
+function buildStarType(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  data: any,
+  rewards: ethers.BigNumberish,
+  fees: ethers.BigNumber
+) {
   if (!data) return
   if (!data.length) return
   const starType: IStarType = {
@@ -56,6 +64,7 @@ function buildStarType(data: any, rewards: ethers.BigNumberish) {
     price: Number(data.price),
     stablePrice: Number(data.stablePrice),
     rewardsPerSecond: Number(rewards),
+    monthlyFees: formatFee(fees),
   }
   return starType
 }
@@ -189,6 +198,26 @@ export function SolarProvider({ children }: { children: ReactNode }) {
       },
       {
         ...diamondContractConfig,
+        functionName: 'getNodeTypeFee',
+        args: [1],
+      },
+      {
+        ...diamondContractConfig,
+        functionName: 'getNodeTypeFee',
+        args: [2],
+      },
+      {
+        ...diamondContractConfig,
+        functionName: 'getNodeTypeFee',
+        args: [3],
+      },
+      {
+        ...diamondContractConfig,
+        functionName: 'getNodeTypeFee',
+        args: [4],
+      },
+      {
+        ...diamondContractConfig,
         functionName: 'getTotalNodesOfType',
         args: [1],
       },
@@ -221,18 +250,22 @@ export function SolarProvider({ children }: { children: ReactNode }) {
       try {
         const starTypes: IStarType[] = []
         data.pages[0][0].map((val: IStarType, idx: number) => {
-          const starType = buildStarType(val, data.pages[0][idx + 1])
+          const starType = buildStarType(
+            val,
+            data.pages[0][idx + 1],
+            data.pages[0][idx + 5]
+          )
           if (!starType) return
           starTypes.push(starType)
         })
         setStarTypes({
           loading: false,
           types: starTypes,
-          protoCount: Number(data.pages[0][5]),
-          neutronCount: Number(data.pages[0][6]),
-          quasarCount: Number(data.pages[0][7]),
-          nebulaCount: Number(data.pages[0][8]),
-          claimTax: Number(data.pages[0][9]),
+          protoCount: Number(data.pages[0][9]),
+          neutronCount: Number(data.pages[0][10]),
+          quasarCount: Number(data.pages[0][11]),
+          nebulaCount: Number(data.pages[0][12]),
+          claimTax: Number(data.pages[0][13]),
         })
       } catch {
         console.error('⚙ BACKEND ERROR => getStarTypes')

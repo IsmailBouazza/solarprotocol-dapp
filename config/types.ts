@@ -60,6 +60,7 @@ export interface IStarType {
   price: number
   stablePrice: number
   rewardsPerSecond: number
+  monthlyFees: number
 }
 
 export interface IStarTypes {
