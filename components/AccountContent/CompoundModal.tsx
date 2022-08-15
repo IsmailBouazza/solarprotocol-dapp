@@ -43,7 +43,7 @@ function ModalCompound({
   onClose: () => void
   price: number
 }) {
-  const [getIdTypes, setIdTypes] = useState<number>(1)
+  const [getIdTypes, setIdTypes] = useState<number>(3)
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { StarTypes, UserState } = useContext(SolarContext)
   const { balanceToNumber } = useWeb3Formatter()

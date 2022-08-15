@@ -26,8 +26,6 @@ import StarList from './StarList'
 import CompoundModal from './CompoundModal'
 
 export default function AccountContent({ price }: { price: number }) {
-  const { isOpen, onOpen, onClose } = useDisclosure()
-
   const walletGridColumns = useBreakpointValue({
     base: '1fr',
     lg: 'repeat(2,1fr)',
