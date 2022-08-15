@@ -8,7 +8,7 @@ import {
   VStack,
 } from '@chakra-ui/react'
 import moment from 'moment'
-import { useContext, useMemo } from 'react'
+import { Dispatch, SetStateAction, useContext, useMemo } from 'react'
 import { FiInfo } from 'react-icons/fi'
 import { toast } from 'react-toastify'
 import { useContractWrite } from 'wagmi'
@@ -22,18 +22,15 @@ import { IStar } from '../../config/types'
 import { SolarContext } from '../../context/SolarContext'
 import useWeb3Formatter from '../../hooks/useWeb3Formatter'
 import NetworkButton from '../NetworkButton'
-import FeesModal from './FeesModal'
 
 export default function StarListElement({
   star,
-  isOpen,
   onOpen,
-  onClose,
+  setStarId,
 }: {
   star: IStar
-  isOpen: boolean
+  setStarId: Dispatch<SetStateAction<number | undefined>>
   onOpen: () => void
-  onClose: () => void
 }) {
   // const mounted = useMounted()
   const isLargerThan1400 = useMediaQuery('(min-width: 1400px)')[0]
@@ -141,7 +138,10 @@ export default function StarListElement({
             size={'xs'}
             variant="solid3"
             gridColumn={'1/-1'}
-            onClick={onOpen}
+            onClick={() => {
+              onOpen()
+              setStarId(star.tokenId)
+            }}
           >
             Pay fees
           </NetworkButton>
@@ -150,7 +150,6 @@ export default function StarListElement({
             Pay fees
           </NetworkButton> */}
         </VStack>
-        <FeesModal isOpen={isOpen} onClose={onClose} star={star} />
       </>
     )
   return (
@@ -224,7 +223,10 @@ export default function StarListElement({
           size={'xs'}
           variant="solid3"
           gridColumn={'1/-1'}
-          onClick={onOpen}
+          onClick={() => {
+            onOpen()
+            setStarId(star.tokenId)
+          }}
         >
           Pay fees
         </NetworkButton>
@@ -232,7 +234,6 @@ export default function StarListElement({
         Pay fees
       </NetworkButton> */}
       </Grid>
-      <FeesModal isOpen={isOpen} onClose={onClose} star={star} />
     </>
   )
 }

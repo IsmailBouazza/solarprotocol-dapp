@@ -34,7 +34,7 @@ function ModalFee({
 }: {
   isOpen: boolean
   onClose: () => void
-  star: IStar
+  star: IStar | undefined
 }) {
   const [days, setDays] = useState(30)
 
@@ -42,7 +42,7 @@ function ModalFee({
   const { isLoading: feesLoading } = useContractRead({
     ...diamondContractConfig,
     functionName: 'calculateFeeAmount',
-    args: [star.typeId, days],
+    args: [star === undefined ? 0 : star.typeId, days],
     onSuccess(data) {
       setCost(Number(ethers.utils.formatUnits(data, 6)))
     },
@@ -50,10 +50,13 @@ function ModalFee({
   const { isLoading, write } = useContractWrite({
     ...diamondContractConfig,
     functionName: 'payFee',
-    args: [star.tokenId, days],
+    args: [star === undefined ? 0 : star.typeId, days],
     onSettled(data, error) {
       if (error) {
-        console.error(`⭐ #${star.tokenId} error: `, error.name)
+        console.error(
+          `⭐ #${star === undefined ? 0 : star.typeId} error: `,
+          error.name
+        )
         toast.error(error.name, {
           position: 'top-center',
           autoClose: 5000,
@@ -67,8 +70,12 @@ function ModalFee({
       }
       if (!data) return
       toast.promise(data.wait(1), {
-        pending: `🏦 Paying fees for Star ${star.tokenId}.`,
-        success: `🤑 Payed fees for Star ${star.tokenId}.`,
+        pending: `🏦 Paying fees for Star ${
+          star === undefined ? 0 : star.typeId
+        }.`,
+        success: `🤑 Payed fees for Star ${
+          star === undefined ? 0 : star.typeId
+        }.`,
         error: '🔥 Paying fees failed.',
       })
     },
@@ -104,6 +111,7 @@ function ModalFee({
   )
 
   const daysPaidFor = useMemo(() => {
+    if (!star) return -1
     if (star.fees.expiresAt === 0) return -1
     const start = moment()
     const end = moment(star.fees.expiresAt * 1000)
@@ -122,7 +130,7 @@ function ModalFee({
       <ModalOverlay backdropFilter="blur(4px)" />
       <ModalContent background={palette.background.gradient}>
         <ModalHeader justifyContent="center" py={2} px={4}>
-          Maintenance fees for Star#{star.tokenId}
+          Maintenance fees for Star#{star === undefined ? 0 : star.tokenId}
         </ModalHeader>
         <ModalCloseButton color={'white'} />
         <ModalBody px={4} color="white">
@@ -243,5 +251,5 @@ function ModalFee({
 
 const FeesModal = React.memo(ModalFee)
 
-FeesModal.displayName = 'FeesModal'
+FeesModal.displayName = `FeesModal`
 export default FeesModal
