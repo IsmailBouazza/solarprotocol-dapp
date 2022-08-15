@@ -23,8 +23,11 @@ import useWeb3Formatter from '../../hooks/useWeb3Formatter'
 import NetworkButton from '../NetworkButton'
 import StarCard from './StarCard'
 import StarList from './StarList'
+import CompoundModal from './CompoundModal'
 
 export default function AccountContent({ price }: { price: number }) {
+  const { isOpen, onOpen, onClose } = useDisclosure()
+
   const walletGridColumns = useBreakpointValue({
     base: '1fr',
     lg: 'repeat(2,1fr)',
@@ -162,6 +165,7 @@ export default function AccountContent({ price }: { price: number }) {
             >
               COMPOUND
             </Button>
+            <CompoundModal price={price} isOpen={isOpen} onClose={onClose} />
             {isLoading ? (
               <NetworkButton
                 w="full"
