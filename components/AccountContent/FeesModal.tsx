@@ -50,11 +50,11 @@ function ModalFee({
   const { isLoading, write } = useContractWrite({
     ...diamondContractConfig,
     functionName: 'payFee',
-    args: [star === undefined ? 0 : star.typeId, days],
+    args: [star === undefined ? 0 : star.tokenId, days],
     onSettled(data, error) {
       if (error) {
         console.error(
-          `⭐ #${star === undefined ? 0 : star.typeId} error: `,
+          `⭐ #${star === undefined ? 0 : star.tokenId} error: `,
           error.name
         )
         toast.error(error.name, {
@@ -71,10 +71,10 @@ function ModalFee({
       if (!data) return
       toast.promise(data.wait(1), {
         pending: `🏦 Paying fees for Star ${
-          star === undefined ? 0 : star.typeId
+          star === undefined ? 0 : star.tokenId
         }.`,
         success: `🤑 Payed fees for Star ${
-          star === undefined ? 0 : star.typeId
+          star === undefined ? 0 : star.tokenId
         }.`,
         error: '🔥 Paying fees failed.',
       })
