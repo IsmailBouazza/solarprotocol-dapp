@@ -1,10 +1,12 @@
 import {
+  Button,
   Grid,
   HStack,
   Spinner,
   Text,
   Tooltip,
   useBreakpointValue,
+  useDisclosure,
   VStack,
 } from '@chakra-ui/react'
 import { useContext, useEffect, useMemo, useState } from 'react'
@@ -21,8 +23,11 @@ import useWeb3Formatter from '../../hooks/useWeb3Formatter'
 import NetworkButton from '../NetworkButton'
 import StarCard from './StarCard'
 import StarList from './StarList'
+import CompoundModal from './CompoundModal'
 
 export default function AccountContent({ price }: { price: number }) {
+  const { isOpen, onOpen, onClose } = useDisclosure()
+
   const walletGridColumns = useBreakpointValue({
     base: '1fr',
     lg: 'repeat(2,1fr)',
@@ -150,13 +155,15 @@ export default function AccountContent({ price }: { price: number }) {
             )}
           </VStack>
           <VStack>
-            {/* <Button
+            <Button
               w="full"
               backgroundColor={'#081429'}
               color={palette.main.buttonLightBorder}
+              onClick={onOpen}
             >
               COMPOUND
-            </Button> */}
+            </Button>
+            <CompoundModal price={price} isOpen={isOpen} onClose={onClose} />
             {isLoading ? (
               <NetworkButton
                 w="full"
