@@ -1,10 +1,12 @@
 import {
+  Button,
   Grid,
   HStack,
   Spinner,
   Text,
   Tooltip,
   useBreakpointValue,
+  useDisclosure,
   VStack,
 } from '@chakra-ui/react'
 import { useContext, useEffect, useMemo, useState } from 'react'
@@ -97,6 +99,8 @@ export default function AccountContent({ price }: { price: number }) {
     },
   })
 
+  const { isOpen, onOpen, onClose } = useDisclosure()
+
   return (
     <>
       <VStack w="full" mx={'5%'} px={'5%'}>
@@ -150,13 +154,14 @@ export default function AccountContent({ price }: { price: number }) {
             )}
           </VStack>
           <VStack>
-            {/* <Button
+            <Button
               w="full"
               backgroundColor={'#081429'}
               color={palette.main.buttonLightBorder}
+              onClick={onOpen}
             >
               COMPOUND
-            </Button> */}
+            </Button>
             {isLoading ? (
               <NetworkButton
                 w="full"

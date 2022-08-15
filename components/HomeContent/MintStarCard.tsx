@@ -74,7 +74,7 @@ export default function MintStarCard({
           <b>Cost: </b> {balanceToNumber(starType.price, 18)} $KELVIN,{' | '}
           {balanceToNumber(starType.stablePrice, 6)} $USDC
         </Text>
-        <Text>Maintenance Fees: ${starType.monthlyFees}/month</Text>
+        <Text>Maintenance Fees: {starType.monthlyFees}$USDC/month</Text>
       </VStack>
       {selectedType === starType.id ? (
         <Radio isChecked colorScheme={'purple'} />
