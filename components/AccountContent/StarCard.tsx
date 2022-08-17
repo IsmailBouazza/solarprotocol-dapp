@@ -6,9 +6,10 @@ import {
   Grid,
   Tooltip,
   Spinner,
+  Image,
 } from '@chakra-ui/react'
 import { ethers } from 'ethers'
-import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
+import { useContext, useEffect, useMemo, useState } from 'react'
 import { toast } from 'react-toastify'
 import { useAccount, useBalance, useContractWrite } from 'wagmi'
 import {
@@ -23,31 +24,32 @@ import { SolarContext } from '../../context/SolarContext'
 import useWeb3Formatter from '../../hooks/useWeb3Formatter'
 // import { toast } from 'react-toastify'
 import NetworkButton from '../NetworkButton'
+import proto from '../../src/protoCard.png'
+import nebula from '../../src/nebulaCard.png'
+import quassar from '../../src/quassarCard.png'
+import neutron from '../../src/neutronCard.png'
 
 const Stars: IStarCardProps = {
   1: {
     starName: 'Proto Star',
-    video: './proto.mov',
+    image: proto.src,
   },
   2: {
     starName: 'Neutron',
-    video: './neutron.mov',
+    image: neutron.src,
   },
   3: {
     starName: 'Quasar',
-    video: './quasar.mov',
+    image: quassar.src,
   },
   4: {
     starName: 'Nebula',
-    video: './proto.mov',
+    image: nebula.src,
   },
 }
 
 export default function StarCard({ tier }: { tier: number }) {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const handleContextMenu = useCallback((event: any) => {
-    event.preventDefault()
-  }, [])
 
   const { UserState, StarTypes } = useContext(SolarContext)
 
@@ -144,17 +146,7 @@ export default function StarCard({ tier }: { tier: number }) {
         justifyContent="center"
         borderBottom={`1px solid ${palette.main.buttonBorder}`}
       >
-        <video
-          autoPlay
-          muted
-          loop
-          controls={false}
-          playsInline
-          preload="auto"
-          onContextMenu={handleContextMenu}
-        >
-          <source src={Stars[tier].video} />
-        </video>
+        <Image src={Stars[tier].image} alt=""></Image>
       </Flex>
       <Text fontWeight={'bold'} textAlign="center" fontSize={'xl'}>
         {Stars[tier].starName.toUpperCase()}

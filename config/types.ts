@@ -12,7 +12,7 @@ export interface IInvestInfo {
 export interface IStarCardProps {
   [key: number]: {
     starName: string
-    video: string
+    image: string
   }
 }
 

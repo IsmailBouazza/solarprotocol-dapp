@@ -21,6 +21,7 @@ import { SolarContext } from '../../context/SolarContext'
 import useWeb3Formatter from '../../hooks/useWeb3Formatter'
 import proton from '../../src/proto.png'
 import quasar from '../../src/quasar.png'
+import nebula from '../../src/nebula.png'
 import neutron from '../../src/neutron.png'
 import { StaticImageData } from 'next/image'
 import NetworkButton from '../NetworkButton'
@@ -31,7 +32,7 @@ const imgs: { [key: number]: StaticImageData } = {
   1: proton,
   2: neutron,
   3: quasar,
-  4: quasar,
+  4: nebula,
 }
 
 function ModalCompound({
