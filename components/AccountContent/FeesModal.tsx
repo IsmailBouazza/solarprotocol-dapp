@@ -111,8 +111,8 @@ function ModalFee({
   )
 
   const daysPaidFor = useMemo(() => {
-    if (!star) return -1
-    if (star.fees.expiresAt === 0) return -1
+    if (!star) return -999
+    if (star.fees.expiresAt === 0) return -999
     const start = moment()
     const end = moment(star.fees.expiresAt * 1000)
     return end.diff(start, 'days')
@@ -139,7 +139,7 @@ function ModalFee({
               Pay Fees for:
             </Text>
 
-            {daysPaidFor === -1 ? (
+            {daysPaidFor === -999 ? (
               <Spinner size="md" color="white" />
             ) : (
               <>
