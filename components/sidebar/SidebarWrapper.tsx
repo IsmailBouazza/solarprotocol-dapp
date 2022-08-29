@@ -113,16 +113,14 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
     >
       <VStack w="full">
         <Flex h="20" alignItems="center" w="full" justifyContent={'center'}>
-          <Image
-            as={Link}
-            href="https://solarprotocol.io"
-            isExternal
-            src="https://raw.githubusercontent.com/SolarProtocol/Media/main/LOGOS%20SOLAR%20PROTOCOL%20PNG/4%20SOLAR%20simbolo%20fondo%20transparente.png"
-            objectFit="contain"
-            h="64px"
-            alt="Solar Logo"
-            cursor={'pointer'}
-          />
+          <Link href="https://solarprotocol.io" isExternal>
+            <Image
+              src="https://raw.githubusercontent.com/SolarProtocol/Media/main/LOGOS%20SOLAR%20PROTOCOL%20PNG/4%20SOLAR%20simbolo%20fondo%20transparente.png"
+              objectFit="contain"
+              h="64px"
+              alt="Solar Logo"
+            />
+          </Link>
           <CloseButton
             display={{ base: 'flex', md: 'none' }}
             onClick={onClose}
