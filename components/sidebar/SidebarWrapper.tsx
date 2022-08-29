@@ -95,7 +95,6 @@ interface SidebarProps extends BoxProps {
 }
 
 const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
-  const router = useRouter()
   return (
     <VStack
       backdropFilter="auto"
@@ -115,7 +114,9 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
       <VStack w="full">
         <Flex h="20" alignItems="center" w="full" justifyContent={'center'}>
           <Image
-            onClick={() => router.push('/', undefined, { shallow: true })}
+            as={Link}
+            href="https://solarprotocol.io"
+            isExternal
             src="https://raw.githubusercontent.com/SolarProtocol/Media/main/LOGOS%20SOLAR%20PROTOCOL%20PNG/4%20SOLAR%20simbolo%20fondo%20transparente.png"
             objectFit="contain"
             h="64px"
